@@ -1,0 +1,13 @@
+{
+  "name": "dershane-app-frontend",
+  "version": "1.0.0",
+  "description": "Frontend for Dershane App served on App Hosting",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "build": "echo 'No build step required'"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

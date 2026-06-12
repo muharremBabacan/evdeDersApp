@@ -1,8 +1,20 @@
 import sqlite3
 import os
 
+import shutil
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_PATH = os.path.join(BASE_DIR, "dershane_sistemi_seeded.db")
+SRC_DB_PATH = os.path.join(BASE_DIR, "dershane_sistemi_seeded.db")
+
+# Detect if running in serverless GCP / Firebase environment
+if os.environ.get("K_SERVICE") or os.environ.get("FUNCTION_TARGET"):
+    DB_PATH = "/tmp/dershane_sistemi_seeded.db"
+    if not os.path.exists(DB_PATH):
+        print(">>> Serverless environment detected. Copying database to /tmp...")
+        shutil.copy2(SRC_DB_PATH, DB_PATH)
+        os.chmod(DB_PATH, 0o666)
+else:
+    DB_PATH = SRC_DB_PATH
 
 print(">>> BACKEND DB PATH:", DB_PATH)
 
