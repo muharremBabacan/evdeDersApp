@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ödev Takip Kontrol | Dershane Sistemi</title>
+    <style>
+        :root {
+            --primary: #1a237e;
+            --secondary: #3949ab;
+            --bg-body: #f8fafc;
+            --white: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --radius: 12px;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+
+        body { font-family: 'Inter', sans-serif; background: var(--bg-body); padding: 20px; color: var(--text-main); margin: 0; }
+        .container { max-width: 1000px; margin: 0 auto; }
+
+        .info-header {
+            background: var(--white);
+            padding: 1.5rem 2rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            border-left: 6px solid var(--secondary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .info-header h2 { margin: 0; color: var(--primary); font-size: 1.4rem; }
+        .info-header p { margin: 5px 0 0; color: var(--text-muted); font-size: 0.9rem; }
+
+        .table-card { background: var(--white); padding: 1.5rem; border-radius: var(--radius); box-shadow: var(--shadow); }
+        
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 12px 15px; background: #f8fafc; color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; border-bottom: 2px solid #e2e8f0; }
+        td { padding: 15px; border-bottom: 1px solid #f1f5f9; font-size: 0.95rem; }
+
+        .status { padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; }
+        .status-completed { background: #dcfce7; color: var(--success); }
+        .status-not-started { background: #fee2e2; color: var(--danger); }
+
+        .score-box { font-weight: 800; color: var(--primary); background: #eef2ff; padding: 4px 10px; border-radius: 6px; }
+        .btn-detail { text-decoration: none; color: var(--secondary); font-weight: 600; font-size: 0.85rem; border: 1.5px solid var(--secondary); padding: 5px 10px; border-radius: 6px; }
+        .btn-detail:hover { background: var(--secondary); color: white; }
+    </style>
+    <script src="/js/config.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <div class="info-header">
+        <div>
+            <h2 id="assignment-title">Ödev Yükleniyor...</h2>
+            <p id="assignment-meta">Konu: - | Toplam Soru: -</p>
+        </div>
+        <div style="text-align: right;">
+            <a href="dashboard.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.85rem; font-weight: 700;">← Panele Dön</a>
+        </div>
+    </div>
+
+    <div class="table-card">
+        <table>
+            <thead>
+                <tr>
+                    <th>Öğrenci Adı</th>
+                    <th>Sınıf</th>
+                    <th>Durum</th>
+                    <th>Başarı Puanı</th>
+                    <th>İşlem</th>
+                </tr>
+            </thead>
+            <tbody id="control-list">
+                <tr><td colspan="5" style="text-align:center;">Yükleniyor...</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+const token = localStorage.getItem("token");
+const params = new URLSearchParams(window.location.search);
+const id = params.get("id"); // Assignment ID
+
+if (!token || !id) {
+    location.href = "dashboard.html";
+}
+
+fetch(`${window.API_BASE}/api/teacher/assignments/${id}/tracking`, {
+    headers: { "Authorization": "Bearer " + token }
+})
+.then(res => res.json())
+.then(data => {
+    document.getElementById("assignment-title").innerText = data.assignment.title;
+    document.getElementById("assignment-meta").innerText = `Konu: ${data.assignment.subject} | Soru Sayısı: ${data.assignment.question_count}`;
+
+    const tbody = document.getElementById("control-list");
+    tbody.innerHTML = "";
+
+    if (data.submissions && data.submissions.length > 0) {
+        data.submissions.forEach(s => {
+            const isCompleted = s.status === 'completed';
+            const statusClass = isCompleted ? "status-completed" : "status-not-started";
+            const statusText = isCompleted ? "Tamamladı" : "Başlamadı";
+            
+            const scoreVal = s.score !== null ? s.score + '/100' : '--';
+            const actionBtn = isCompleted 
+                ? `<a href="student_submission.html?id=${s.submission_id}" class="btn-detail">Cevapları Gör</a>` 
+                : `<span style="color:var(--text-muted); font-size:0.85rem;">Teslim Edilmedi</span>`;
+                
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td><strong>${s.student_name}</strong></td>
+                <td>${s.grade}. Sınıf</td>
+                <td><span class="status ${statusClass}">${statusText}</span></td>
+                <td><span class="score-box">${scoreVal}</span></td>
+                <td>${actionBtn}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    } else {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted)">Bu ödeve henüz öğrenci atanmamış.</td></tr>`;
+    }
+})
+.catch(err => {
+    console.error(err);
+    document.getElementById("control-list").innerHTML = "<tr><td colspan='5' style='text-align:center'>Veri yüklenemedi.</td></tr>";
+});
+</script>
+</body>
+</html>

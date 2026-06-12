@@ -1,0 +1,19 @@
+{
+  "functions": {
+    "source": "backend"
+  },
+  "hosting": {
+    "public": "frontend",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "/api/**",
+        "function": "flask_app"
+      }
+    ]
+  }
+}

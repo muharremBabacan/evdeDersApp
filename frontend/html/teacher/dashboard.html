@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Öğretmen Paneli | Dershane Sistemi</title>
+    <style>
+        :root {
+            --primary: #1a237e;
+            --secondary: #3949ab;
+            --bg-body: #f1f5f9;
+            --white: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --accent: #10b981; /* Başarı/Ekleme rengi (Yeşil) */
+            --radius: 12px;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .dashboard-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Üst Bilgi Kartı */
+        .header-card {
+            background: var(--white);
+            padding: 1.5rem 2rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            border-left: 6px solid var(--primary);
+        }
+
+        .teacher-info h2 { margin: 0; color: var(--primary); font-size: 1.5rem; }
+        .teacher-info p { margin: 5px 0 0; color: var(--text-muted); font-weight: 500; }
+
+        .logout-btn {
+            background: #e2e8f0;
+            color: var(--text-main);
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        /* Tablo Alanı */
+        .content-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        h3 { color: var(--text-main); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            background: #f8fafc;
+            padding: 12px 15px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        td { padding: 15px; border-bottom: 1px solid #f1f5f9; font-size: 0.95rem; }
+
+        tr:hover { background-color: #f8fafc; }
+
+        /* Aksiyon Butonları */
+        .btn-action {
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-view { color: var(--secondary); background: #e8eaf6; }
+        .btn-view:hover { background: var(--secondary); color: white; }
+
+        .btn-add { color: var(--accent); background: #ecfdf5; margin-left: 10px; }
+        .btn-add:hover { background: var(--accent); color: white; }
+
+        .badge {
+            background: #f1f5f9;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            color: var(--secondary);
+            font-weight: bold;
+        }
+    </style>
+    <script src="/js/config.js"></script>
+</head>
+<body>
+
+<div class="dashboard-container">
+    <div class="header-card">
+        <div class="teacher-info" id="teacher">
+            <h2>Yükleniyor...</h2>
+            <p>Branş bilgisi alınıyor...</p>
+        </div>
+        <a href="#" onclick="logout()" class="logout-btn">Güvenli Çıkış</a>
+    </div>
+
+    <div class="content-card">
+        <h3>👨‍🎓 Sorumlu Olduğum Öğrenciler</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Öğrenci Adı</th>
+                    <th>Sınıf / Derece</th>
+                    <th>İşlemler</th>
+                </tr>
+            </thead>
+            <tbody id="students-table">
+                </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+const token = localStorage.getItem("token");
+
+if (!token) {
+    alert("Oturum süresi dolmuş veya giriş yapılmamış.");
+    location.href = "/";
+}
+
+function logout() {
+    localStorage.clear();
+    location.href = "/";
+}
+
+// API'den verileri çekme
+fetch(window.API_BASE + "/api/teacher/dashboard", {
+    headers: { "Authorization": "Bearer " + token }
+})
+.then(res => {
+    if (!res.ok) throw new Error("API yetkilendirme hatası");
+    return res.json();
+})
+.then(data => {
+    // Öğretmen Bilgileri Güncelleme
+    document.getElementById("teacher").innerHTML = `
+        <h2>Hoş Geldiniz, ${data.teacher.name}</h2>
+        <p>Branş: ${data.teacher.branch}</p>
+    `;
+
+    // Öğrenci Tablosu Güncelleme
+    const tbody = document.getElementById("students-table");
+    tbody.innerHTML = "";
+
+    if (data.students.length === 0) {
+        tbody.innerHTML = "<tr><td colspan='3' style='text-align:center;'>Henüz atanmış öğrenci bulunmamaktadır.</td></tr>";
+        return;
+    }
+
+    data.students.forEach(s => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+            <td><strong>${s.name}</strong></td>
+            <td><span class="badge">${s.grade}</span></td>
+            <td>
+                <a href="/html/teacher/ogrenci_durum_karti.html?id=${s.id}" class="btn-action btn-view">
+                    👁️ Görüntüle
+                </a>
+                <a href="/html/teacher/assignment_create.html?student_id=${s.id}" class="btn-action btn-add">
+                    ➕ Ödev Tanımla
+                </a>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+})
+.catch(err => {
+    console.error(err);
+    alert("Veriler yüklenirken bir hata oluştu. Lütfen tekrar giriş yapın.");
+});
+</script>
+
+</body>
+</html>

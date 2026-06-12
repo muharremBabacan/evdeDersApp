@@ -1,0 +1,129 @@
+{
+  "exam_name": "2020 LGS Sözel Sınavı",
+  "year": 2020,
+  "session": "sozel",
+  "duration_minutes": 75,
+  "total_questions": 10,
+  "questions": [
+    {
+      "question_text": "Aşağıdaki cümlelerin hangisinde 'kazanmak' sözcüğü mecaz anlamda kullanılmıştır?",
+      "options": {
+        "A": "Son yaptığı yatırımlarla çok para kazandı.",
+        "B": "Samimi tavırlarıyla herkesin sevgisini kazandı.",
+        "C": "Yarışmada birinci olarak altın madalya kazandı.",
+        "D": "Bu ayki çalışmasıyla terfi kazanmayı başardı."
+      },
+      "correct_answer": "B",
+      "subject": "Türkçe",
+      "question_number": 1
+    },
+    {
+      "question_text": "Aşağıdaki cümlelerin hangisinde neden-sonuç (gerekçeli) bir ilişki vardır?",
+      "options": {
+        "A": "Sınavı kazanmak için gece gündüz demeden çalışıyordu.",
+        "B": "Yağmur yağdığı için piknik planımız iptal oldu.",
+        "C": "Kitap okumak, kelime dağarcığını geliştiren en önemli unsurdur.",
+        "D": "Eğer erken uyanırsan yürüyüşe çıkabiliriz."
+      },
+      "correct_answer": "B",
+      "subject": "Türkçe",
+      "question_number": 2
+    },
+    {
+      "question_text": "Aşağıdaki cümlelerin hangisinde yazım yanlışı yapılmıştır?",
+      "options": {
+        "A": "LGS sınavı 1 Haziran 2026'da gerçekleştirilecek.",
+        "B": "Bugün kütüphanede ardarda üç kitap bitirdi.",
+        "C": "Hiçbir insan bu durum karşısında sessiz kalamaz.",
+        "D": "Her şeyin bir zamanı olduğunu hepimiz biliriz."
+      },
+      "correct_answer": "B",
+      "subject": "Türkçe",
+      "question_number": 3
+    },
+    {
+      "question_text": "Mustafa Kemal'in askeri idadi yıllarında etkilendiği, Türk milliyetçiliğinin ve vatan sevgisinin oluşmasında rol oynayan yazar kimdir?",
+      "options": {
+        "A": "Namık Kemal",
+        "B": "Jean-Jacques Rousseau",
+        "C": "Ziya Gökalp",
+        "D": "Tevfik Fikret"
+      },
+      "correct_answer": "A",
+      "subject": "T.C. İnkılap Tarihi ve Atatürkçülük",
+      "question_number": 4
+    },
+    {
+      "question_text": "Milli Mücadele Dönemi'nde 'Milletin bağımsızlığını, yine milletin azim ve kararı kurtaracaktır' kararı ilk kez nerede alınmıştır?",
+      "options": {
+        "A": "Havza Genelgesi",
+        "B": "Amasya Genelgesi",
+        "C": "Erzurum Kongresi",
+        "D": "Sivas Kongresi"
+      },
+      "correct_answer": "B",
+      "subject": "T.C. İnkılap Tarihi ve Atatürkçülük",
+      "question_number": 5
+    },
+    {
+      "question_text": "Zekat ibadeti ile ilgili aşağıda verilen bilgilerden hangisi yanlıştır?",
+      "options": {
+        "A": "Yılda bir kez yerine getirilir.",
+        "B": "Nisap miktarı mala sahip olan her zengin Müslümana farzdır.",
+        "C": "Sadece Ramazan ayında verilmesi zorunludur.",
+        "D": "Malı temizler ve toplumsal dayanışmayı artırır."
+      },
+      "correct_answer": "C",
+      "subject": "Din Kültürü ve Ahlak Bilgisi",
+      "question_number": 6
+    },
+    {
+      "question_text": "Aşağıdakilerden hangisi İslam dininin korunmasını emrettiği temel değerlerden (zarurat-ı hamse) biri değildir?",
+      "options": {
+        "A": "Canın korunması",
+        "B": "Neslin korunması",
+        "C": "Makamın korunması",
+        "D": "Aklın korunması"
+      },
+      "correct_answer": "C",
+      "subject": "Din Kültürü ve Ahlak Bilgisi",
+      "question_number": 7
+    },
+    {
+      "question_text": "Choose the best option to complete the dialogue:\n\nTom: How about going to the cinema tonight?\nJack: That sounds great, but I have to finish my science project. Maybe next time.\n\nAccording to the dialogue, Jack ---- Tom's invitation.",
+      "options": {
+        "A": "accepts",
+        "B": "refuses",
+        "C": "ignores",
+        "D": "forgets"
+      },
+      "correct_answer": "B",
+      "subject": "İngilizce",
+      "question_number": 8
+    },
+    {
+      "question_text": "Complete the sentence:\n\nMy sister is a very ---- person. She never changes her mind and always does what she wants.",
+      "options": {
+        "A": "helpful",
+        "B": "stubborn",
+        "C": "generous",
+        "D": "laid-back"
+      },
+      "correct_answer": "B",
+      "subject": "İngilizce",
+      "question_number": 9
+    },
+    {
+      "question_text": "Which of the following is related to cooking terms?",
+      "options": {
+        "A": "Bake, boil, steam, fry",
+        "B": "Loud, noisy, rhythmic, soft",
+        "C": "Stubborn, honest, polite, helpful",
+        "D": "Sender, receiver, message, letter"
+      },
+      "correct_answer": "A",
+      "subject": "İngilizce",
+      "question_number": 10
+    }
+  ]
+}

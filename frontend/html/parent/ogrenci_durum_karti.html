@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Öğrenci Gelişim Durumu | Veli Sistemi</title>
+    <!-- Premium Google Fonts & Chart.js -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #0f172a;        /* Slate 900 */
+            --primary-light: #1e293b;  /* Slate 800 */
+            --accent: #3b82f6;         /* Neon Blue */
+            --accent-purple: #8b5cf6;  /* Royal Purple */
+            --bg-body: #f8fafc;        /* Slate 50 */
+            --white: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+            --shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.08), 0 2px 8px -1px rgba(15, 23, 42, 0.04);
+            --gradient: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            --glass: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(226, 232, 240, 0.8);
+        }
+
+        body { 
+            font-family: 'Outfit', sans-serif; 
+            background: var(--bg-body); 
+            padding: 20px; 
+            color: var(--text-main); 
+            margin: 0; 
+            min-height: 100vh;
+        }
+        
+        .container { max-width: 1200px; margin: 0 auto; }
+
+        .back-link { 
+            text-decoration: none; 
+            color: var(--accent); 
+            font-weight: 700; 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 5px; 
+            margin-bottom: 20px; 
+            font-size: 0.95rem;
+            transition: transform 0.2s;
+        }
+        .back-link:hover {
+            transform: translateX(-3px);
+        }
+
+        /* Profile & Target Header */
+        .profile-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            margin-bottom: 25px;
+            border: 1px solid var(--glass-border);
+        }
+        .target-header { margin-bottom: 1.5rem; text-align: center; }
+        .target-label { 
+            display: block; 
+            font-size: 0.8rem; 
+            text-transform: uppercase; 
+            color: var(--text-muted); 
+            font-weight: 800; 
+            letter-spacing: 2px; 
+        }
+        .target-value { 
+            font-size: 2.6rem; 
+            font-weight: 900; 
+            color: var(--primary); 
+            margin: 5px 0 0; 
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            width: 100%;
+            padding-top: 1.5rem;
+            border-top: 1px solid #f1f5f9;
+            text-align: center;
+        }
+        .info-item label { 
+            display: block; 
+            font-size: 0.75rem; 
+            text-transform: uppercase; 
+            color: var(--text-muted); 
+            font-weight: 700; 
+            margin-bottom: 5px; 
+        }
+        .info-item span { font-size: 1.2rem; font-weight: 700; color: var(--text-main); }
+
+        /* AI Performance Hero Panel */
+        .ai-hero-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--glass-border);
+            padding: 2rem;
+            margin-bottom: 25px;
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 30px;
+        }
+        @media (max-width: 992px) {
+            .ai-hero-card { grid-template-columns: 1fr; }
+        }
+
+        .chart-container {
+            position: relative;
+            min-height: 280px;
+        }
+
+        .ai-analysis-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: linear-gradient(180deg, #f8fafc 0%, #eff6ff 100%);
+            border: 1.5px solid #dbeafe;
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .ai-analysis-container::before {
+            content: "🤖";
+            position: absolute;
+            top: -15px;
+            right: -10px;
+            font-size: 5rem;
+            opacity: 0.08;
+        }
+        .ai-analysis-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .ai-pulse-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+            animation: pulse 1.6s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(59, 130, 246, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+        }
+        .ai-analysis-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .ai-analysis-text {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--primary-light);
+            margin: 0;
+            font-weight: 500;
+        }
+
+        /* Content Grid */
+        .content-grid { display: grid; grid-template-columns: 1.8fr 1fr; gap: 25px; }
+        @media (max-width: 992px) { .content-grid { grid-template-columns: 1fr; } }
+
+        .section-card { 
+            background: var(--white); 
+            padding: 1.75rem; 
+            border-radius: var(--radius-lg); 
+            box-shadow: var(--shadow); 
+            margin-bottom: 25px; 
+            border: 1px solid var(--glass-border);
+        }
+        h3 { 
+            color: var(--primary); 
+            font-size: 1.2rem; 
+            font-weight: 800; 
+            margin-top: 0; 
+            margin-bottom: 1.25rem; 
+            border-bottom: 1.5px solid #f1f5f9; 
+            padding-bottom: 10px; 
+        }
+
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; color: var(--text-muted); font-size: 0.8rem; padding: 10px; border-bottom: 2px solid #f1f5f9; text-transform: uppercase; }
+        td { padding: 12px 10px; border-bottom: 1px solid #f1f5f9; font-size: 0.95rem; font-weight: 500; }
+        tr:last-child td { border-bottom: none; }
+
+        .score-badge { background: #eff6ff; color: var(--accent); padding: 4px 10px; border-radius: 6px; font-weight: 800; border: 1px solid #dbeafe; }
+        .status-badge { padding: 4px 10px; border-radius: 20px; font-size: 0.78rem; font-weight: 700; display: inline-block; }
+        .status-completed { background: #dcfce7; color: var(--success); }
+        .status-pending { background: #fef3c7; color: var(--warning); }
+
+        /* AI Advisor Panel */
+        .ai-card {
+            background: linear-gradient(180deg, #ffffff 0%, #f0f4ff 100%);
+            border: 2px solid #dbeafe;
+        }
+        .ai-advisor-badge {
+            background: var(--gradient); color: white; padding: 8px 12px; border-radius: 6px;
+            font-weight: bold; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(139, 92, 246, 0.2);
+        }
+        .ai-content {
+            background: var(--white); padding: 1.25rem; border-radius: 8px;
+            border-left: 4px solid var(--accent-purple); margin-bottom: 15px; box-shadow: var(--shadow);
+            font-size: 0.95rem; line-height: 1.5; font-weight: 500;
+        }
+
+        /* Attendance Stats */
+        .attendance-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .attendance-box { padding: 15px 10px; border-radius: var(--radius-md); text-align: center; font-weight: bold; }
+        .att-present { background: #dcfce7; color: var(--success); border: 1px solid #bbf7d0; }
+        .att-absent { background: #fee2e2; color: var(--danger); border: 1px solid #fecaca; }
+        .att-late { background: #fef3c7; color: var(--warning); border: 1px solid #fde68a; }
+        .att-val { font-size: 1.8rem; display: block; font-weight: 900; }
+
+        /* Note Feed */
+        .note-item {
+            background: #f8fafc; padding: 12px 15px; border-radius: var(--radius-sm);
+            border: 1px solid #e2e8f0; margin-bottom: 10px;
+        }
+        .note-date { font-size: 0.75rem; color: var(--text-muted); display: block; margin-top: 5px; font-weight: 600; }
+    </style>
+    <script src="/js/config.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <a href="dashboard.html" class="back-link">← Veli Paneline Dön</a>
+
+    <!-- Profile & Target Header -->
+    <div class="profile-card">
+        <div class="target-header">
+            <span class="target-label">Çocuğumun LGS Hedefi</span>
+            <h1 id="target-exam-large" class="target-value">...</h1>
+        </div>
+        <div class="info-grid">
+            <div class="info-item"><label>Öğrenci Adı</label><span id="student-name">...</span></div>
+            <div class="info-item"><label>Okulu & Sınıfı</label><span id="student-grade">...</span></div>
+            <div class="info-item"><label>Hedef LGS Dilimi</label><span id="target-percentile">...</span></div>
+        </div>
+    </div>
+
+    <!-- AI Hero Card with Chart & Advisor Analysis -->
+    <div class="ai-hero-card">
+        <div>
+            <h3 style="border:none; margin-bottom:5px;">📈 LGS Deneme Sınavları Gelişim Grafiği</h3>
+            <span style="font-size:0.8rem; color:var(--text-muted); font-weight:600; display:block; margin-bottom:15px;">Öğrencinin hedefe giden yoldaki başarı eğrisi</span>
+            <div class="chart-container">
+                <canvas id="mockExamsChart"></canvas>
+            </div>
+        </div>
+        <div class="ai-analysis-container">
+            <div class="ai-analysis-header">
+                <div class="ai-pulse-dot"></div>
+                <div class="ai-analysis-title">Rehber Durum Analizi</div>
+            </div>
+            <p id="ai-analysis-text" class="ai-analysis-text">
+                Öğrencimizin performans verileri inceleniyor, durum analizi raporu hazırlanıyor...
+            </p>
+        </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="content-grid">
+        
+        <!-- Left Column (Academic Data) -->
+        <div>
+            <!-- School Grades -->
+            <div class="section-card">
+                <h3>🏫 Okul Ders Yazılı Notları</h3>
+                <table>
+                    <thead>
+                        <tr><th>Ders</th><th>Sınav Türü</th><th>Puan</th><th>Tarih</th></tr>
+                    </thead>
+                    <tbody id="school-grades-table">
+                        <tr><td colspan="4" style="text-align:center; color:var(--text-muted)">Yükleniyor...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Homework Status -->
+            <div class="section-card">
+                <h3>📚 Dershane Ödev Takibi</h3>
+                <table>
+                    <thead>
+                        <tr><th>Ödev Başlığı</th><th>Ders</th><th>Durum</th><th>Başarı Puanı</th></tr>
+                    </thead>
+                    <tbody id="assignments-table">
+                        <tr><td colspan="4" style="text-align:center; color:var(--text-muted)">Yükleniyor...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Reviews & Certs Grid -->
+            <div style="display: grid; grid-template-columns: 1.1fr 1fr; gap: 20px;">
+                <!-- Review Chart -->
+                <div class="section-card">
+                    <h3>🕒 Ev Çalışma / Konu Tekrar Dağılımı</h3>
+                    <div style="position:relative; max-height:220px;">
+                        <canvas id="studyReviewsChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Certificates -->
+                <div class="section-card">
+                    <h3>🏅 Sertifikalar & Kurslar</h3>
+                    <table>
+                        <thead>
+                            <tr><th>Sertifika / Kurs</th><th>Kurum</th></tr>
+                        </thead>
+                        <tbody id="certs-table">
+                            <tr><td colspan="2" style="text-align:center; color:var(--text-muted)">Yükleniyor...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column (AI Advisor, Attendance & Notes) -->
+        <div>
+            <!-- AI Advisor Weekly Target -->
+            <div class="section-card ai-card">
+                <div class="ai-advisor-badge">
+                    <span>🤖</span>
+                    <span id="ai-name-badge">Yapay Zeka Rehberi</span>
+                </div>
+                
+                <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 800; margin-bottom: 5px;">Haftalık Çalışma Konusu</div>
+                <h4 id="ai-topic" style="margin: 0 0 10px 0; color: var(--primary); font-size: 1.15rem;">Analiz yapılıyor...</h4>
+                
+                <div class="ai-content">
+                    <p id="ai-guide" style="margin: 0; color: var(--text-main);">Yükleniyor...</p>
+                </div>
+
+                <div style="font-size: 0.82rem; font-weight: 700; text-align: center; padding: 10px; border-radius: var(--radius-sm); background: var(--white); border: 1px solid #dbeafe;" id="ai-quiz-status">
+                    <!-- Pekiştirme testi durumu -->
+                </div>
+            </div>
+
+            <!-- Attendance -->
+            <div class="section-card">
+                <h3>📅 Dershane Devamsızlık Durumu</h3>
+                <div class="attendance-summary">
+                    <div class="attendance-box att-present">
+                        <span class="att-val" id="att-present">0</span>
+                        Katılım
+                    </div>
+                    <div class="attendance-box att-absent">
+                        <span class="att-val" id="att-absent">0</span>
+                        Devamsız
+                    </div>
+                    <div class="attendance-box att-late">
+                        <span class="att-val" id="att-late">0</span>
+                        Geç Giriş
+                    </div>
+                </div>
+            </div>
+
+            <!-- Teacher Notes -->
+            <div class="section-card">
+                <h3>👨‍🏫 Öğretmen / Rehber Görüşleri</h3>
+                <div id="notes-container">
+                    <p style="color: var(--text-muted); font-size: 0.9rem; text-align: center;">Öğretmen görüşü bulunmuyor.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+const token = localStorage.getItem("token");
+const params = new URLSearchParams(window.location.search);
+const id = params.get("id"); // Student ID
+
+if (!token || !id) {
+    location.href = "dashboard.html";
+}
+
+// 1. Fetch detailed performance datasets
+fetch(`${window.API_BASE}/api/parent/student/${id}`, {
+    headers: { "Authorization": "Bearer " + token }
+})
+.then(res => {
+    if (!res.ok) throw new Error();
+    return res.json();
+})
+.then(data => {
+    // Profil Info
+    document.getElementById("student-name").innerText = data.student.name;
+    document.getElementById("student-grade").innerText = `${data.student.school} | ${data.student.grade}. Sınıf`;
+    document.getElementById("target-exam-large").innerText = data.target_exam || "LGS";
+    document.getElementById("target-percentile").innerText = `%${data.target_exam === 'LGS' ? '1.2' : '3.5'}`;
+    
+    // AI advisor name update
+    document.getElementById("ai-name-badge").innerText = data.student.ai_advisor_name || "Yapay Zeka Rehberi";
+
+    // Attendance
+    document.getElementById("att-present").innerText = data.attendance.present;
+    document.getElementById("att-absent").innerText = data.attendance.absent;
+    document.getElementById("att-late").innerText = data.attendance.late;
+
+    // School Grades
+    const sTable = document.getElementById("school-grades-table");
+    if (data.school_grades && data.school_grades.length > 0) {
+        sTable.innerHTML = data.school_grades.map(g => `
+            <tr>
+                <td><strong>${g.subject}</strong></td>
+                <td>${g.grade_type}</td>
+                <td><span class="score-badge">${g.score}</span></td>
+                <td>${g.date}</td>
+            </tr>
+        `).join('');
+    } else {
+        sTable.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted)">Yazılı notu yok.</td></tr>`;
+    }
+
+    // Homework Assignments
+    const atable = document.getElementById("assignments-table");
+    if (data.assignments && data.assignments.length > 0) {
+        atable.innerHTML = data.assignments.map(a => `
+            <tr>
+                <td><strong>${a.title}</strong></td>
+                <td>${a.subject}</td>
+                <td><span class="status-badge ${a.status === 'completed' ? 'status-completed' : 'status-pending'}">${a.status === 'completed' ? 'Tamamlandı' : 'Bekliyor'}</span></td>
+                <td>${a.score !== null ? '<b>' + a.score + '</b>' : '-'}</td>
+            </tr>
+        `).join('');
+    } else {
+        atable.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted)">Ödev bulunmuyor.</td></tr>`;
+    }
+
+    // Certificates
+    const cTable = document.getElementById("certs-table");
+    if (data.certificates && data.certificates.length > 0) {
+        cTable.innerHTML = data.certificates.map(c => `
+            <tr>
+                <td><strong>${c.title}</strong></td>
+                <td><span style="font-size:0.8rem; color:var(--text-muted);">${c.issuer}</span></td>
+            </tr>
+        `).join('');
+    } else {
+        cTable.innerHTML = `<tr><td colspan="2" style="text-align:center; color:var(--text-muted)">Sertifika bulunmuyor.</td></tr>`;
+    }
+
+    // Teacher Guidance Notes
+    const nBox = document.getElementById("notes-container");
+    if (data.notes && data.notes.length > 0) {
+        nBox.innerHTML = data.notes.map(n => `
+            <div class="note-item">
+                <p style="margin:0; font-size:0.95rem; font-weight:500;">${n.note_text}</p>
+                <span class="note-date">🕒 ${n.created_at}</span>
+            </div>
+        `).join('');
+    } else {
+        nBox.innerHTML = `<p style="color:var(--text-muted); font-size:0.9rem; text-align:center;">Öğretmen görüş notu bulunmuyor.</p>`;
+    }
+});
+
+// 2. Fetch AI Analysis critique
+fetch(`${window.API_BASE}/api/student/${id}/ai_analysis`, {
+    headers: { "Authorization": "Bearer " + token }
+})
+.then(res => res.json())
+.then(data => {
+    document.getElementById("ai-analysis-text").innerText = data.analysis;
+});
+
+// 3. Fetch AI Study Plan and Quiz Status
+fetch(`${window.API_BASE}/api/student/${id}/ai_study_plan`, {
+    headers: { "Authorization": "Bearer " + token }
+})
+.then(res => res.json())
+.then(plan => {
+    document.getElementById("ai-topic").innerText = plan.topic;
+    document.getElementById("ai-guide").innerText = plan.study_guide;
+    
+    const qStatus = document.getElementById("ai-quiz-status");
+    if (plan.status === "completed") {
+        qStatus.innerHTML = `<span style="color:var(--success); font-weight:800;">✓ Pekiştirme Testi Tamamlandı (Puan: %${plan.quiz_score || 100})</span>`;
+    } else {
+        qStatus.innerHTML = `<span style="color:var(--warning); font-weight:800;">⌛ Pekiştirme Testi Tamamlanmayı Bekliyor</span>`;
+    }
+});
+
+// 4. Fetch and render Chart.js progress lines and study breakdowns
+fetch(`${window.API_BASE}/api/student/${id}/ai_chart_data`, {
+    headers: { "Authorization": "Bearer " + token }
+})
+.then(res => res.json())
+.then(chartData => {
+    // Line Chart (Practice exams scores)
+    const examLabels = chartData.exams.map(e => e.name);
+    const examScores = chartData.exams.map(e => e.score);
+    const targetScore = 475; 
+
+    const ctx1 = document.getElementById("mockExamsChart").getContext("2d");
+    new Chart(ctx1, {
+        type: 'line',
+        data: {
+            labels: examLabels,
+            datasets: [
+                {
+                    label: 'Deneme Puanı',
+                    data: examScores,
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.08)',
+                    borderWidth: 3,
+                    pointBackgroundColor: '#2563eb',
+                    pointBorderColor: '#fff',
+                    pointRadius: 6,
+                    fill: true,
+                    tension: 0.35
+                },
+                {
+                    label: 'LGS Hedef Çizgisi',
+                    data: Array(examLabels.length).fill(targetScore),
+                    borderColor: '#f59e0b',
+                    borderDash: [6, 6],
+                    borderWidth: 2,
+                    pointRadius: 0,
+                    fill: false
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { labels: { font: { family: 'Outfit', weight: '600' } } }
+            },
+            scales: {
+                x: { ticks: { font: { family: 'Outfit', weight: '500' } }, grid: { display: false } },
+                y: { min: 240, max: 500, ticks: { font: { family: 'Outfit', weight: '500' } } }
+            }
+        }
+    });
+
+    // Doughnut Chart (Study topic durations)
+    const reviewLabels = chartData.reviews.map(r => r.subject);
+    const reviewDurations = chartData.reviews.map(r => r.duration);
+
+    const ctx2 = document.getElementById("studyReviewsChart").getContext("2d");
+    new Chart(ctx2, {
+        type: 'doughnut',
+        data: {
+            labels: reviewLabels,
+            datasets: [{
+                data: reviewDurations,
+                backgroundColor: ['#3b82f6', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444'],
+                borderWidth: 2,
+                borderColor: '#ffffff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'right', labels: { font: { family: 'Outfit', weight: '600' } } }
+            },
+            cutout: '60%'
+        }
+    });
+});
+</script>
+</body>
+</html>

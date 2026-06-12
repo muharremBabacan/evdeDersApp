@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ödev Oluştur | Dershane Sistemi</title>
+    <style>
+        :root {
+            --primary: #1a237e;
+            --secondary: #3949ab;
+            --bg-body: #f1f5f9;
+            --white: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --radius: 12px;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .form-card {
+            background: var(--white);
+            padding: 2.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 550px;
+        }
+
+        h2 {
+            color: var(--primary);
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Form Düzeni */
+        .grid-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .full-width { grid-column: span 2; }
+
+        .form-group { margin-bottom: 1rem; }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: all 0.2s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 4px rgba(57, 73, 171, 0.1);
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 1.5rem;
+            transition: background 0.2s;
+        }
+
+        button:hover { background-color: var(--secondary); }
+
+        #msg {
+            text-align: center;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            color: var(--text-main);
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 1rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+        }
+    </style>
+    <script src="/js/config.js"></script>
+</head>
+<body>
+
+<div class="form-card">
+    <h2>📝 Yeni Görev Tanımla</h2>
+    
+    <form id="form" class="grid-form">
+        <div class="form-group full-width">
+            <label>Ödev / Test Başlığı</label>
+            <input type="text" id="title" placeholder="Örn: Limit ve Türev Çalışma Soruları" required>
+        </div>
+
+        <div class="form-group">
+            <label>Tür</label>
+            <select id="type">
+                <option value="homework">🏠 Ödev</option>
+                <option value="test">📝 Test / Deneme</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Zorluk Seviyesi</label>
+            <select id="difficulty">
+                <option value="easy">Kolay</option>
+                <option value="medium" selected>Orta</option>
+                <option value="hard">Zor</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Konu</label>
+            <input type="text" id="subject" placeholder="Örn: Matematik" required>
+        </div>
+
+        <div class="form-group">
+            <label>Son Teslim Tarihi</label>
+            <input type="date" id="due_date">
+        </div>
+
+        <div class="full-width">
+            <button type="submit">Devam Et: Soru Ekle →</button>
+        </div>
+    </form>
+
+    <p id="msg"></p>
+    <a href="dashboard.html" class="back-link">Vazgeç ve Listeye Dön</a>
+</div>
+
+<script>
+const token = localStorage.getItem("token");
+if (!token) {
+    alert("Giriş yetkiniz bulunmuyor.");
+    location.href = "/";
+}
+
+document.getElementById("form").onsubmit = async (e) => {
+    e.preventDefault();
+    const msg = document.getElementById("msg");
+    const submitBtn = e.target.querySelector("button");
+
+    msg.innerText = "Kaydediliyor...";
+    submitBtn.disabled = true;
+
+    try {
+        const res = await fetch(window.API_BASE + "/api/teacher/assignments", {
+            method: "POST",
+            headers: {
+                "Authorization": "Bearer " + token,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                title: document.getElementById("title").value,
+                type: document.getElementById("type").value,
+                subject: document.getElementById("subject").value,
+                difficulty: document.getElementById("difficulty").value,
+                due_date: document.getElementById("due_date").value
+            })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            msg.innerText = "Hata: " + (data.error || "Sunucu hatası");
+            msg.style.color = "red";
+            submitBtn.disabled = false;
+            return;
+        }
+
+        // Başarılı ise Soru Ekleme sayfasına yönlendir
+        location.href = `assignment_questions.html?id=${data.assignment_id}`;
+    } catch (err) {
+        msg.innerText = "Bağlantı hatası!";
+        msg.style.color = "red";
+        submitBtn.disabled = false;
+    }
+};
+</script>
+
+</body>
+</html>

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Pekiştirme Testi | Dershane Sistemi</title>
+    <style>
+        :root {
+            --primary: #1a237e;
+            --secondary: #3949ab;
+            --bg-body: #f8fafc;
+            --white: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --border: #e2e8f0;
+            --radius: 12px;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .quiz-card {
+            background: var(--white);
+            padding: 2.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 650px;
+        }
+
+        h2 {
+            color: var(--primary);
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .topic-badge {
+            background: #eef2ff;
+            color: var(--secondary);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: 800;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .question-box {
+            background: #f8fafc;
+            padding: 1.25rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+
+        .question-text {
+            font-weight: 700;
+            margin-bottom: 15px;
+            font-size: 1.05rem;
+        }
+
+        .option-label {
+            display: block;
+            background: var(--white);
+            padding: 10px 15px;
+            border: 1.5px solid var(--border);
+            border-radius: 6px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .option-label:hover {
+            border-color: var(--secondary);
+            background: #f0f4ff;
+        }
+
+        .option-label input {
+            margin-right: 10px;
+        }
+
+        .option-label.selected {
+            border-color: var(--primary);
+            background: #e8eaf6;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            margin-top: 10px;
+        }
+        button:hover { opacity: 0.9; }
+
+        .result-box {
+            display: none;
+            text-align: center;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .result-pass { background: #dcfce7; border: 1px solid #bbf7d0; color: #166534; }
+        .result-fail { background: #fee2e2; border: 1px solid #fecaca; color: #991b1b; }
+        
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 1.5rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+    </style>
+    <script src="/js/config.js"></script>
+</head>
+<body>
+
+<div class="quiz-card">
+    <h2 id="ai-advisor-header">🤖 Yapay Zeka Rehberi Testi</h2>
+    <div class="topic-badge" id="plan-topic">Konu Yükleniyor...</div>
+
+    <div id="quiz-questions-container">
+        <!-- Sorular buraya yüklenecek -->
+    </div>
+
+    <button onclick="submitQuiz()" id="submitBtn">Cevapları Gönder</button>
+
+    <div id="resultBox" class="result-box">
+        <span id="resultIcon" style="font-size: 3rem; display: block; margin-bottom: 10px;">🎉</span>
+        <h3 id="resultTitle">Tebrikler!</h3>
+        <p id="resultFeedback" style="font-size: 1rem; line-height: 1.5; font-weight: 500;"></p>
+        <button onclick="goBack()" style="margin-top: 15px; background: var(--primary);">Panele Dön</button>
+    </div>
+
+    <a href="dashboard.html" class="back-link">Vazgeç ve Vazgeç</a>
+</div>
+
+<script>
+const token = localStorage.getItem("token");
+const params = new URLSearchParams(window.location.search);
+const studentId = params.get("student_id");
+const planId = params.get("plan_id");
+
+let questionsData = [];
+
+if (!token || !studentId || !planId) {
+    location.href = "dashboard.html";
+}
+
+// 1. Pekiştirme Testi Sorularını Çek
+fetch(`${window.API_BASE}/api/student/${studentId}/ai_study_plan`, {
+    headers: { "Authorization": "Bearer " + token }
+})
+.then(res => res.json())
+.then(plan => {
+    document.getElementById("ai-advisor-header").innerText = `🤖 ${plan.ai_advisor_name || 'Yapay Zeka Rehberi'} Testi`;
+    document.getElementById("plan-topic").innerText = plan.topic;
+    
+    questionsData = plan.quiz_questions;
+    
+    const container = document.getElementById("quiz-questions-container");
+    container.innerHTML = plan.quiz_questions.map((q, qIdx) => `
+        <div class="question-box">
+            <div class="question-text">${qIdx + 1}. ${q.question}</div>
+            <div class="options-container">
+                ${q.options.map((opt, optIdx) => `
+                    <label class="option-label" id="label-q${qIdx}-o${optIdx}">
+                        <input type="radio" name="question-${qIdx}" value="${opt}" onchange="selectOption(${qIdx}, ${optIdx})">
+                        ${opt}
+                    </label>
+                `).join('')}
+            </div>
+        </div>
+    `).join('');
+});
+
+function selectOption(qIdx, optIdx) {
+    // Aynı sorunun diğer seçeneklerindeki "selected" classını kaldır
+    const radioButtons = document.getElementsByName(`question-${qIdx}`);
+    radioButtons.forEach((btn, idx) => {
+        const lbl = document.getElementById(`label-q${qIdx}-o${idx}`);
+        if (lbl) {
+            lbl.classList.remove("selected");
+        }
+    });
+    
+    // Seçilen seçeneğe "selected" classı ekle
+    const selectedLbl = document.getElementById(`label-q${qIdx}-o${optIdx}`);
+    if (selectedLbl) {
+        selectedLbl.classList.add("selected");
+    }
+}
+
+async function submitQuiz() {
+    const answers = [];
+    const errorMsg = [];
+    
+    // Cevapları topla
+    questionsData.forEach((q, qIdx) => {
+        const selected = document.querySelector(`input[name="question-${qIdx}"]:checked`);
+        if (!selected) {
+            errorMsg.push(qIdx + 1);
+        } else {
+            answers.push(selected.value);
+        }
+    });
+    
+    if (errorMsg.length > 0) {
+        alert(`Lütfen şu soruları boş bırakmayın: ${errorMsg.join(', ')}`);
+        return;
+    }
+    
+    const submitBtn = document.getElementById("submitBtn");
+    submitBtn.disabled = true;
+    submitBtn.innerText = "Gönderiliyor...";
+    
+    try {
+        const res = await fetch(`${window.API_BASE}/api/student/${studentId}/ai_study_plan/submit`, {
+            method: "POST",
+            headers: {
+                "Authorization": "Bearer " + token,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                plan_id: planId,
+                answers: answers
+            })
+        });
+        
+        const result = await res.json();
+        
+        if (!res.ok) {
+            alert(result.error || "Gönderim başarısız.");
+            submitBtn.disabled = false;
+            submitBtn.innerText = "Cevapları Gönder";
+            return;
+        }
+        
+        // Arayüzü güncelle ve sonucu göster
+        document.getElementById("quiz-questions-container").style.display = "none";
+        submitBtn.style.display = "none";
+        
+        const rBox = document.getElementById("resultBox");
+        const rIcon = document.getElementById("resultIcon");
+        const rTitle = document.getElementById("resultTitle");
+        const rFeedback = document.getElementById("resultFeedback");
+        
+        rBox.style.display = "block";
+        rFeedback.innerText = result.feedback;
+        
+        if (result.passed) {
+            rBox.className = "result-box result-pass";
+            rIcon.innerText = "🎉";
+            rTitle.innerText = "Başarı Tamamlandı!";
+        } else {
+            rBox.className = "result-box result-fail";
+            rIcon.innerText = "⚠️";
+            rTitle.innerText = "Tekrar Çalışmalısın";
+        }
+        
+    } catch (err) {
+        console.error(err);
+        alert("Bağlantı hatası!");
+        submitBtn.disabled = false;
+        submitBtn.innerText = "Cevapları Gönder";
+    }
+}
+
+function goBack() {
+    location.href = "dashboard.html";
+}
+</script>
+</body>
+</html>

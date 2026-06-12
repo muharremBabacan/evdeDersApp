@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LGS Sınav Modu | AI Dershane Sistemi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f172a;
+            --primary-light: #1e293b;
+            --accent: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --bg-body: #f8fafc;
+            --white: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+            --shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.1), 0 8px 10px -6px rgba(15, 23, 42, 0.05);
+            --gradient: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            --glass-border: rgba(226, 232, 240, 0.8);
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            width: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Bar */
+        .exam-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--white);
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .exam-title-box h2 {
+            margin: 0;
+            font-size: 1.3rem;
+            font-weight: 800;
+        }
+        .exam-title-box span {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Timer Area */
+        .timer-box {
+            background: #fef2f2;
+            border: 1.5px solid #fee2e2;
+            color: var(--danger);
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            font-weight: 800;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: 1.5px;
+        }
+        .timer-box.warning {
+            animation: blink 1s infinite alternate;
+        }
+        @keyframes blink {
+            0% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+
+        /* Layout Main Grid */
+        .exam-grid {
+            display: grid;
+            grid-template-columns: 1fr 2.8fr;
+            gap: 20px;
+            flex: 1;
+        }
+        @media (max-width: 768px) {
+            .exam-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Left Sidebar: Question Navigator */
+        .sidebar-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 1.25rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .navigator-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            max-height: 250px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+        .nav-item {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid #cbd5e1;
+            background: var(--white);
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .nav-item:hover { border-color: var(--accent); }
+        .nav-item.current { border-color: var(--accent-purple); background: #f3e8ff; color: var(--accent-purple); box-shadow: 0 0 0 2px var(--accent-purple); }
+        .nav-item.answered { background: #dcfce7; border-color: var(--success); color: var(--success); }
+        .nav-item.blank { background: var(--white); border-color: #cbd5e1; }
+
+        /* Right Panel: Question Viewer */
+        .question-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 2.25rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1.5px solid #f1f5f9;
+            padding-bottom: 10px;
+        }
+        .question-meta {
+            font-size: 0.8rem;
+            font-weight: 800;
+            background: #eff6ff;
+            color: var(--accent);
+            padding: 4px 10px;
+            border-radius: 6px;
+            text-transform: uppercase;
+        }
+
+        .question-text {
+            font-size: 1.15rem;
+            font-weight: 700;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            color: var(--primary-light);
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+        .option-btn {
+            display: flex;
+            align-items: center;
+            background: var(--white);
+            border: 2px solid #e2e8f0;
+            padding: 14px 18px;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1rem;
+            font-weight: 500;
+            text-align: left;
+            width: 100%;
+        }
+        .option-btn:hover {
+            border-color: var(--accent);
+            background: #f0f7ff;
+        }
+        .option-btn.selected {
+            border-color: var(--accent-purple);
+            background: #f3e8ff;
+            font-weight: 700;
+            color: var(--accent-purple);
+        }
+        .option-letter {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid currentColor;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+
+        /* Navigation Buttons */
+        .controls-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1.5px solid #f1f5f9;
+            padding-top: 20px;
+        }
+        .btn-nav {
+            background: var(--white);
+            color: var(--text-main);
+            border: 1.5px solid #cbd5e1;
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Outfit', sans-serif;
+        }
+        .btn-nav:hover:not(:disabled) {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .btn-nav:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .btn-submit-exam {
+            background: var(--gradient);
+            color: var(--white);
+            border: none;
+            padding: 12px 28px;
+            border-radius: var(--radius-sm);
+            font-weight: 800;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
+            transition: all 0.2s;
+            font-family: 'Outfit', sans-serif;
+        }
+        .btn-submit-exam:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        /* Results Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+        .modal-content {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 580px;
+            box-shadow: var(--shadow);
+            padding: 2.25rem;
+            border: 1px solid var(--glass-border);
+            text-align: center;
+        }
+        .score-circle-box {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .score-circle {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: var(--gradient);
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
+        }
+        .score-num { font-size: 2.2rem; font-weight: 900; line-height: 1; }
+        .score-lbl { font-size: 0.75rem; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; margin-top: 3px; opacity: 0.9; }
+
+        .result-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .result-stat-box {
+            padding: 12px;
+            border-radius: var(--radius-md);
+            font-weight: 800;
+            font-size: 0.9rem;
+        }
+        .stat-correct { background: #dcfce7; color: var(--success); }
+        .stat-wrong { background: #fee2e2; color: var(--danger); }
+        .stat-blank { background: #f1f5f9; color: var(--text-muted); }
+        .stat-val { font-size: 1.4rem; display: block; font-weight: 900; }
+
+        .btn-modal-close {
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            padding: 12px 30px;
+            border-radius: var(--radius-sm);
+            font-weight: 800;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            font-family: 'Outfit', sans-serif;
+            transition: background 0.2s;
+        }
+        .btn-modal-close:hover { background: var(--accent); }
+    </style>
+    <script src="/js/config.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <!-- Top Bar -->
+    <div class="exam-header">
+        <div class="exam-title-box">
+            <span id="exam-session-badge">Sayısal Bölüm</span>
+            <h2 id="exam-name-header">LGS Mock Exam</h2>
+        </div>
+        <div style="display:flex; gap:15px; align-items:center;">
+            <!-- Fast solver button for testing purposes -->
+            <button onclick="fastExamFill()" style="background:#f1f5f9; border:none; padding:6px 12px; border-radius:6px; font-weight:700; font-size:0.75rem; cursor:pointer;">Hızlı Doldur (Test)</button>
+            <div class="timer-box" id="timerBox">
+                ⏱️ <span id="timerVal">80:00</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Exam Layout Grid -->
+    <div class="exam-grid">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar-card">
+            <h4 style="margin:0; font-weight:800; font-size:0.9rem; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted)">Soru Listesi</h4>
+            <div class="navigator-grid" id="questionNavGrid">
+                <!-- Nav buttons injected here -->
+            </div>
+            
+            <div style="margin-top: 10px; font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">
+                <div>🟢 Çözüldü</div>
+                <div style="margin-top: 4px;">⚪ Boş Bırakıldı / Bekliyor</div>
+            </div>
+        </div>
+
+        <!-- Question Body Viewer -->
+        <div class="question-card">
+            <div>
+                <div class="question-header">
+                    <span class="question-meta" id="questionNumLabel">Soru 1/10</span>
+                    <span id="questionSubjectLabel" style="font-weight:700; font-size:0.9rem; color:var(--text-muted);">Matematik</span>
+                </div>
+                
+                <div class="question-text" id="questionText">
+                    Soru yükleniyor...
+                </div>
+
+                <div class="options-list">
+                    <button class="option-btn" onclick="selectOption('A')">
+                        <span class="option-letter">A</span> <span id="optLabelA">...</span>
+                    </button>
+                    <button class="option-btn" onclick="selectOption('B')">
+                        <span class="option-letter">B</span> <span id="optLabelB">...</span>
+                    </button>
+                    <button class="option-btn" onclick="selectOption('C')">
+                        <span class="option-letter">C</span> <span id="optLabelC">...</span>
+                    </button>
+                    <button class="option-btn" onclick="selectOption('D')">
+                        <span class="option-letter">D</span> <span id="optLabelD">...</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Controls bar -->
+            <div class="controls-bar">
+                <div>
+                    <button class="btn-nav" id="btnPrev" onclick="navigateQuestion(-1)" disabled>← Önceki</button>
+                    <button class="btn-nav" style="margin-left: 8px;" onclick="selectOption('')">Boş Bırak</button>
+                    <button class="btn-nav" style="margin-left: 8px;" id="btnNext" onclick="navigateQuestion(1)">Sonraki →</button>
+                </div>
+                <button class="btn-submit-exam" onclick="confirmSubmit()">Sınavı Bitir</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Results Modal -->
+<div class="modal-overlay" id="resultsModal">
+    <div class="modal-content">
+        <span style="font-size: 3rem;">🏆</span>
+        <h2 style="margin: 5px 0 0; font-weight:900;">Sınavınız Değerlendirildi</h2>
+        <p style="color:var(--text-muted); font-size:0.9rem; margin-top:5px;" id="modalExamName">2025 LGS Sayısal Çözümü</p>
+        
+        <div class="score-circle-box">
+            <div class="score-circle">
+                <span class="score-num" id="modalLgsScore">0.0</span>
+                <span class="score-lbl">Tahmini LGS</span>
+            </div>
+        </div>
+
+        <div class="result-stats-grid">
+            <div class="result-stat-box stat-correct">
+                <span class="stat-val" id="modalCorrect">0</span>
+                Doğru
+            </div>
+            <div class="result-stat-box stat-wrong">
+                <span class="stat-val" id="modalWrong">0</span>
+                Yanlış
+            </div>
+            <div class="result-stat-box stat-blank">
+                <span class="stat-val" id="modalBlank">0</span>
+                Boş
+            </div>
+        </div>
+        
+        <div id="subjectBreakdowns" style="text-align: left; background:#f8fafc; padding:12px 15px; border-radius:8px; margin-bottom:20px; font-size:0.9rem;">
+            <!-- Net details injected here -->
+        </div>
+
+        <button class="btn-modal-close" onclick="closeModalAndExit()">Panele Geri Dön</button>
+    </div>
+</div>
+
+<script>
+const token = localStorage.getItem("token");
+const params = new URLSearchParams(window.location.search);
+const examFile = params.get("file") || "2025_sayisal.json";
+
+let questionsList = [];
+let currentQuestionIndex = 0;
+let studentAnswers = {}; // question_number -> option (A/B/C/D)
+let durationSeconds = 80 * 60; // default 80 mins
+let timerInterval = null;
+let examSubmitted = false;
+
+if (!token) {
+    location.href = "/";
+}
+
+// 1. Fetch Exam questions
+fetch(`${window.API_BASE}/api/lgs_exams/${examFile}/questions`, {
+    headers: { "Authorization": "Bearer " + token }
+})
+.then(res => {
+    if (!res.ok) throw new Error("Mock exam loading failed.");
+    return res.json();
+})
+.then(data => {
+    document.getElementById("exam-name-header").innerText = data.exam_name;
+    document.getElementById("exam-session-badge").innerText = examFile.includes("sozel") ? "Sözel Bölüm (75 Dk)" : "Sayısal Bölüm (80 Dk)";
+    
+    questionsList = data.questions;
+    durationSeconds = data.duration_minutes * 60;
+    
+    // Initialize question navigator grid
+    const navGrid = document.getElementById("questionNavGrid");
+    navGrid.innerHTML = questionsList.map((q, idx) => `
+        <button class="nav-item" id="navItem-${idx}" onclick="jumpToQuestion(${idx})">${idx + 1}</button>
+    `).join('');
+    
+    // Start countdown timer
+    startCountdown();
+    
+    // Load first question
+    displayQuestion(0);
+})
+.catch(err => {
+    alert("Sınav dosyası yüklenemedi!");
+    location.href = "dashboard.html";
+});
+
+// Countdown timer function
+function startCountdown() {
+    updateTimerText();
+    timerInterval = setInterval(() => {
+        durationSeconds--;
+        updateTimerText();
+        
+        // Warnings when under 5 minutes
+        if (durationSeconds <= 300) {
+            document.getElementById("timerBox").classList.add("warning");
+        }
+        
+        if (durationSeconds <= 0) {
+            clearInterval(timerInterval);
+            alert("Sınav süreniz dolmuştur! Cevaplarınız otomatik olarak gönderiliyor.");
+            submitExamAnswers();
+        }
+    }, 1000);
+}
+
+function updateTimerText() {
+    const mins = Math.floor(durationSeconds / 60);
+    const secs = durationSeconds % 60;
+    document.getElementById("timerVal").innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+}
+
+// Display specific question
+function displayQuestion(idx) {
+    currentQuestionIndex = idx;
+    const q = questionsList[idx];
+    
+    // Update active navigator selection
+    document.querySelectorAll(".nav-item").forEach(item => item.classList.remove("current"));
+    document.getElementById(`navItem-${idx}`).classList.add("current");
+    
+    // Update headers
+    document.getElementById("questionNumLabel").innerText = `Soru ${idx + 1}/${questionsList.length}`;
+    document.getElementById("questionSubjectLabel").innerText = q.subject;
+    
+    // Update question body
+    document.getElementById("questionText").innerText = q.question_text;
+    document.getElementById("optLabelA").innerText = q.options.A;
+    document.getElementById("optLabelB").innerText = q.options.B;
+    document.getElementById("optLabelC").innerText = q.options.C;
+    document.getElementById("optLabelD").innerText = q.options.D;
+    
+    // Render selected option
+    const savedAns = studentAnswers[q.question_number] || "";
+    document.querySelectorAll(".option-btn").forEach(btn => btn.classList.remove("selected"));
+    
+    if (savedAns) {
+        document.querySelectorAll(".option-btn").forEach(btn => {
+            if (btn.querySelector(".option-letter").innerText === savedAns) {
+                btn.classList.add("selected");
+            }
+        });
+    }
+    
+    // Toggle nav buttons
+    document.getElementById("btnPrev").disabled = (idx === 0);
+    document.getElementById("btnNext").disabled = (idx === questionsList.length - 1);
+}
+
+function selectOption(letter) {
+    const q = questionsList[currentQuestionIndex];
+    const navItem = document.getElementById(`navItem-${currentQuestionIndex}`);
+    
+    if (letter === "") {
+        // Clear selection
+        delete studentAnswers[q.question_number];
+        navItem.classList.remove("answered");
+        document.querySelectorAll(".option-btn").forEach(btn => btn.classList.remove("selected"));
+    } else {
+        studentAnswers[q.question_number] = letter;
+        navItem.classList.add("answered");
+        
+        document.querySelectorAll(".option-btn").forEach(btn => {
+            btn.classList.remove("selected");
+            if (btn.querySelector(".option-letter").innerText === letter) {
+                btn.classList.add("selected");
+            }
+        });
+    }
+}
+
+function navigateQuestion(step) {
+    const newIdx = currentQuestionIndex + step;
+    if (newIdx >= 0 && newIdx < questionsList.length) {
+        displayQuestion(newIdx);
+    }
+}
+
+function jumpToQuestion(idx) {
+    displayQuestion(idx);
+}
+
+// Helper to quickly fill answers for testing
+function fastExamFill() {
+    questionsList.forEach((q, idx) => {
+        const letters = ["A", "B", "C", "D"];
+        const randLetter = letters[Math.floor(Math.random() * letters.length)];
+        studentAnswers[q.question_number] = randLetter;
+        document.getElementById(`navItem-${idx}`).classList.add("answered");
+    });
+    // Refresh display
+    displayQuestion(currentQuestionIndex);
+}
+
+function confirmSubmit() {
+    const totalAnswered = Object.keys(studentAnswers).length;
+    const totalQ = questionsList.length;
+    if (confirm(`Sınavı bitirmek istediğinize emin misiniz?\nToplam Soru: ${totalQ}\nCevaplanan Soru: ${totalAnswered}`)) {
+        submitExamAnswers();
+    }
+}
+
+function submitExamAnswers() {
+    if (examSubmitted) return;
+    examSubmitted = true;
+    clearInterval(timerInterval);
+    
+    const submitBtn = document.querySelector(".btn-submit-exam");
+    submitBtn.disabled = true;
+    submitBtn.innerText = "Hesaplanıyor...";
+    
+    fetch(`${window.API_BASE}/api/lgs_exams/${examFile}/submit`, {
+        method: "POST",
+        headers: {
+            "Authorization": "Bearer " + token,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ answers: studentAnswers })
+    })
+    .then(res => res.json())
+    .then(result => {
+        if (result.error) {
+            alert(result.error);
+            return;
+        }
+        
+        // Show results modal
+        document.getElementById("modalExamName").innerText = result.exam_name;
+        document.getElementById("modalLgsScore").innerText = result.lgs_score;
+        document.getElementById("modalCorrect").innerText = result.total_correct;
+        document.getElementById("modalWrong").innerText = result.total_wrong;
+        document.getElementById("modalBlank").innerText = result.total_blank;
+        
+        // Subject breakdown text
+        const bd = document.getElementById("subjectBreakdowns");
+        let bdHtml = "<strong style='display:block; margin-bottom:5px;'>Ders Bazında Net Raporu:</strong>";
+        for (const [sub, net] of Object.entries(result.subject_nets)) {
+            const stats = result.subject_stats[sub];
+            bdHtml += `<div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                <span>${sub}</span>
+                <strong>${net} Net (${stats.correct}D - ${stats.wrong}Y)</strong>
+            </div>`;
+        }
+        bd.innerHTML = bdHtml;
+        
+        document.getElementById("resultsModal").style.display = "flex";
+    })
+    .catch(err => {
+        console.error(err);
+        alert("Bağlantı hatası! Sınavınız veritabanına kaydedilemedi.");
+        submitBtn.disabled = false;
+        submitBtn.innerText = "Sınavı Bitir";
+    });
+}
+
+function closeModalAndExit() {
+    location.href = "dashboard.html";
+}
+</script>
+
+</body>
+</html>

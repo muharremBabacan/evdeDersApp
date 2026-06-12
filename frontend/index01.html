@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Giriş | Dershane Sistemi</title>
+    <script src="/js/config.js"></script>
+</head>
+<body>
+
+<h2>Giriş</h2>
+
+<form onsubmit="doLogin(event)">
+    <div>
+        <label>Kullanıcı Adı</label><br>
+        <input type="text" id="username" required>
+    </div>
+
+    <div>
+        <label>Şifre</label><br>
+        <input type="password" id="password" required>
+    </div>
+
+    <button type="submit">Giriş</button>
+</form>
+
+<p id="error" style="color:red;"></p>
+
+<script>
+async function doLogin(event) {
+    event.preventDefault();
+
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+    const errorEl = document.getElementById("error");
+
+    errorEl.innerText = "";
+
+    try {
+        const res = await fetch(window.API_BASE + "/api/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ username, password })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            errorEl.innerText = data.error || "Giriş başarısız";
+            return;
+        }
+
+        // 🔐 JWT KAYDET
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user_role", data.role);
+
+        
+
+        // 🔀 ROLE GÖRE YÖNLENDİRME
+        switch (data.role) {
+            case "manager":
+                window.location.href = "html/manager/dashboard.html";
+                break;
+            case "clerk":
+                window.location.href = "html/clerk/dashboard.html";
+                break;
+            case "accounting":
+                window.location.href = "html/accounting/dashboard.html";
+                break;
+            case "teacher":
+                window.location.href = "html/teacher/dashboard.html";
+                break;
+            case "student":
+                window.location.href = "/html/student/dashboard.html";
+                break;
+            case "parent":
+                window.location.href = "html/parent/dashboard.html";
+                break;
+            default:
+                errorEl.innerText = "Tanımsız rol";
+        }
+
+    } catch (err) {
+        errorEl.innerText = "Sunucuya bağlanılamadı";
+        console.error(err);
+    }
+}
+</script>
+
+</body>
+</html>

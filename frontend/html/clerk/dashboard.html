@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memur Dashboard | Dershane Sistemi</title>
+    <style>
+        :root {
+            --primary: #1a237e; --secondary: #3949ab; --bg: #f1f5f9;
+            --white: #ffffff; --text: #1e293b; --radius: 12px;
+        }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header { background: var(--white); padding: 2rem; border-radius: var(--radius); border-top: 8px solid var(--primary); margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .menu-card { 
+            background: var(--white); padding: 2rem; border-radius: var(--radius); text-align: center; 
+            text-decoration: none; color: var(--text); transition: transform 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            display: flex; flex-direction: column; align-items: center; gap: 15px;
+        }
+        .menu-card:hover { transform: translateY(-5px); border-bottom: 4px solid var(--secondary); }
+        .menu-card i { font-size: 2.5rem; color: var(--primary); }
+        .menu-card h3 { margin: 0; font-size: 1.1rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>🏫 Memur Kontrol Paneli</h2>
+            <p>Sistem kayıt ve atama işlemlerini buradan yönetebilirsiniz.</p>
+        </div>
+        <div class="menu-grid">
+            <a href="ogrenci_kayit.html" class="menu-card"><i>👤</i><h3>Öğrenci Kaydı</h3></a>
+            <a href="veli_kayit.html" class="menu-card"><i>👥</i><h3>Veli Kaydı</h3></a>
+            <a href="sinif_atama.html" class="menu-card"><i>📂</i><h3>Sınıf Atama</h3></a>
+            <a href="#" class="menu-card" onclick="localStorage.clear(); location.href='/'"><i>🚪</i><h3>Çıkış Yap</h3></a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Öğrenci Ata | Dershane Sistemi</title>
+    <style>
+        :root {
+            --primary: #1a237e;
+            --secondary: #3949ab;
+            --bg-body: #f1f5f9;
+            --white: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --success: #10b981;
+            --border: #e2e8f0;
+            --radius: 12px;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: var(--white);
+            padding: 2.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+        }
+
+        h2 {
+            color: var(--primary);
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+        
+        p.desc {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .student-select-card {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding: 10px;
+        }
+
+        .student-row {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #f1f5f9;
+            cursor: pointer;
+            transition: background 0.1s;
+        }
+        .student-row:hover {
+            background: #f8fafc;
+        }
+        .student-row input {
+            margin-right: 12px;
+            transform: scale(1.2);
+            cursor: pointer;
+        }
+        .student-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+            flex: 1;
+        }
+        .student-grade {
+            background: #eef2ff;
+            color: var(--secondary);
+            font-size: 0.8rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 700;
+        }
+
+        .select-all-box {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: #f8fafc;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        .select-all-box input {
+            margin-right: 12px;
+            transform: scale(1.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover { background-color: var(--secondary); }
+
+        #msg {
+            text-align: center;
+            margin-top: 15px;
+            font-weight: 600;
+            min-height: 1.2rem;
+        }
+    </style>
+    <script src="/js/config.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <h2>👤 Ödevi Öğrencilere Tanımla</h2>
+    <p class="desc">Bu ödevi çözecek olan öğrencileri listeden seçin ve ödevi yayınlayın.</p>
+
+    <div class="select-all-box" onclick="toggleSelectAll(event)">
+        <input type="checkbox" id="selectAll" onclick="event.stopPropagation(); doToggleAll()">
+        <span>Tüm Öğrencileri Seç</span>
+    </div>
+
+    <div class="student-select-card" id="students-list">
+        <p style="text-align:center; color:var(--text-muted); padding:20px;">Öğrenci listesi yükleniyor...</p>
+    </div>
+
+    <button onclick="assignAndPublish()" id="submitBtn">Ödevi Ata ve Yayınla →</button>
+    <p id="msg"></p>
+</div>
+
+<script>
+const token = localStorage.getItem("token");
+const params = new URLSearchParams(window.location.search);
+const id = params.get("id"); // Assignment ID
+
+if (!token || !id) {
+    location.href = "dashboard.html";
+}
+
+// 1. Öğrenci Listesini Yükle (Öğretmen Dashboard API'sinden çekiyoruz)
+fetch(window.API_BASE + "/api/teacher/dashboard", {
+    headers: { "Authorization": "Bearer " + token }
+})
+.then(res => res.json())
+.then(data => {
+    const list = document.getElementById("students-list");
+    if (data.students && data.students.length > 0) {
+        list.innerHTML = data.students.map(s => `
+            <div class="student-row" onclick="toggleStudentRow(this, ${s.id})">
+                <input type="checkbox" class="student-checkbox" value="${s.id}" onclick="event.stopPropagation()">
+                <span class="student-name">${s.name}</span>
+                <span class="student-grade">${s.grade}. Sınıf</span>
+            </div>
+        `).join('');
+    } else {
+        list.innerHTML = `<p style="text-align:center; color:var(--text-muted); padding:20px;">Atanabilecek öğrenci bulunamadı.</p>`;
+    }
+})
+.catch(err => {
+    console.error(err);
+    document.getElementById("students-list").innerHTML = `<p style="text-align:center; color:red; padding:20px;">Liste yüklenemedi.</p>`;
+});
+
+function toggleStudentRow(rowEl, sId) {
+    const checkbox = rowEl.querySelector("input");
+    checkbox.checked = !checkbox.checked;
+    checkSelectAllState();
+}
+
+function doToggleAll() {
+    const selectAll = document.getElementById("selectAll");
+    const checkboxes = document.querySelectorAll(".student-checkbox");
+    checkboxes.forEach(cb => {
+        cb.checked = selectAll.checked;
+    });
+}
+
+function toggleSelectAll(event) {
+    const selectAll = document.getElementById("selectAll");
+    selectAll.checked = !selectAll.checked;
+    doToggleAll();
+}
+
+function checkSelectAllState() {
+    const checkboxes = document.querySelectorAll(".student-checkbox");
+    const checked = document.querySelectorAll(".student-checkbox:checked");
+    const selectAll = document.getElementById("selectAll");
+    
+    selectAll.checked = (checkboxes.length === checked.length && checkboxes.length > 0);
+}
+
+async function assignAndPublish() {
+    const checked = document.querySelectorAll(".student-checkbox:checked");
+    const studentIds = Array.from(checked).map(cb => parseInt(cb.value));
+    const msg = document.getElementById("msg");
+    const submitBtn = document.getElementById("submitBtn");
+
+    if (studentIds.length === 0) {
+        msg.innerText = "Lütfen en az bir öğrenci seçin!";
+        msg.style.color = "red";
+        return;
+    }
+
+    msg.innerText = "Ödev tanımlanıyor...";
+    msg.style.color = "var(--primary)";
+    submitBtn.disabled = true;
+
+    try {
+        // 1. Ödevi öğrencilere ata
+        const resAssign = await fetch(`${window.API_BASE}/api/teacher/assignments/${id}/students`, {
+            method: "POST",
+            headers: {
+                "Authorization": "Bearer " + token,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ student_ids: studentIds })
+        });
+
+        if (!resAssign.ok) {
+            const errData = await resAssign.json();
+            throw new Error(errData.error || "Öğrenci atama hatası");
+        }
+
+        // 2. Ödevi yayınla
+        const resPublish = await fetch(`${window.API_BASE}/api/teacher/assignments/${id}/publish`, {
+            method: "POST",
+            headers: {
+                "Authorization": "Bearer " + token,
+                "Content-Type": "application/json"
+            }
+        });
+
+        if (!resPublish.ok) {
+            const errData = await resPublish.json();
+            throw new Error(errData.error || "Yayınlama hatası");
+        }
+
+        msg.innerText = "✓ Ödev başarıyla tanımlandı ve yayınlandı! Yönlendiriliyorsunuz...";
+        msg.style.color = "var(--success)";
+
+        setTimeout(() => {
+            location.href = "dashboard.html";
+        }, 2000);
+
+    } catch (err) {
+        msg.innerText = "Hata: " + err.message;
+        msg.style.color = "red";
+        submitBtn.disabled = false;
+    }
+}
+</script>
+</body>
+</html>

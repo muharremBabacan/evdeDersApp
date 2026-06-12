@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cevap Kağıdı İnceleme | Dershane Sistemi</title>
+    <style>
+        :root {
+            --primary: #1a237e;
+            --secondary: #3949ab;
+            --bg-body: #f8fafc;
+            --white: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --border: #e2e8f0;
+            --radius: 12px;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+
+        body { font-family: 'Inter', sans-serif; background: var(--bg-body); padding: 20px; color: var(--text-main); margin: 0; }
+        .container { max-width: 800px; margin: 0 auto; }
+
+        .back-btn { text-decoration: none; color: var(--secondary); font-weight: 700; display: inline-block; margin-bottom: 20px; }
+
+        .submission-card { background: var(--white); padding: 2rem; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 20px; }
+        
+        .header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px; }
+        .header-flex h2 { margin: 0; color: var(--primary); font-size: 1.35rem; }
+
+        .score-circle {
+            width: 80px; height: 80px; line-height: 80px; text-align: center;
+            background: #eef2ff; color: var(--primary); border-radius: 50%;
+            font-size: 1.5rem; font-weight: 900; border: 3px solid var(--secondary);
+        }
+
+        .question-box {
+            background: #f8fafc; padding: 1.25rem; border-radius: 8px;
+            border: 1px solid var(--border); margin-bottom: 15px;
+        }
+        .question-text { font-weight: 700; margin-bottom: 10px; }
+        
+        .answer-comparison {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px;
+        }
+        .answer-block { padding: 10px; border-radius: 6px; font-size: 0.9rem; }
+        .student-ans { background: #fee2e2; border: 1px solid #fecaca; color: #991b1b; }
+        .student-ans.correct { background: #dcfce7; border: 1px solid #bbf7d0; color: #166534; }
+        .correct-ans { background: #e0f2fe; border: 1px solid #bae6fd; color: #0369a1; }
+    </style>
+    <script src="/js/config.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <a href="javascript:history.back()" class="back-btn">← Geri Dön</a>
+
+    <div class="submission-card">
+        <div class="header-flex">
+            <div>
+                <h2 id="student-name">Öğrenci Adı</h2>
+                <p id="assignment-title" style="margin:5px 0 0; color:var(--text-muted); font-weight:600;">Ödev Adı</p>
+                <span id="submit-date" style="font-size:0.8rem; color:var(--text-muted);">Tarih: -</span>
+            </div>
+            <div class="score-circle" id="scoreVal">0</div>
+        </div>
+
+        <h3 style="color:var(--primary); font-size:1.1rem; margin-top:0; margin-bottom:15px;">📝 Soru ve Cevap Detayları</h3>
+        <div id="questions-list">
+            <!-- Sorular buraya yüklenecek -->
+        </div>
+    </div>
+</div>
+
+<script>
+const token = localStorage.getItem("token");
+const params = new URLSearchParams(window.location.search);
+const submissionId = params.get("id"); // Submission ID
+
+if (!token || !submissionId) {
+    location.href = "dashboard.html";
+}
+
+fetch(`${window.API_BASE}/api/teacher/submissions/${submissionId}`, {
+    headers: { "Authorization": "Bearer " + token }
+})
+.then(res => res.json())
+.then(data => {
+    document.getElementById("student-name").innerText = data.student_name;
+    document.getElementById("assignment-title").innerText = data.assignment_title;
+    document.getElementById("submit-date").innerText = `Gönderim Tarihi: ${data.submitted_at}`;
+    document.getElementById("scoreVal").innerText = data.score;
+
+    const list = document.getElementById("questions-list");
+    list.innerHTML = data.questions.map((q, idx) => `
+        <div class="question-box">
+            <div class="question-text">${idx + 1}. ${q.question_text}</div>
+            <div class="answer-comparison">
+                <div class="answer-block ${q.is_correct ? 'student-ans correct' : 'student-ans'}">
+                    <strong style="display:block; font-size:0.75rem; margin-bottom:3px; text-transform:uppercase;">Öğrencinin Cevabı:</strong>
+                    ${q.student_answer || '<i>Boş bırakıldı</i>'}
+                    <span style="float:right;">${q.is_correct ? '✓' : '✗'}</span>
+                </div>
+                <div class="answer-block correct-ans">
+                    <strong style="display:block; font-size:0.75rem; margin-bottom:3px; text-transform:uppercase;">Cevap Anahtarı:</strong>
+                    ${q.correct_answer}
+                </div>
+            </div>
+        </div>
+    `).join('');
+})
+.catch(err => {
+    console.error(err);
+    alert("Cevap kağıdı yüklenemedi.");
+});
+</script>
+</body>
+</html>

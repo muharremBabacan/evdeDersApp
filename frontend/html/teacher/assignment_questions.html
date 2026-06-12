@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soru Ekle | Dershane Sistemi</title>
+    <style>
+        :root {
+            --primary: #1a237e;
+            --secondary: #3949ab;
+            --bg-body: #f1f5f9;
+            --white: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --success: #10b981;
+            --border: #e2e8f0;
+            --radius: 12px;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: var(--white);
+            padding: 2.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        h2 {
+            color: var(--primary);
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        textarea, input {
+            width: 100%;
+            padding: 1rem;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: all 0.2s;
+            margin-bottom: 1.25rem;
+            font-family: inherit;
+        }
+
+        textarea:focus, input:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 4px rgba(57, 73, 171, 0.1);
+        }
+
+        .actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 1rem;
+        }
+
+        .btn-add {
+            flex: 2;
+            padding: 1rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-add:hover { background-color: var(--secondary); }
+
+        .btn-next {
+            flex: 1;
+            padding: 1rem;
+            background-color: var(--success);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn-next:hover { opacity: 0.9; }
+
+        #msg {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-weight: 600;
+            color: var(--success);
+            min-height: 1.2rem;
+        }
+
+        .helper-text {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: -10px;
+            margin-bottom: 15px;
+            display: block;
+        }
+    </style>
+    <script src="/js/config.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <h2>🧩 Soru Ekleme Ekranı</h2>
+    
+    <div>
+        <label class="info-label">Soru Metni</label>
+        <textarea id="question" rows="5" placeholder="Soruyu buraya yazın veya yapıştırın..."></textarea>
+        
+        <label class="info-label">Cevap Anahtarı (Opsiyonel)</label>
+        <input type="text" id="answer" placeholder="Örn: A şıkkı veya Doğru yanıt">
+        <span class="helper-text">Öğrenci bu ödevi çözerken bu cevabı kontrol edebilecek.</span>
+    </div>
+
+    <div class="actions">
+        <button class="btn-add" onclick="add()">➕ Listeye Soru Ekle</button>
+        <button class="btn-next" onclick="next()">İleri: Öğrenci Seç →</button>
+    </div>
+
+    <p id="msg"></p>
+</div>
+
+<script>
+const token = localStorage.getItem("token");
+const params = new URLSearchParams(window.location.search);
+const id = params.get("id");
+
+if (!token) location.href = "/";
+
+function add() {
+    const q = document.getElementById("question");
+    const a = document.getElementById("answer");
+    const msg = document.getElementById("msg");
+
+    if (!q.value.trim()) {
+        msg.innerText = "Lütfen bir soru metni girin!";
+        msg.style.color = "#dc2626";
+        return;
+    }
+
+    fetch(`${window.API_BASE}/api/teacher/assignments/${id}/questions`, {
+        method: "POST",
+        headers: {
+            "Authorization": "Bearer " + token,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            question_text: q.value,
+            correct_answer: a.value
+        })
+    }).then(res => {
+        if (!res.ok) throw new Error();
+        q.value = "";
+        a.value = "";
+        msg.innerText = "✓ Soru başarıyla kaydedildi.";
+        msg.style.color = "var(--success)";
+        q.focus(); // Yeni soru için hemen odaklan
+    }).catch(() => {
+        msg.innerText = "Soru kaydedilemedi!";
+        msg.style.color = "#dc2626";
+    });
+}
+
+function next() {
+    location.href = `assignment_students.html?id=${id}`;
+}
+</script>
+
+</body>
+</html>

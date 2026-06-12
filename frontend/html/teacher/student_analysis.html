@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gelişim Raporu | Dershane Yönetim Sistemi</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root { 
+            --primary: #1a237e; 
+            --secondary: #3949ab; 
+            --up: #10b981; 
+            --down: #ef4444; 
+            --white: #ffffff;
+            --text-muted: #64748b;
+        }
+        body { font-family: 'Inter', sans-serif; background: #f1f5f9; padding: 25px; margin: 0; }
+        .container { max-width: 1100px; margin: 0 auto; }
+        .grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .trend-card { text-align: center; border-top: 6px solid var(--primary); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 300px; }
+        .status-pill { padding: 8px 16px; border-radius: 50px; font-weight: 800; font-size: 1.2rem; display: inline-block; margin-top: 10px; }
+        .up { background: #dcfce7; color: var(--up); }
+        .down { background: #fee2e2; color: var(--down); }
+        .back-btn { text-decoration: none; color: var(--secondary); font-weight: 700; display: inline-block; margin-bottom: 20px; }
+    </style>
+    <script src="/js/config.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <div>
+        <a href="javascript:history.back()" class="back-btn">← Öğrenci Kartına Dön</a>
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <h3 id="chart-title">📈 Dershane Deneme Başarı Grafiği</h3>
+            <canvas id="mainChart" style="max-height: 400px;"></canvas>
+        </div>
+
+        <div class="card trend-card">
+            <h3 style="color:var(--text-muted); margin: 0 0 10px 0;">SON SINAV ANALİZİ</h3>
+            <div id="status-icon" style="font-size: 4rem; margin: 10px 0;">🚀</div>
+            <div id="status-text" class="status-pill">ANALİZ EDİLİYOR...</div>
+            <p id="analysis-note" style="margin-top:20px; color:#64748b; font-size: 0.95rem; line-height: 1.5; font-weight: 500;">
+                Öğrencinin son deneme verileri analiz ediliyor...
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+const token = localStorage.getItem("token");
+const params = new URLSearchParams(window.location.search);
+const studentId = params.get("student_id");
+
+if (!token || !studentId) {
+    location.href = "dashboard.html";
+}
+
+// 1. Öğrencinin Deneme Verilerini Çek
+fetch(`${window.API_BASE}/api/teacher/student/${studentId}`, {
+    headers: { "Authorization": "Bearer " + token }
+})
+.then(res => res.json())
+.then(data => {
+    document.getElementById("chart-title").innerText = `📈 ${data.student.name} - Deneme Başarı Grafiği`;
+    
+    const exams = data.recent_exams || [];
+    
+    if (exams.length === 0) {
+        document.getElementById("analysis-note").innerText = "Öğrenciye ait henüz deneme sınavı kaydı bulunmuyor.";
+        document.getElementById("status-text").innerText = "VERİ YOK";
+        return;
+    }
+
+    const labels = exams.map(e => e.exam_name);
+    const scores = exams.map(e => e.score);
+
+    // Chart.js Çizimi
+    const ctx = document.getElementById('mainChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Sınav Puanı (LGS: 200 - 500)',
+                data: scores,
+                borderColor: '#1a237e',
+                tension: 0.3,
+                fill: true,
+                backgroundColor: 'rgba(26, 35, 126, 0.05)',
+                pointBackgroundColor: '#3949ab',
+                pointRadius: 6
+            }]
+        },
+        options: {
+            scales: { 
+                y: { 
+                    min: 200, 
+                    max: 500 
+                } 
+            }
+        }
+    });
+
+    // İlerleme/Gerileme Analizi
+    analyzeTrend(scores);
+})
+.catch(err => {
+    console.error(err);
+    document.getElementById("analysis-note").innerText = "Grafik yüklenirken hata oluştu.";
+});
+
+function analyzeTrend(scores) {
+    const pill = document.getElementById('status-text');
+    const note = document.getElementById('analysis-note');
+    const icon = document.getElementById('status-icon');
+    
+    if (scores.length < 2) {
+        pill.innerText = "DENGELİ";
+        pill.className = "status-pill up";
+        note.innerHTML = "Öğrencinin sistemde tek deneme sınavı bulunuyor. Gelişim analizi için en az iki sınav verisi gereklidir.";
+        icon.innerText = "📊";
+        return;
+    }
+
+    const last = scores[scores.length - 1];
+    const prev = scores[scores.length - 2];
+    const diff = (last - prev).toFixed(1);
+    
+    if (last >= prev) {
+        pill.innerText = "YÜKSELİŞTE";
+        pill.className = "status-pill up";
+        icon.innerText = "🚀";
+        note.innerHTML = `Öğrencinin son deneme sınavı puanı <b>${last}</b>, bir önceki sınav puanı olan <b>${prev}</b> değerine göre <b>+${diff}</b> puan artış göstermiştir. Gelişim trendi pozitiftir.`;
+    } else {
+        pill.innerText = "GERİLEME";
+        pill.className = "status-pill down";
+        icon.innerText = "⚠️";
+        note.innerHTML = `Öğrencinin son deneme sınavı puanı <b>${last}</b>, bir önceki sınav puanı olan <b>${prev}</b> değerine göre <b>${diff}</b> puanlık bir düşüş göstermiştir. Zayıf konuların analizi ve ek ders tekrarları önerilir.`;
+    }
+}
+</script>
+</body>
+</html>

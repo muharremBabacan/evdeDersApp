@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Kayıt Ekranı | Dershane Sistemi</title>
+    <style>
+        :root { --primary: #1a237e; --bg: #f1f5f9; --white: #ffffff; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); padding: 20px; }
+        .form-card { 
+            max-width: 600px; margin: 0 auto; background: var(--white); padding: 2.5rem; 
+            border-radius: 12px; border-top: 8px solid var(--primary); box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: 700; margin-bottom: 5px; color: #64748b; font-size: 0.85rem; }
+        input, select { width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; box-sizing: border-box; }
+        .btn-save { 
+            width: 100%; padding: 14px; background: var(--primary); color: white; 
+            border: none; border-radius: 8px; font-weight: 700; cursor: pointer; margin-top: 10px;
+        }
+        .back-btn { display: inline-block; margin-bottom: 20px; text-decoration: none; color: var(--primary); font-weight: 700; }
+    </style>
+</head>
+<body>
+    <div style="max-width:600px; margin:0 auto;">
+        <a href="dashboard.html" class="back-btn">← Panele Dön</a>
+        <div class="form-card">
+            <h2>📝 Yeni Kayıt</h2>
+            <form id="recordForm">
+                <div class="form-group"><label>Ad</label><input type="text" required></div>
+                <div class="form-group"><label>Soyad</label><input type="text" required></div>
+                <div class="form-group"><label>Telefon / E-posta</label><input type="text"></div>
+                <button type="submit" class="btn-save">Kaydı Tamamla</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

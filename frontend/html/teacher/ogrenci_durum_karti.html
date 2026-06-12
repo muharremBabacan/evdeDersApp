@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Öğrenci Durum Kartı | Danışman Öğretmen Paneli</title>
+    <style>
+        :root {
+            --primary: #1a237e;
+            --secondary: #3949ab;
+            --bg-body: #f8fafc;
+            --white: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --radius: 12px;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            --gradient: linear-gradient(135deg, #1a237e, #3949ab);
+        }
+
+        body { font-family: 'Inter', sans-serif; background: var(--bg-body); padding: 20px; color: var(--text-main); margin: 0; }
+        .container { max-width: 1100px; margin: 0 auto; }
+
+        .header-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .back-link { text-decoration: none; color: var(--secondary); font-weight: 600; display: flex; align-items: center; gap: 5px; }
+
+        /* Profil ve Hedef Kartı */
+        .profile-card {
+            background: var(--white);
+            padding: 2.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            border-top: 10px solid var(--primary);
+            position: relative;
+        }
+
+        .target-header { margin-bottom: 2rem; }
+        .target-label { display: block; font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); font-weight: 800; letter-spacing: 2px; margin-bottom: 5px; }
+        .target-value { font-size: 3.5rem; font-weight: 900; color: var(--primary); margin: 0; }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            width: 100%;
+            padding-top: 1.5rem;
+            border-top: 1px solid #f1f5f9;
+        }
+        .info-item label { display: block; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; margin-bottom: 5px; }
+        .info-item span { font-size: 1.15rem; font-weight: 700; color: var(--text-main); }
+
+        .btn-report {
+            position: absolute; top: 20px; right: 20px;
+            background: var(--gradient);
+            color: white; padding: 10px 20px; border-radius: 8px;
+            text-decoration: none; font-weight: 700; font-size: 0.85rem;
+            display: flex; align-items: center; gap: 8px;
+            box-shadow: 0 4px 10px rgba(26,35,126,0.2);
+        }
+
+        /* Layout Grid */
+        .content-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+        @media (max-width: 900px) { .content-grid { grid-template-columns: 1fr; } }
+
+        .section-card { background: var(--white); padding: 1.5rem; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 20px; }
+        h3 { color: var(--primary); font-size: 1.15rem; margin-top: 0; margin-bottom: 1.25rem; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; }
+
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; color: var(--text-muted); font-size: 0.8rem; padding: 10px; border-bottom: 2px solid #f1f5f9; text-transform: uppercase; }
+        td { padding: 10px; border-bottom: 1px solid #f8fafc; font-size: 0.95rem; }
+        tr:hover { background: #f8fafc; }
+
+        .score-badge { background: #eef2ff; color: var(--primary); padding: 4px 8px; border-radius: 6px; font-weight: 800; }
+        .status-badge { padding: 4px 8px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+        .status-completed { background: #dcfce7; color: var(--success); }
+        .status-pending { background: #fef3c7; color: var(--warning); }
+
+        .btn-action { text-decoration: none; color: var(--secondary); font-weight: 700; font-size: 0.8rem; border: 1.5px solid var(--secondary); padding: 4px 10px; border-radius: 6px; transition: 0.2s; }
+        .btn-action:hover { background: var(--secondary); color: white; }
+
+        /* Attendance Stats */
+        .attendance-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .attendance-box { padding: 10px; border-radius: 8px; text-align: center; font-weight: bold; font-size: 0.85rem; }
+        .att-present { background: #dcfce7; color: var(--success); }
+        .att-absent { background: #fee2e2; color: var(--danger); }
+        .att-late { background: #fef3c7; color: var(--warning); }
+        .att-val { font-size: 1.25rem; display: block; }
+
+        /* Notes Form & Feed */
+        .note-item {
+            background: #f8fafc; padding: 10px 15px; border-radius: 8px;
+            border: 1px solid #e2e8f0; margin-bottom: 10px;
+        }
+        .note-date { font-size: 0.75rem; color: var(--text-muted); display: block; margin-top: 5px; }
+
+        textarea {
+            width: 100%; padding: 10px; border: 1.5px solid #e2e8f0; border-radius: 8px;
+            font-size: 0.95rem; resize: vertical; box-sizing: border-box; font-family: inherit; margin-bottom: 10px;
+        }
+        textarea:focus { outline: none; border-color: var(--secondary); }
+        .btn-note-submit {
+            background: var(--primary); color: white; border: none; padding: 10px 20px;
+            border-radius: 6px; font-weight: 700; cursor: pointer; width: 100%; font-size: 0.9rem;
+        }
+        .btn-note-submit:hover { background: var(--secondary); }
+
+        /* AI Status */
+        .ai-status-box {
+            background: #f0f4ff; border: 1.5px solid #bfdbfe; padding: 12px; border-radius: 8px;
+            font-size: 0.9rem; margin-bottom: 15px;
+        }
+    </style>
+    <script src="/js/config.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-nav">
+        <a href="dashboard.html" class="back-link">← Öğretmen Paneline Dön</a>
+    </div>
+
+    <div id="content">
+        <!-- Profil Kartı -->
+        <div class="profile-card">
+            <a href="#" id="report-link" class="btn-report">📊 Gelişim Raporu (Grafik)</a>
+            <div class="target-header">
+                <label class="target-label">Hedef Sınav</label>
+                <h1 id="target-exam-large" class="target-value">...</h1>
+            </div>
+            <div class="info-grid">
+                <div class="info-item"><label>Ad Soyad</label><span id="name">...</span></div>
+                <div class="info-item"><label>Sınıf Seviyesi</label><span id="grade">...</span></div>
+                <div class="info-item"><label>Okul</label><span id="school">...</span></div>
+            </div>
+        </div>
+
+        <!-- Grid Layout -->
+        <div class="content-grid">
+            
+            <!-- Sol Sütun: Akademik Performans -->
+            <div>
+                <!-- Sınavlar -->
+                <div class="section-card">
+                    <h3>📈 Dershane Deneme Sonuçları</h3>
+                    <table>
+                        <thead>
+                            <tr><th>Sınav Adı</th><th>Tür</th><th>Puan</th></tr>
+                        </thead>
+                        <tbody id="exam-list">
+                            <tr><td colspan="3" style="text-align:center; color:var(--text-muted)">Yükleniyor...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Okul Notları -->
+                <div class="section-card">
+                    <h3>🏫 Okul Ders Notları</h3>
+                    <table>
+                        <thead>
+                            <tr><th>Ders</th><th>Sınav Türü</th><th>Puan</th><th>Tarih</th></tr>
+                        </thead>
+                        <tbody id="school-grades-table">
+                            <tr><td colspan="4" style="text-align:center; color:var(--text-muted)">Yükleniyor...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Ödevler -->
+                <div class="section-card">
+                    <h3>📚 Atanan Ödevler ve Takip</h3>
+                    <table>
+                        <thead>
+                            <tr><th>Ödev Başlığı</th><th>Durum</th><th>Başarı</th><th>İşlem</th></tr>
+                        </thead>
+                        <tbody id="assignment-list">
+                            <tr><td colspan="4" style="text-align:center; color:var(--text-muted)">Yükleniyor...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Tekrarlar & Sertifikalar -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="section-card">
+                        <h3>🕒 Konu Tekrar Günlüğü</h3>
+                        <table>
+                            <thead>
+                                <tr><th>Konu</th><th>Süre</th></tr>
+                            </thead>
+                            <tbody id="reviews-table">
+                                <tr><td colspan="2" style="text-align:center; color:var(--text-muted)">Yükleniyor...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="section-card">
+                        <h3>🏅 Sertifika & Başarılar</h3>
+                        <table>
+                            <thead>
+                                <tr><th>Başarı / Sertifika</th><th>Veren Kurum</th></tr>
+                            </thead>
+                            <tbody id="certs-table">
+                                <tr><td colspan="2" style="text-align:center; color:var(--text-muted)">Yükleniyor...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sağ Sütun: AI Analiz, Devamsızlık ve Danışman Notları -->
+            <div>
+                <!-- AI Advisor Takibi -->
+                <div class="section-card">
+                    <h3>🤖 AI Rehber Durum Takibi</h3>
+                    <div class="ai-status-box">
+                        <strong style="color:var(--primary); display:block; font-size:0.8rem; text-transform:uppercase;">AI Rehber Adı:</strong>
+                        <span id="ai-advisor-name" style="font-weight:700;">Yapay Zeka Rehberi</span>
+                    </div>
+                    <div class="ai-status-box" style="background:#fff7ed; border-color:#fed7aa;">
+                        <strong style="color:#c2410c; display:block; font-size:0.8rem; text-transform:uppercase;">Aktif AI Hedef Konusu:</strong>
+                        <span id="ai-active-topic" style="font-weight:700;">Yükleniyor...</span>
+                    </div>
+                    <div class="ai-status-box" id="ai-quiz-result-box" style="background:#f0fdf4; border-color:#bbf7d0;">
+                        <strong style="color:#15803d; display:block; font-size:0.8rem; text-transform:uppercase;">Pekiştirme Testi:</strong>
+                        <span id="ai-quiz-status" style="font-weight:700;">Yükleniyor...</span>
+                    </div>
+                </div>
+
+                <!-- Devamsızlık -->
+                <div class="section-card">
+                    <h3>📅 Dershane Devam Durumu</h3>
+                    <div class="attendance-summary">
+                        <div class="attendance-box att-present">
+                            <span class="att-val" id="present-count">0</span>
+                            Geldi
+                        </div>
+                        <div class="attendance-box att-absent">
+                            <span class="att-val" id="absent-count">0</span>
+                            Devamsız
+                        </div>
+                        <div class="attendance-box att-late">
+                            <span class="att-val" id="late-count">0</span>
+                            Geç
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Danışman Rehberlik Notu Formu & Feed -->
+                <div class="section-card">
+                    <h3>👨‍🏫 Danışmanlık Tavsiyesi Yaz</h3>
+                    <textarea id="newNoteText" rows="4" placeholder="Öğrenci ve velisine yönelik çalışma önerileri, uyarılar veya övgü notları yazın..."></textarea>
+                    <button onclick="submitNote()" class="btn-note-submit">Rehberlik Tavsiyesini Yayınla</button>
+
+                    <h4 style="margin-top:20px; border-top:1px solid #f1f5f9; padding-top:15px; color:var(--text-muted); font-size:0.85rem; text-transform:uppercase; letter-spacing:1px;">Geçmiş Rehberlik Notları</h4>
+                    <div id="notes-list" style="margin-top:10px;">
+                        <p style="text-align:center; color:var(--text-muted); font-size:0.9rem;">Yükleniyor...</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+const token = localStorage.getItem("token");
+const params = new URLSearchParams(window.location.search);
+const studentId = params.get("id");
+
+if (!token || !studentId) {
+    location.href = "dashboard.html";
+}
+
+document.getElementById("report-link").href = `student_analysis.html?student_id=${studentId}`;
+
+// 1. Kapsamlı Öğrenci Verilerini Çek
+function loadStudentData() {
+    fetch(`${window.API_BASE}/api/teacher/student/${studentId}`, {
+        headers: { "Authorization": "Bearer " + token }
+    })
+    .then(res => {
+        if (!res.ok) throw new Error();
+        return res.json();
+    })
+    .then(data => {
+        // Profil
+        document.getElementById("name").innerText = data.student.name;
+        document.getElementById("grade").innerText = data.student.grade + ". Sınıf";
+        document.getElementById("school").innerText = data.student.school;
+        document.getElementById("target-exam-large").innerText = data.target_exam;
+        document.getElementById("ai-advisor-name").innerText = data.student.ai_advisor_name || "Yapay Zeka Rehberi";
+
+        // Devamsızlık
+        document.getElementById("present-count").innerText = data.attendance.present;
+        document.getElementById("absent-count").innerText = data.attendance.absent;
+        document.getElementById("late-count").innerText = data.attendance.late;
+
+        // Denemeler
+        const elist = document.getElementById("exam-list");
+        if (data.recent_exams && data.recent_exams.length > 0) {
+            elist.innerHTML = data.recent_exams.map(e => `
+                <tr>
+                    <td><strong>${e.exam_name}</strong></td>
+                    <td><span style="font-size:0.75rem; background:#f1f5f9; padding:2px 6px; border-radius:4px; font-weight:700;">${e.exam_kind.toUpperCase()}</span></td>
+                    <td><span class="score-badge">${e.score}</span></td>
+                </tr>
+            `).join('');
+        } else {
+            elist.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-muted)">Deneme sınav verisi yok.</td></tr>`;
+        }
+
+        // Okul Notları
+        const sTable = document.getElementById("school-grades-table");
+        if (data.school_grades && data.school_grades.length > 0) {
+            sTable.innerHTML = data.school_grades.map(g => `
+                <tr>
+                    <td><strong>${g.subject}</strong></td>
+                    <td>${g.grade_type}</td>
+                    <td><span class="score-badge">${g.score}</span></td>
+                    <td>${g.date}</td>
+                </tr>
+            `).join('');
+        } else {
+            sTable.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted)">Okul notu bulunmuyor.</td></tr>`;
+        }
+
+        // Ödevler
+        const alist = document.getElementById("assignment-list");
+        if (data.assignments && data.assignments.length > 0) {
+            alist.innerHTML = data.assignments.map(a => `
+                <tr>
+                    <td><strong>${a.title}</strong></td>
+                    <td><span class="status-badge ${a.status === 'completed' ? 'status-completed' : 'status-pending'}">${a.status === 'completed' ? '✓ Tamamlandı' : '⌛ Bekliyor'}</span></td>
+                    <td>${a.score !== null ? '<b>' + a.score + '</b>' : '-'}</td>
+                    <td><a href="assignment_control.html?id=${a.assignment_id}" class="btn-action">Takip Et</a></td>
+                </tr>
+            `).join('');
+        } else {
+            alist.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted)">Ödev kaydı yok.</td></tr>`;
+        }
+
+        // Tekrarlar
+        const rTable = document.getElementById("reviews-table");
+        if (data.reviews && data.reviews.length > 0) {
+            rTable.innerHTML = data.reviews.map(r => `
+                <tr><td><strong>${r.subject}</strong> - ${r.topic}</td><td><span style="font-weight:700; color:var(--secondary);">${r.duration_minutes} dk</span></td></tr>
+            `).join('');
+        } else {
+            rTable.innerHTML = `<tr><td colspan="2" style="text-align:center; color:var(--text-muted)">Konu tekrarı kaydı bulunmuyor.</td></tr>`;
+        }
+
+        // Sertifikalar
+        const cTable = document.getElementById("certs-table");
+        if (data.certificates && data.certificates.length > 0) {
+            cTable.innerHTML = data.certificates.map(c => `
+                <tr><td><strong>${c.title}</strong></td><td><span style="font-size:0.8rem; color:var(--text-muted);">${c.issuer}</span></td></tr>
+            `).join('');
+        } else {
+            cTable.innerHTML = `<tr><td colspan="2" style="text-align:center; color:var(--text-muted)">Sertifika bulunmuyor.</td></tr>`;
+        }
+
+        // Görüş Notları
+        const nList = document.getElementById("notes-list");
+        if (data.notes && data.notes.length > 0) {
+            nList.innerHTML = data.notes.map(n => `
+                <div class="note-item">
+                    <p style="margin:0; font-size:0.9rem; font-weight:500;">${n.note_text}</p>
+                    <span class="note-date">🕒 ${n.created_at}</span>
+                </div>
+            `).join('');
+        } else {
+            nList.innerHTML = `<p style="text-align:center; color:var(--text-muted); font-size:0.9rem;">Geçmiş not bulunmuyor.</p>`;
+        }
+    })
+    .catch(err => {
+        console.error(err);
+    });
+}
+
+// 2. AI Rehber Planını Çek
+function loadAiStatus() {
+    fetch(`${window.API_BASE}/api/student/${studentId}/ai_study_plan`, {
+        headers: { "Authorization": "Bearer " + token }
+    })
+    .then(res => res.json())
+    .then(plan => {
+        document.getElementById("ai-active-topic").innerText = plan.topic;
+        const qStatus = document.getElementById("ai-quiz-status");
+        const qBox = document.getElementById("ai-quiz-result-box");
+        
+        if (plan.status === "completed") {
+            qStatus.innerText = `✓ Başarıyla Geçti (Puan: %${plan.quiz_score || 100})`;
+            qBox.style.background = "#f0fdf4";
+            qBox.style.borderColor = "#bbf7d0";
+        } else {
+            qStatus.innerText = `⌛ Test Bekliyor / Devam Ediyor`;
+            qBox.style.background = "#fee2e2";
+            qBox.style.borderColor = "#fecaca";
+        }
+    });
+}
+
+// 3. Tavsiye Notu Ekle
+function submitNote() {
+    const text = document.getElementById("newNoteText").value;
+    if (!text.trim()) return;
+
+    fetch(`${window.API_BASE}/api/teacher/student/${studentId}/notes`, {
+        method: "POST",
+        headers: {
+            "Authorization": "Bearer " + token,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ note_text: text })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === "ok") {
+            document.getElementById("newNoteText").value = "";
+            loadStudentData(); // Feed'i yenile
+        }
+    });
+}
+
+loadStudentData();
+loadAiStatus();
+</script>
+</body>
+</html>

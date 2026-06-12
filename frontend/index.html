@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giriş | Dershane Yönetim Sistemi</title>
+    <style>
+        /* --- KURUMSAL TASARIM SİSTEMİ --- */
+        :root {
+            --primary: #1a237e;    /* Kurumsal Lacivert */
+            --secondary: #3949ab;  /* Etkileşim Mavisi */
+            --bg-body: #f1f5f9;    /* Sayfa Arka Planı */
+            --white: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --error-bg: #fef2f2;
+            --error-text: #dc2626;
+            --radius: 12px;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background-color: var(--bg-body);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        /* --- GİRİŞ KARTI --- */
+        .login-card {
+            background: var(--white);
+            padding: 2.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h2 {
+            color: var(--primary);
+            text-align: center;
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-card p.desc {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+        }
+
+        /* --- FORM ELEMANLARI --- */
+        .form-group { margin-bottom: 1.25rem; }
+
+        label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.2s;
+            box-sizing: border-box;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 4px rgba(57, 73, 171, 0.1);
+        }
+
+        /* --- BUTON --- */
+        button {
+            width: 100%;
+            padding: 0.9rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            margin-top: 1rem;
+        }
+
+        button:hover { background-color: var(--secondary); }
+        button:active { transform: scale(0.98); }
+
+        /* --- HATA MESAJI --- */
+        #error {
+            background-color: var(--error-bg);
+            color: var(--error-text);
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            text-align: center;
+            margin-top: 1.5rem;
+            display: none; /* Boşken gizle */
+            border: 1px solid #fee2e2;
+        }
+
+        /* --- WHATSAPP TOAST NOTIFICATION --- */
+        .wa-toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-120px);
+            background: #128c7e;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            z-index: 1000;
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-left: 5px solid #25d366;
+        }
+        .wa-toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
+    <script src="/js/config.js"></script>
+</head>
+<body>
+
+<!-- Sanal WhatsApp Bildirim Balonu -->
+<div id="waToast" class="wa-toast">
+    <span style="font-size: 1.25rem;">💬</span>
+    <div>
+        <strong style="display: block; font-size: 0.8rem; color: #25d366;">WhatsApp Bildirimi</strong>
+        <span id="waToastText" style="font-size: 0.95rem;">Giriş kodunuz gönderildi.</span>
+    </div>
+</div>
+
+<div class="login-card">
+    <h2>Sistem Girişi</h2>
+    <p class="desc" id="loginDesc">Kurumsal dershane yönetim paneli</p>
+
+    <!-- 1. Aşama: Şifre Giriş Formu -->
+    <form id="loginForm" onsubmit="doLogin(event)">
+        <div class="form-group">
+            <label for="username">Kullanıcı Adı</label>
+            <input type="text" id="username" placeholder="Kullanıcı adınızı yazın" required>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Şifre</label>
+            <input type="password" id="password" placeholder="••••••••" required>
+        </div>
+
+        <button type="submit" id="loginBtn">Giriş Yap</button>
+    </form>
+
+    <!-- 2. Aşama: WhatsApp Kod Giriş Formu -->
+    <form id="verifyForm" onsubmit="doVerify(event)" style="display: none;">
+        <div class="form-group">
+            <label id="phoneLabel">WhatsApp Doğrulama Kodu</label>
+            <input type="text" id="verifyCode" placeholder="6 haneli kodu yazın (Örn: 123456)" maxlength="6" pattern="\d{6}" required style="text-align: center; font-size: 1.5rem; letter-spacing: 5px; font-weight: bold;">
+        </div>
+
+        <button type="submit" id="verifyBtn">Kodu Doğrula</button>
+        <button type="button" onclick="cancelVerify()" style="background: transparent; color: var(--text-muted); border: 1px solid #e2e8f0; margin-top: 0.5rem; font-weight: 500;">Vazgeç</button>
+    </form>
+
+    <p id="error"></p>
+</div>
+
+<script>
+let tempUsername = "";
+
+async function doLogin(event) {
+    event.preventDefault();
+
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+    const errorEl = document.getElementById("error");
+    const loginBtn = document.getElementById("loginBtn");
+
+    errorEl.innerText = "";
+    errorEl.style.display = "none";
+    loginBtn.disabled = true;
+    loginBtn.innerText = "Bağlanıyor...";
+
+    try {
+        const res = await fetch(window.API_BASE + "/api/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            errorEl.innerText = data.error || "Giriş başarısız. Lütfen bilgilerinizi kontrol edin.";
+            errorEl.style.display = "block";
+            loginBtn.disabled = false;
+            loginBtn.innerText = "Giriş Yap";
+            return;
+        }
+
+        if (data.status === "two_factor_required") {
+            // İkinci aşamaya geç
+            tempUsername = data.username;
+            document.getElementById("loginForm").style.display = "none";
+            document.getElementById("verifyForm").style.display = "block";
+            document.getElementById("loginDesc").innerText = "Lütfen telefonunuza gönderilen kodu girin.";
+            document.getElementById("phoneLabel").innerText = `${data.phone} numaralı WhatsApp hattına gönderilen kod:`;
+            
+            // Simüle edilmiş WhatsApp bildirim balonunu göster
+            const toast = document.getElementById("waToast");
+            const toastText = document.getElementById("waToastText");
+            toastText.innerHTML = `Giriş kodunuz: <strong style='font-size:1.1rem; color:#25d366;'>${data.mock_code_for_testing}</strong>`;
+            toast.classList.add("show");
+            
+            // 5 saniye sonra bildirimi gizle
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 6000);
+
+            document.getElementById("verifyCode").focus();
+        }
+
+    } catch (err) {
+        errorEl.innerText = "Sunucu bağlantı hatası! (Backend çalışıyor mu?)";
+        errorEl.style.display = "block";
+        console.error("Login Error:", err);
+        loginBtn.disabled = false;
+        loginBtn.innerText = "Giriş Yap";
+    }
+}
+
+async function doVerify(event) {
+    event.preventDefault();
+
+    const code = document.getElementById("verifyCode").value;
+    const errorEl = document.getElementById("error");
+    const verifyBtn = document.getElementById("verifyBtn");
+
+    errorEl.innerText = "";
+    errorEl.style.display = "none";
+    verifyBtn.disabled = true;
+    verifyBtn.innerText = "Doğrulanıyor...";
+
+    try {
+        const res = await fetch(window.API_BASE + "/api/login/verify", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username: tempUsername, code: code })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            errorEl.innerText = data.error || "Kod doğrulanamadı.";
+            errorEl.style.display = "block";
+            verifyBtn.disabled = false;
+            verifyBtn.innerText = "Kodu Doğrula";
+            return;
+        }
+
+        // 🔐 JWT VE ROL KAYDI
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user_role", data.role);
+
+        // 🔀 DİNAMİK YÖNLENDİRME
+        let redirectPath = "";
+        switch (data.role) {
+            case "manager":    redirectPath = "html/manager/dashboard.html"; break;
+            case "clerk":      redirectPath = "html/clerk/dashboard.html"; break;
+            case "accounting": redirectPath = "html/accounting/dashboard.html"; break;
+            case "teacher":    redirectPath = "html/teacher/dashboard.html"; break;
+            case "student":    redirectPath = "html/student/dashboard.html"; break;
+            case "parent":     redirectPath = "html/parent/dashboard.html"; break;
+            default:
+                errorEl.innerText = "Tanımsız rol yetkisi!";
+                errorEl.style.display = "block";
+                verifyBtn.disabled = false;
+                verifyBtn.innerText = "Kodu Doğrula";
+                return;
+        }
+        
+        window.location.href = redirectPath;
+
+    } catch (err) {
+        errorEl.innerText = "Bağlantı hatası!";
+        errorEl.style.display = "block";
+        verifyBtn.disabled = false;
+        verifyBtn.innerText = "Kodu Doğrula";
+    }
+}
+
+function cancelVerify() {
+    document.getElementById("loginForm").style.display = "block";
+    document.getElementById("verifyForm").style.display = "none";
+    document.getElementById("loginDesc").innerText = "Kurumsal dershane yönetim paneli";
+    document.getElementById("error").style.display = "none";
+    document.getElementById("waToast").classList.remove("show");
+    
+    // Reset login button
+    const loginBtn = document.getElementById("loginBtn");
+    loginBtn.disabled = false;
+    loginBtn.innerText = "Giriş Yap";
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,8 @@
+backend/venv/
+backend/.env
+firebase-debug.log
+.gemini/
+.idea/
+.vscode/
+__pycache__/
+*.pyc

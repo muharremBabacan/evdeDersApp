@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ödev Çözümü | Dershane Sistemi</title>
+    <style>
+        :root {
+            --primary: #1a237e;
+            --secondary: #3949ab;
+            --bg-body: #f8fafc;
+            --white: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --success: #10b981;
+            --border: #e2e8f0;
+            --radius: 12px;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .assignment-card {
+            background: var(--white);
+            padding: 2.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 700px;
+        }
+
+        h2 {
+            color: var(--primary);
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subject-badge {
+            background: #eef2ff;
+            color: var(--secondary);
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .question-box {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+
+        .question-text {
+            font-weight: 700;
+            margin-bottom: 12px;
+            font-size: 1.05rem;
+            color: var(--text-main);
+        }
+
+        textarea {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1.5px solid var(--border);
+            border-radius: 6px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            font-family: inherit;
+            resize: vertical;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 4px rgba(57, 73, 171, 0.1);
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 10px;
+        }
+        button:hover { background-color: var(--secondary); }
+
+        .result-box {
+            display: none;
+            text-align: center;
+            background: #eef2ff;
+            border: 1px solid #bfdbfe;
+            color: var(--primary);
+            padding: 2rem;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .score-circle {
+            width: 100px;
+            height: 100px;
+            line-height: 100px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            font-size: 2rem;
+            font-weight: 900;
+            margin: 0 auto 15px auto;
+            box-shadow: 0 4px 10px rgba(26,35,126,0.3);
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 1.5rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+    </style>
+    <script src="/js/config.js"></script>
+</head>
+<body>
+
+<div class="assignment-card">
+    <h2 id="assignment-title">Ödev Yükleniyor...</h2>
+    <div class="subject-badge" id="assignment-subject">Ders</div>
+
+    <div id="questions-container">
+        <!-- Sorular buraya listelenecek -->
+    </div>
+
+    <button onclick="submitAssignment()" id="submitBtn">Ödevi Tamamla ve Gönder</button>
+
+    <div id="resultBox" class="result-box">
+        <div class="score-circle" id="scoreVal">0</div>
+        <h3>Ödevinizi Tamamladınız!</h3>
+        <p id="scoreInfo" style="font-size: 1rem; color: var(--text-muted); font-weight: 500;"></p>
+        <button onclick="goBack()" style="background: var(--primary); margin-top: 15px;">Panele Dön</button>
+    </div>
+
+    <a href="dashboard.html" class="back-link">Vazgeç ve Listeye Dön</a>
+</div>
+
+<script>
+const token = localStorage.getItem("token");
+const params = new URLSearchParams(window.location.search);
+const id = params.get("id"); // Assignment ID
+
+let questionsData = [];
+
+if (!token || !id) {
+    location.href = "dashboard.html";
+}
+
+// 1. Ödev Sorularını Çek
+fetch(`${window.API_BASE}/api/student/assignments/${id}`, {
+    headers: { "Authorization": "Bearer " + token }
+})
+.then(res => res.json())
+.then(data => {
+    document.getElementById("assignment-title").innerText = data.title;
+    document.getElementById("assignment-subject").innerText = data.subject;
+    
+    questionsData = data.questions;
+    
+    const container = document.getElementById("questions-container");
+    if (data.questions && data.questions.length > 0) {
+        container.innerHTML = data.questions.map((q, qIdx) => `
+            <div class="question-box">
+                <div class="question-text">${qIdx + 1}. ${q.question_text}</div>
+                <textarea id="answer-q${q.id}" rows="3" placeholder="Cevabınızı buraya yazın..."></textarea>
+            </div>
+        `).join('');
+    } else {
+        container.innerHTML = `<p style="text-align:center; color:var(--text-muted);">Bu ödevde henüz soru bulunmuyor.</p>`;
+        document.getElementById("submitBtn").style.display = "none";
+    }
+});
+
+async function submitAssignment() {
+    const answers = {};
+    let isAnyEmpty = false;
+    
+    questionsData.forEach(q => {
+        const text = document.getElementById(`answer-q${q.id}`).value;
+        if (!text.trim()) {
+            isAnyEmpty = true;
+        }
+        answers[q.id] = text;
+    });
+    
+    if (isAnyEmpty) {
+        if (!confirm("Bazı soruları boş bıraktınız. Göndermek istediğinize emin misiniz?")) {
+            return;
+        }
+    }
+    
+    const submitBtn = document.getElementById("submitBtn");
+    submitBtn.disabled = true;
+    submitBtn.innerText = "Gönderiliyor...";
+    
+    try {
+        const res = await fetch(`${window.API_BASE}/api/student/assignments/${id}/submit`, {
+            method: "POST",
+            headers: {
+                "Authorization": "Bearer " + token,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                answers: answers
+            })
+        });
+        
+        const result = await res.json();
+        
+        if (!res.ok) {
+            alert(result.error || "Ödev gönderilemedi.");
+            submitBtn.disabled = false;
+            submitBtn.innerText = "Ödevi Tamamla ve Gönder";
+            return;
+        }
+        
+        // Arayüzü güncelle ve sonucu göster
+        document.getElementById("questions-container").style.display = "none";
+        submitBtn.style.display = "none";
+        
+        const rBox = document.getElementById("resultBox");
+        rBox.style.display = "block";
+        document.getElementById("scoreVal").innerText = result.score;
+        document.getElementById("scoreInfo").innerText = `Toplam ${result.total_count} sorudan ${result.correct_count} tanesini doğru cevapladınız.`;
+        
+    } catch (err) {
+        console.error(err);
+        alert("Bağlantı hatası!");
+        submitBtn.disabled = false;
+        submitBtn.innerText = "Ödevi Tamamla ve Gönder";
+    }
+}
+
+function goBack() {
+    location.href = "dashboard.html";
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,129 @@
+{
+  "exam_name": "2025 LGS Sözel Simülasyonu",
+  "year": 2025,
+  "session": "sozel",
+  "duration_minutes": 75,
+  "total_questions": 10,
+  "questions": [
+    {
+      "question_number": 1,
+      "subject": "Türkçe",
+      "question_text": "Aşağıdaki cümlelerin hangisinde 'göz yummak' deyimi, 'kusurları görmezden gelmek, hoş görmek' anlamında kullanılmıştır?",
+      "options": {
+        "A": "Onun bu yaramazlıklarına daha fazla göz yumamam.",
+        "B": "Uykusu geldiği için televizyon karşısında gözünü yumdu.",
+        "C": "Olayı görmesine rağmen korkudan gözünü yumdu.",
+        "D": "Karanlıkta hiçbir şey göremediği için gözlerini yumup bekledi."
+      },
+      "correct_answer": "A"
+    },
+    {
+      "question_number": 2,
+      "subject": "Türkçe",
+      "question_text": "Bir paragrafın 'ana fikri' veya 'ana düşüncesi' aşağıdakilerden hangisini en iyi tanımlar?",
+      "options": {
+        "A": "Paragraftaki olay örgüsünün geçtiği yeri",
+        "B": "Yazarın okuyucuya vermek istediği temel mesajı veya iletiyi",
+        "C": "Paragrafta kullanılan yabancı kelimelerin anlamlarını",
+        "D": "Karakterlerin fiziksel ve ruhsal özelliklerini"
+      },
+      "correct_answer": "B"
+    },
+    {
+      "question_number": 3,
+      "subject": "Türkçe",
+      "question_text": "Aşağıdaki cümlelerin hangisinde bir yazım yanlışı vardır?",
+      "options": {
+        "A": "2025 yılı LGS sınavı haziran ayında yapılacak.",
+        "B": "O da bizimle birlikte tiyatroya gelmek istedi.",
+        "C": "Bir kaç gün sonra döneceğini söyledi.",
+        "D": "Herkesin kendi sorumluluklarını bilmesi gerekir."
+      },
+      "correct_answer": "C"
+    },
+    {
+      "question_number": 4,
+      "subject": "Türkçe",
+      "question_text": "Aşağıdaki cümlelerin hangisi nesnel bir yargı bildirmektedir?",
+      "options": {
+        "A": "Yazarın son romanı çok sürükleyici ve heyecanlı.",
+        "B": "Yeşil renk insan ruhunu dinlendiren en güzel renktir.",
+        "C": "Türkiye'nin başkenti Ankara'dır.",
+        "D": "LGS sınavına hazırlanmak hayatın en zor dönemidir."
+      },
+      "correct_answer": "C"
+    },
+    {
+      "question_number": 5,
+      "subject": "T.C. İnkılap Tarihi ve Atatürkçülük",
+      "question_text": "Mustafa Kemal Atatürk'ün 'Ordular, ilk hedefiniz Akdeniz'dir, ileri!' emrini verdiği meşhur savaş aşağıdakilerden hangisidir?",
+      "options": {
+        "A": "Çanakkale Savaşı",
+        "B": "Büyük Taarruz (Başkomutanlık Meydan Muharebesi)",
+        "C": "I. İnönü Savaşı",
+        "D": "Sakarya Meydan Muharebesi"
+      },
+      "correct_answer": "B"
+    },
+    {
+      "question_number": 6,
+      "subject": "T.C. İnkılap Tarihi ve Atatürkçülük",
+      "question_text": "Sivas Kongresi'nde alınan en önemli karar aşağıdakilerden hangisidir?",
+      "options": {
+        "A": "Manda ve himayenin kesin olarak reddedilmesi ve tüm cemiyetlerin birleştirilmesi",
+        "B": "Kuvayı Milliye'nin kaldırılması",
+        "C": "İstanbul Hükümeti ile iş birliği yapılması",
+        "D": "Sadece bölgesel kurtuluş yollarının aranması"
+      },
+      "correct_answer": "A"
+    },
+    {
+      "question_number": 7,
+      "subject": "Din Kültürü ve Ahlak Bilgisi",
+      "question_text": "Yüce Allah'ın evrendeki her şeyi belli bir düzen, uyum ve ölçü içerisinde yaratmasına ne ad verilir?",
+      "options": {
+        "A": "Kader ve Kaza",
+        "B": "Tevekkül",
+        "C": "Sadaka-i Cariye",
+        "D": "İhlas"
+      },
+      "correct_answer": "A"
+    },
+    {
+      "question_number": 8,
+      "subject": "Din Kültürü ve Ahlak Bilgisi",
+      "question_text": "Kişinin çalışıp çabaladıktan sonra işin sonucunu Allah'a bırakıp O'na güvenmesine ne ad verilir?",
+      "options": {
+        "A": "Zekat",
+        "B": "Rızık",
+        "C": "Tevekkül",
+        "D": "Ecel"
+      },
+      "correct_answer": "C"
+    },
+    {
+      "question_number": 9,
+      "subject": "İngilizce",
+      "question_text": "Read the dialogue and complete the sentence:\n\nAlice: What do you think about rock music?\nBob: To be honest, I can't stand it. It is too loud and noisy.\n\nAccording to the dialogue, Bob ---- rock music.",
+      "options": {
+        "A": "loves listening to",
+        "B": "prefers loud",
+        "C": "dislikes or hates",
+        "D": "thinks is trendy"
+      },
+      "correct_answer": "C"
+    },
+    {
+      "question_number": 10,
+      "subject": "İngilizce",
+      "question_text": "Complete the sentence:\n\nIf you want to make a cake, first you should ---- the eggs and sugar in a large bowl, then add flour and bake it.",
+      "options": {
+        "A": "grill",
+        "B": "whisk or mix",
+        "C": "slice",
+        "D": "boil"
+      },
+      "correct_answer": "B"
+    }
+  ]
+}
