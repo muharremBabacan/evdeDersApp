@@ -211,6 +211,207 @@
             .dashboard-grid { grid-template-columns: 1fr; }
         }
 
+        /* Tab Navigation styles */
+        .tabs-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            background: var(--white);
+            padding: 8px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--glass-border);
+        }
+        .main-tab-btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            border-radius: var(--radius-md);
+            transition: all 0.2s ease-in-out;
+            font-family: 'Outfit', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .main-tab-btn:hover {
+            background: #f1f5f9;
+            color: var(--primary);
+        }
+        .main-tab-btn.active {
+            background: var(--gradient);
+            color: var(--white);
+            box-shadow: 0 4px 15px -3px rgba(59, 130, 246, 0.4);
+        }
+        .tab-panel {
+            display: none;
+        }
+        .tab-panel.active {
+            display: block;
+            animation: fadeIn 0.35s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+            animation: fadeInOverlay 0.25s ease;
+        }
+        @keyframes fadeInOverlay {
+            from { opacity: 0; } to { opacity: 1; }
+        }
+        .modal-content-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 700px;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.15), 0 10px 10px -5px rgba(0,0,0,0.04);
+            border: 1px solid var(--glass-border);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            max-height: 90vh;
+            animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes slideUp {
+            from { transform: translateY(40px) scale(0.95); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
+        }
+        .modal-header {
+            padding: 1.25rem 1.75rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8fafc;
+        }
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 800;
+        }
+        .modal-close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: color 0.2s;
+            line-height: 1;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-close-btn:hover {
+            background: #e2e8f0;
+            color: var(--primary);
+        }
+        .modal-body {
+            padding: 1.75rem;
+            overflow-y: auto;
+            flex: 1;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+        .modal-footer {
+            padding: 1rem 1.75rem;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: flex-end;
+            background: #f8fafc;
+        }
+
+        /* Active Study list styles */
+        .study-plan-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            transition: transform 0.2s;
+        }
+        .study-plan-card:hover {
+            transform: translateY(-2px);
+        }
+        .study-grid-row {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 20px;
+            align-items: center;
+        }
+        .study-left {
+            border-right: 1.5px dashed #e2e8f0;
+            padding-right: 20px;
+        }
+        .study-right {
+            padding-left: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* Welcome Banner Card */
+        .welcome-hero-card {
+            display: grid;
+            grid-template-columns: 1.6fr 1fr;
+            gap: 25px;
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 2.25rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 25px;
+            border: 1px solid var(--glass-border);
+            position: relative;
+            overflow: hidden;
+        }
+        .welcome-hero-card::before {
+            content: '';
+            position: absolute;
+            top: -50%; right: -20%;
+            width: 350px; height: 350px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, rgba(255,255,255,0) 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+        .welcome-left {
+            z-index: 1;
+        }
+        .welcome-right {
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #f8fafc;
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            border: 1px solid var(--glass-border);
+        }
+        @media (max-width: 768px) {
+            .welcome-hero-card { grid-template-columns: 1fr; }
+        }
+
         /* Section Cards */
         .section-card { 
             background: var(--white); 
@@ -507,120 +708,168 @@
             <a href="#" onclick="logout()" class="logout-btn">Çıkış Yap</a>
         </div>
     </div>
-
-    <!-- AI Hero Card with Chart & Advisor Analysis -->
-    <div class="ai-hero-card">
-        <div>
-            <h3 style="border:none; margin-bottom:5px;">📈 LGS Deneme Sınavları Gelişim Grafiği</h3>
-            <span style="font-size:0.8rem; color:var(--text-muted); font-weight:600; display:block; margin-bottom:15px;">Hedefe giden yoldaki deneme puanı gelişim eğriniz</span>
-            <div class="chart-container">
-                <canvas id="mockExamsChart"></canvas>
+     <!-- AI Welcome & Motivation Card (Hoşgeldin & Motivasyon Kartı) -->
+    <div class="welcome-hero-card">
+        <div class="welcome-left">
+            <span style="font-size:0.85rem; color:var(--accent-purple); font-weight:800; text-transform:uppercase; letter-spacing:1px;">LGS Hazırlık Portalı</span>
+            <h2 style="margin: 5px 0 15px 0; font-size: 1.85rem; font-weight: 800;">Merhaba, <span id="welcome-student-name">...</span>! 🌟</h2>
+            
+            <div style="background: rgba(99, 102, 241, 0.03); border-left: 4px solid var(--accent-purple); padding: 15px; border-radius: 4px; font-size: 0.95rem; line-height: 1.6; color: var(--primary-light);">
+                <div style="font-weight: 700; color: var(--accent-purple); display: flex; align-items: center; gap: 6px; margin-bottom: 8px;">
+                    <span>🤖</span> Yapay Zeka Rehber Öğretmen Analizi:
+                </div>
+                <div id="ai-analysis-welcome-text" style="white-space: pre-line;">
+                    Akademik durumunuz analiz ediliyor, tavsiyeler hazırlanıyor...
+                </div>
             </div>
         </div>
-        <div class="ai-analysis-container">
-            <div class="ai-analysis-header">
-                <div class="ai-pulse-dot"></div>
-                <div class="ai-analysis-title">Rehber Durum Analizi</div>
+        <div class="welcome-right">
+            <h4 style="margin: 0 0 10px 0; font-weight: 800; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">🎯 LGS Hedef Durumu</h4>
+            <div style="position: relative; width: 140px; height: 140px; display: flex; align-items: center; justify-content: center;">
+                <canvas id="targetGaugeChart" style="width: 100%; height: 100%;"></canvas>
+                <div style="position: absolute; text-align: center;">
+                    <span id="gaugeCurrentScore" style="font-size: 1.5rem; font-weight: 900; color: var(--primary); display: block; line-height: 1;">...</span>
+                    <span style="font-size: 0.65rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Mevcut</span>
+                </div>
             </div>
-            <p id="ai-analysis-text" class="ai-analysis-text">
-                Performans verileriniz inceleniyor, durum analiziniz hazırlanıyor...
-            </p>
+            <div style="margin-top: 12px; text-align: center;">
+                <span style="font-size: 0.95rem; font-weight: 800; color: var(--primary); display: block;">Hedef: 450 Puan</span>
+                <span id="gaugeRemainingDistance" style="font-size: 0.8rem; font-weight: 700; color: var(--accent); display: block; margin-top: 2px;">Hedefe kalan hesaplanıyor...</span>
+            </div>
         </div>
     </div>
 
-    <!-- 3-Column Info Bar -->
-    <div class="target-box-card">
-        <div class="target-box-item">
-            <label>Mevcut LGS Hedefim</label>
-            <span id="target-exam">...</span>
-        </div>
-        <div class="target-box-item">
-            <label>Hedef Dilimim</label>
-            <span id="target-percentile">...</span>
-        </div>
-        <div class="target-box-item">
-            <label>Öğrenci Numaram</label>
-            <span id="student-no">...</span>
-        </div>
+    <!-- Main Tabs Navigation -->
+    <div class="tabs-nav">
+        <button class="main-tab-btn active" id="btn-tab-study" onclick="switchMainTab('study')">
+            <span>🎯</span> Çalışma Programı & Testlerim
+        </button>
+        <button class="main-tab-btn" id="btn-tab-exams" onclick="switchMainTab('exams')">
+            <span>📈</span> Deneme Sınavlarım & Gelişim
+        </button>
+        <button class="main-tab-btn" id="btn-tab-archive" onclick="switchMainTab('archive')">
+            <span>📂</span> Eğitim Arşivi
+        </button>
     </div>
 
-    <!-- Layout Grid -->
-    <div class="dashboard-grid">
-        
-        <!-- Left Column (Academic Data) -->
-        <div>
-            <!-- Homeworks -->
-            <div class="section-card">
-                <h3>📚 Tanımlı Ödevlerim</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Ödev Başlığı</th>
-                            <th>Ders</th>
-                            <th>Son Tarih</th>
-                            <th>Durum</th>
-                            <th>Puan</th>
-                            <th>İşlem</th>
-                        </tr>
-                    </thead>
-                    <tbody id="assignments-table">
-                        <tr><td colspan="6" style="text-align:center; color:var(--text-muted)">Ödevler yükleniyor...</td></tr>
-                    </tbody>
-                </table>
+    <!-- Tab Panel 1: Active Study & Tests -->
+    <div class="tab-panel active" id="panel-study">
+        <div class="dashboard-grid">
+            <!-- Left Column: Study Topics & Homeworks -->
+            <div>
+                <!-- Active study card (Ders & Test split view) -->
+                <div class="section-card">
+                    <h3 style="margin-bottom:15px;">📖 Haftalık Odak Çalışma Konusu</h3>
+                    <div id="active-study-plan-container">
+                        <!-- Dynamic active plans loaded here -->
+                        <div style="text-align:center; padding:20px; color:var(--text-muted)">Yükleniyor...</div>
+                    </div>
+                </div>
+
+                <!-- Homeworks Table -->
+                <div class="section-card">
+                    <h3>📚 Tanımlı Ödevlerim</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ödev Başlığı</th>
+                                <th>Ders</th>
+                                <th>Son Tarih</th>
+                                <th>Durum</th>
+                                <th>Puan</th>
+                                <th>İşlem</th>
+                            </tr>
+                        </thead>
+                        <tbody id="assignments-table">
+                            <tr><td colspan="6" style="text-align:center; color:var(--text-muted)">Ödevler yükleniyor...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
-            <!-- LGS Past Year PDFs Archive & Simulation -->
-            <div class="section-card">
-                <h3>📂 LGS Çıkmış Sınavlar Arşivi & Zamanlı Simülasyon</h3>
-                <div class="pdf-list" id="lgs-exams-list-container">
-                    <div class="pdf-item">
-                        <div class="pdf-info">
-                            <span class="pdf-icon">📕</span>
-                            <div>
-                                <div class="pdf-title">2025 LGS Sözel Sınavı (50 Soru)</div>
-                                <span style="font-size:0.75rem; color:var(--text-muted)">Zamanlı Simülasyon (75 Dk) / Soru Kitapçığı</span>
+            <!-- Right Column: AI Chat & Stats -->
+            <div>
+                <!-- AI Advisor Tab Center (Chat Box) -->
+                <div class="section-card" style="padding: 1.25rem;">
+                    <h3 style="border:none; margin-bottom:10px;">💬 AI Rehber Öğretmen Sohbeti</h3>
+                    <div class="chat-container">
+                        <div class="chat-messages" id="chat-messages-box" style="max-height: 250px;">
+                            <div class="chat-bubble advisor">
+                                Merhaba! Benimle ders çalışma taktikleri, çözemediğin konular veya motivasyon hakkında sohbet edebilirsin! 👇
+                            </div>
+                            <div class="chat-typing" id="chat-typing-indicator" style="display: none;">
+                                <span></span><span></span><span></span>
                             </div>
                         </div>
-                        <div style="display:flex; gap:8px;">
-                            <a href="lgs_exam_solve.html?file=2025_sozel.json" class="btn-solve" style="background:var(--gradient);">Sınavı Çöz</a>
-                            <a href="../../assets/lgs_pdfs/2025_sozel.pdf" download class="pdf-download-btn">PDF</a>
+                        <div class="chat-input-bar">
+                            <input type="text" id="chat-input-field" placeholder="Rehberine bir mesaj yaz..." onkeydown="if(event.key === 'Enter') sendChatMessage()">
+                            <button onclick="sendChatMessage()">Gönder</button>
                         </div>
                     </div>
-                    <div class="pdf-item">
-                        <div class="pdf-info">
-                            <span class="pdf-icon">📘</span>
-                            <div>
-                                <div class="pdf-title">2025 LGS Sayısal Sınavı (40 Soru)</div>
-                                <span style="font-size:0.75rem; color:var(--text-muted)">Zamanlı Simülasyon (80 Dk) / Soru Kitapçığı</span>
-                            </div>
+                </div>
+
+                <!-- Devamsızlık Takibi -->
+                <div class="section-card">
+                    <h3>📅 Dershane Devamsızlık Takibi</h3>
+                    <div class="attendance-summary">
+                        <div class="attendance-box att-present">
+                            <span class="att-val" id="att-present">0</span>
+                            Katılım
                         </div>
-                        <div style="display:flex; gap:8px;">
-                            <a href="lgs_exam_solve.html?file=2025_sayisal.json" class="btn-solve" style="background:var(--gradient);">Sınavı Çöz</a>
-                            <a href="../../assets/lgs_pdfs/2025_sayisal.pdf" download class="pdf-download-btn">PDF</a>
+                        <div class="attendance-box att-absent">
+                            <span class="att-val" id="att-absent">0</span>
+                            Devamsız
+                        </div>
+                        <div class="attendance-box att-late">
+                            <span class="att-val" id="att-late">0</span>
+                            Geç Giriş
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <!-- LGS Practice Exam Results Table -->
-            <div class="section-card">
-                <h3>📝 LGS Deneme Sınavı Sonuçlarım</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Sınav Adı</th>
-                            <th>Puan / Başarı</th>
-                            <th>Durum</th>
-                        </tr>
-                    </thead>
-                    <tbody id="lgs-exam-results-table">
-                        <tr><td colspan="3" style="text-align:center; color:var(--text-muted)">Henüz çözülmüş sınav sonucu bulunmuyor.</td></tr>
-                    </tbody>
-                </table>
+    <!-- Tab Panel 2: Mock Exams & Analytics -->
+    <div class="tab-panel" id="panel-exams">
+        <!-- Chart Section -->
+        <div class="section-card">
+            <h3>📈 LGS Deneme Sınavları Gelişim Grafiği</h3>
+            <span style="font-size:0.8rem; color:var(--text-muted); font-weight:600; display:block; margin-bottom:15px;">Hedefe giden yoldaki deneme puanı gelişim eğriniz</span>
+            <div class="chart-container" style="height: 320px; position: relative;">
+                <canvas id="mockExamsChart"></canvas>
             </div>
+        </div>
 
-            <!-- Grades & Reviews Sub-grid -->
-            <div style="display: grid; grid-template-columns: 1.1fr 1fr; gap: 20px;">
+        <div class="dashboard-grid">
+            <!-- Left Column: Exams & Written Grades -->
+            <div>
+                <!-- LGS Past Year PDFs Archive & Simulation -->
+                <div class="section-card">
+                    <h3>📂 LGS Çıkmış Sınavlar Arşivi & Zamanlı Simülasyon</h3>
+                    <div class="pdf-list" id="lgs-exams-list-container">
+                        <!-- Dynamic LGS booklets list -->
+                        <div style="text-align:center; padding:20px; color:var(--text-muted)">Yükleniyor...</div>
+                    </div>
+                </div>
+
+                <!-- LGS Exam Results Table -->
+                <div class="section-card">
+                    <h3>📝 LGS Deneme Sınavı Sonuçlarım</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Sınav Adı</th>
+                                <th>Puan / Başarı</th>
+                                <th>Durum</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lgs-exam-results-table">
+                            <tr><td colspan="3" style="text-align:center; color:var(--text-muted)">Henüz çözülmüş sınav sonucu bulunmuyor.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
                 <!-- School Grades -->
                 <div class="section-card">
                     <h3>🏫 Okul Ders Yazılı Notları</h3>
@@ -638,120 +887,99 @@
                         </tbody>
                     </table>
                 </div>
+            </div>
 
+            <!-- Right Column: Study distributions & Certificates -->
+            <div>
                 <!-- Study Reviews breakdown -->
                 <div class="section-card">
                     <h3>🕒 Konu Tekrar & Çalışma Dağılımı</h3>
-                    <div style="position:relative; max-height:220px;">
+                    <div style="position:relative; max-height:220px; height: 200px;">
                         <canvas id="studyReviewsChart"></canvas>
                     </div>
                 </div>
+
+                <!-- Certificates -->
+                <div class="section-card">
+                    <h3>🏅 Sertifikalar ve Ödüller</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Sertifika / Kurs</th>
+                                <th>Kurum</th>
+                            </tr>
+                        </thead>
+                        <tbody id="certs-table">
+                            <tr><td colspan="2" style="text-align:center; color:var(--text-muted)">Yükleniyor...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-
-        <!-- Right Column (AI Advisor & Attendance) -->
-        <div>
-            <!-- AI Advisor Tab Center -->
-            <div class="ai-tab-card">
-                <div class="ai-tab-header">
-                    <button class="tab-btn active" onclick="switchTab('weekly-target')">🎯 Haftalık Hedef</button>
-                    <button class="tab-btn" onclick="switchTab('advisor-chat')">💬 Danışman Sohbeti</button>
-                </div>
-                
-                <!-- Tab 1: Weekly Target Plan -->
-                <div id="tab-weekly-target" class="tab-content">
-                    <div class="ai-branding">
-                        <div class="ai-badge">
-                            <span>🤖</span> <span id="ai-name-badge">Yapay Zeka Rehberi</span>
-                        </div>
-                        <button class="ai-rename-trigger" onclick="promptRename()">İsmi Düzenle</button>
-                    </div>
-                    
-                    <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 800; margin-bottom: 5px;">Haftalık Çalışma Konusu</div>
-                    <h4 id="ai-topic" style="margin: 0 0 10px 0; font-size: 1.25rem; color: var(--accent-purple);">Yükleniyor...</h4>
-                    
-                    <div class="ai-advisor-text-section">
-                        <p id="ai-guide" style="margin: 0;">Rehber analizlerine göre çalışma planınız hazırlanıyor...</p>
-                    </div>
-
-                    <div class="ai-quiz-section" id="ai-action-box" style="text-align:center; padding: 10px; border: 1.5px dashed #bfdbfe; border-radius:8px;">
-                        <p style="margin: 0 0 1rem 0; font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">
-                            Haftalık odak konusunu tamamlamak için testi geçmelisiniz.
-                        </p>
-                        <button class="btn-solve" style="width:100%;">Yükleniyor...</button>
-                    </div>
-                </div>
-
-                <!-- Tab 2: Advisor Interactive Chat -->
-                <div id="tab-advisor-chat" class="tab-content hidden">
-                    <div class="ai-branding">
-                        <div class="ai-badge">
-                            <span>🤖</span> <span id="ai-chat-badge">Danışman Bot</span>
-                        </div>
-                        <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">Çevrimiçi</span>
-                    </div>
-
-                    <div class="chat-container">
-                        <div class="chat-messages" id="chat-messages-box">
-                            <div class="chat-bubble advisor">
-                                Merhaba! LGS hazırlık durumunu analiz ettim. Aklına takılan çalışma tekniklerini veya derslerdeki zorlandığın konuları bana sorabilirsin!
-                            </div>
-                        </div>
-                        <div id="chat-typing-indicator" class="chat-typing" style="display:none; margin: 10px 15px;">
-                            <span></span><span></span><span></span>
-                        </div>
-                        <div class="chat-input-bar">
-                            <input type="text" id="chatInput" placeholder="Mesajınızı yazın..." onkeydown="if(event.key === 'Enter') sendChatMessage()">
-                            <button onclick="sendChatMessage()">Gönder</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Attendance -->
-            <div class="section-card">
-                <h3>📅 Dershane Devamsızlık Takibi</h3>
-                <div class="attendance-summary">
-                    <div class="attendance-box att-present">
-                        <span class="att-val" id="att-present">0</span>
-                        Katılım
-                    </div>
-                    <div class="attendance-box att-absent">
-                        <span class="att-val" id="att-absent">0</span>
-                        Devamsız
-                    </div>
-                    <div class="attendance-box att-late">
-                        <span class="att-val" id="att-late">0</span>
-                        Geç Giriş
-                    </div>
-                </div>
-            </div>
-
-            <!-- Certificates -->
-            <div class="section-card">
-                <h3>🏅 Sertifikalar ve Ödüller</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Sertifika / Kurs</th>
-                            <th>Kurum</th>
-                        </tr>
-                    </thead>
-                    <tbody id="certs-table">
-                        <tr><td colspan="2" style="text-align:center; color:var(--text-muted)">Yükleniyor...</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        
     </div>
-</div>
+
+    <!-- Tab Panel 3: Learning Archive -->
+    <div class="tab-panel" id="panel-archive">
+        <div class="section-card">
+            <h3>📂 Tamamlanan Konu & Pekiştirme Testleri Arşivi</h3>
+            <span style="font-size:0.8rem; color:var(--text-muted); font-weight:600; display:block; margin-bottom:15px;">Daha önce tamamladığınız ve onaylanan tüm AI çalışma konularına buradan dönüp bakabilirsiniz.</span>
+            
+            <div id="learning-archive-list" style="display: grid; grid-template-columns: 1fr; gap: 15px;">
+                <!-- Completed study plans loaded here -->
+                <div style="text-align:center; padding:30px; color:var(--text-muted)">Arşiv yükleniyor...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inline Modal: Lesson Study Guide -->
+    <div class="modal-overlay" id="lessonModal">
+        <div class="modal-content-card">
+            <div class="modal-header">
+                <h3 id="lessonModalTitle">Çalışma Konusu</h3>
+                <button class="modal-close-btn" onclick="closeLessonModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="lessonModalBody" style="white-space: pre-line; color: var(--primary-light);">
+                <!-- Study guide text injected here -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn-solve" onclick="closeLessonModal()" style="width: auto; padding: 10px 20px;">Anladım, Kapat</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inline Modal: AI Reinforcement Quiz -->
+    <div class="modal-overlay" id="quizModal">
+        <div class="modal-content-card" style="max-width: 650px;">
+            <div class="modal-header">
+                <h3 id="quizModalTitle">Pekiştirme Testi</h3>
+                <button class="modal-close-btn" onclick="closeQuizModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="quizModalPlanTopic" style="font-weight: 800; color: var(--accent-purple); margin-bottom: 15px; font-size: 1rem;">Konu</div>
+                <div id="quizModalQuestionsContainer">
+                    <!-- Quiz questions injected here -->
+                </div>
+                <!-- Quiz result section -->
+                <div id="quizModalResultContainer" style="display: none; text-align: center; padding: 1.5rem; border-radius: 8px; margin-top: 15px;">
+                    <span id="quizModalResultIcon" style="font-size: 3rem; display: block; margin-bottom: 10px;">🎉</span>
+                    <h4 id="quizModalResultTitle" style="margin: 0 0 10px 0; font-size: 1.2rem; font-weight: 800;">Tebrikler!</h4>
+                    <p id="quizModalResultFeedback" style="font-size: 0.95rem; line-height: 1.5; font-weight: 500; margin: 0;"></p>
+                </div>
+            </div>
+            <div class="modal-footer" id="quizModalFooter">
+                <button class="btn-solve" onclick="submitInlineQuiz()" style="width: auto; padding: 10px 20px;">Cevapları Gönder</button>
+            </div>
+        </div>
+    </div>
 
 <script>
 const token = localStorage.getItem("token");
 let studentId = null;
 let advisorName = "Yapay Zeka Rehberi";
 let solvedExamsMap = {};
+let targetGaugeChartInstance = null;
+let currentQuizPlanId = null;
+let currentQuizQuestions = [];
 
 if (!token) {
     alert("Giriş yetkiniz bulunmuyor.");
@@ -763,28 +991,27 @@ function logout() {
     location.href = "/";
 }
 
-// Switch between Weekly Target and Advisor Chat Tabs
-function switchTab(tabName) {
-    document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
-    document.querySelectorAll(".tab-content").forEach(content => content.classList.add("hidden"));
+// Switch between Main Dashboard Tabs
+function switchMainTab(tabName) {
+    document.getElementById("btn-tab-study").classList.remove("active");
+    document.getElementById("btn-tab-exams").classList.remove("active");
+    document.getElementById("btn-tab-archive").classList.remove("active");
     
-    if (tabName === 'weekly-target') {
-        document.querySelector("[onclick=\"switchTab('weekly-target')\"]").classList.add("active");
-        document.getElementById("tab-weekly-target").classList.remove("hidden");
-    } else {
-        document.querySelector("[onclick=\"switchTab('advisor-chat')\"]").classList.add("active");
-        document.getElementById("tab-advisor-chat").classList.remove("hidden");
-        // Scroll chat box to bottom
-        const box = document.getElementById("chat-messages-box");
-        box.scrollTop = box.scrollHeight;
-    }
+    document.getElementById("panel-study").classList.remove("active");
+    document.getElementById("panel-exams").classList.remove("active");
+    document.getElementById("panel-archive").classList.remove("active");
+    
+    document.getElementById(`btn-tab-${tabName}`).classList.add("active");
+    document.getElementById(`panel-${tabName}`).classList.add("active");
 }
 
-// Tab updates naming
+// Update Advisor Name Labels
 function updateAdvisorNameLabels(name) {
     advisorName = name;
-    document.getElementById("ai-name-badge").innerText = name;
-    document.getElementById("ai-chat-badge").innerText = name;
+    const badge = document.getElementById("ai-name-badge");
+    if (badge) badge.innerText = name;
+    const chatBadge = document.getElementById("ai-chat-badge");
+    if (chatBadge) chatBadge.innerText = name;
 }
 
 // Prompt to rename advisor
@@ -810,11 +1037,10 @@ function promptRename() {
 
 // Send interactive message to AI Advisor chat
 function sendChatMessage() {
-    const input = document.getElementById("chatInput");
-    const message = input.value.strip ? input.value.strip() : input.value.trim();
+    const input = document.getElementById("chat-input-field");
+    const message = input.value ? input.value.trim() : "";
     if (!message) return;
     
-    // Add student message bubble
     const messagesBox = document.getElementById("chat-messages-box");
     const studentBubble = document.createElement("div");
     studentBubble.className = "chat-bubble student";
@@ -826,10 +1052,12 @@ function sendChatMessage() {
     
     // Show typing indicator
     const typing = document.getElementById("chat-typing-indicator");
-    typing.style.display = "flex";
+    if (typing) {
+        typing.style.display = "flex";
+        messagesBox.appendChild(typing); // ensure it stays at bottom
+    }
     messagesBox.scrollTop = messagesBox.scrollHeight;
     
-    // Post to backend API
     fetch(`${window.API_BASE}/api/student/${studentId}/ai_chat`, {
         method: "POST",
         headers: {
@@ -840,13 +1068,12 @@ function sendChatMessage() {
     })
     .then(res => res.json())
     .then(data => {
-        typing.style.display = "none";
+        if (typing) typing.style.display = "none";
         if (data.error) {
             alert(data.error);
             return;
         }
         
-        // Add advisor message bubble
         const advisorBubble = document.createElement("div");
         advisorBubble.className = "chat-bubble advisor";
         advisorBubble.innerText = data.response;
@@ -854,8 +1081,50 @@ function sendChatMessage() {
         messagesBox.scrollTop = messagesBox.scrollHeight;
     })
     .catch(err => {
-        typing.style.display = "none";
+        if (typing) typing.style.display = "none";
         console.error(err);
+    });
+}
+
+// Update Target progress gauge doughnut chart (450 target)
+function updateTargetGauge(currentScore) {
+    const target = 450;
+    const remaining = Math.max(0, target - currentScore);
+    const completed = Math.min(currentScore, target);
+    
+    document.getElementById("gaugeCurrentScore").innerText = currentScore;
+    const distanceEl = document.getElementById("gaugeRemainingDistance");
+    if (currentScore >= target) {
+        distanceEl.innerText = `Hedef Aşıldı! (+${currentScore - target} Puan)`;
+        distanceEl.style.color = "var(--success)";
+    } else {
+        distanceEl.innerText = `Hedefe Kalan: ${remaining} Puan`;
+        distanceEl.style.color = "var(--accent)";
+    }
+    
+    const ctx = document.getElementById("targetGaugeChart").getContext("2d");
+    if (targetGaugeChartInstance) {
+        targetGaugeChartInstance.destroy();
+    }
+    
+    targetGaugeChartInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [completed, remaining],
+                backgroundColor: ['#3b82f6', '#e2e8f0'],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '75%',
+            plugins: {
+                legend: { display: false },
+                tooltip: { enabled: false }
+            }
+        }
     });
 }
 
@@ -870,15 +1139,17 @@ fetch(window.API_BASE + "/api/student/dashboard", {
 .then(data => {
     studentId = data.student.id;
     
-    // Main profile bindings
+    // Welcome Banner and Profile Bindings
     document.getElementById("student-name").innerText = data.student.name;
     document.getElementById("student-school").innerText = `${data.student.school} | ${data.student.grade}. Sınıf`;
-    document.getElementById("student-no").innerText = data.student.student_no;
+    document.getElementById("welcome-student-name").innerText = data.student.name;
     
-    // Target exam details
-    document.getElementById("target-exam").innerText = data.target_exam || "BELİRTİLMEDİ";
+    const noEl = document.getElementById("student-no");
+    if (noEl) noEl.innerText = data.student.student_no;
     
-    // Update advisor name badges
+    const targetExamEl = document.getElementById("target-exam");
+    if (targetExamEl) targetExamEl.innerText = data.target_exam || "BELİRTİLMEDİ";
+    
     updateAdvisorNameLabels(data.student.ai_advisor_name || "Yapay Zeka Rehberi");
 
     // Populate solved exams map
@@ -888,6 +1159,10 @@ fetch(window.API_BASE + "/api/student/dashboard", {
             solvedExamsMap[e.exam_name] = e.score;
         });
     }
+
+    // Render Target Progress Gauge
+    const latestScore = data.recent_exams && data.recent_exams.length > 0 ? data.recent_exams[0].score : 440;
+    updateTargetGauge(latestScore);
 
     // Render LGS Exam Results Table
     const etable = document.getElementById("lgs-exam-results-table");
@@ -933,7 +1208,6 @@ fetch(window.API_BASE + "/api/student/dashboard", {
         atable.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted)">Sistemde tanımlı ödev bulunmuyor.</td></tr>`;
     }
 
-    // Now call supplementary endpoints using studentId
     loadSupplementaryData(studentId);
 })
 .catch(err => {
@@ -947,8 +1221,15 @@ function loadSupplementaryData(sId) {
     })
     .then(res => res.json())
     .then(data => {
-        document.getElementById("ai-analysis-text").innerText = data.analysis;
-    });
+        const welcomeText = document.getElementById("ai-analysis-welcome-text");
+        if (welcomeText) {
+            welcomeText.innerText = data.analysis;
+        } else {
+            const legacyText = document.getElementById("ai-analysis-text");
+            if (legacyText) legacyText.innerText = data.analysis;
+        }
+    })
+    .catch(err => console.error("Error fetching AI critique:", err));
 
     // 2. Fetch chart progress data
     fetch(`${window.API_BASE}/api/student/${sId}/ai_chart_data`, {
@@ -956,13 +1237,10 @@ function loadSupplementaryData(sId) {
     })
     .then(res => res.json())
     .then(chartData => {
-        // Render Line chart of Mock exams
+        // Line chart of Mock exams
         const examLabels = chartData.exams.map(e => e.name);
         const examScores = chartData.exams.map(e => e.score);
-        
-        // Dynamic target line based on student percentile (e.g. 480 points for Zeynep_S target)
-        // Hardcode a nice benchmark score of 450 for display
-        const targetScore = 475; 
+        const targetScore = 450; 
 
         const ctx1 = document.getElementById("mockExamsChart").getContext("2d");
         new Chart(ctx1, {
@@ -1016,7 +1294,7 @@ function loadSupplementaryData(sId) {
             }
         });
 
-        // Render Study Reviews breakdown Doughnut Chart
+        // Study Reviews breakdown doughnut chart
         const reviewLabels = chartData.reviews.map(r => r.subject);
         const reviewDurations = chartData.reviews.map(r => r.duration);
 
@@ -1052,8 +1330,10 @@ function loadSupplementaryData(sId) {
     })
     .then(res => res.json())
     .then(data => {
-        // Set target percentile
-        document.getElementById("target-percentile").innerText = `%${data.target_exam ? (data.target_exam === 'LGS' ? '1.2' : data.target_exam) : '3.5'}`;
+        const tpEl = document.getElementById("target-percentile");
+        if (tpEl) {
+            tpEl.innerText = `%${data.target_exam ? (data.target_exam === 'LGS' ? '1.2' : data.target_exam) : '3.5'}`;
+        }
         
         // Attendance
         document.getElementById("att-present").innerText = data.attendance.present;
@@ -1100,7 +1380,6 @@ function loadSupplementaryData(sId) {
             container.innerHTML = exams.map(exam => {
                 const isSozel = exam.session === "sozel";
                 const icon = isSozel ? "📕" : "📘";
-                const sessionLabel = isSozel ? "Sözel Bölüm" : "Sayısal Bölüm";
                 const pdfName = `${exam.year}_${exam.session}.pdf`;
                 
                 const score = solvedExamsMap[exam.exam_name];
@@ -1130,44 +1409,334 @@ function loadSupplementaryData(sId) {
     })
     .catch(err => console.error("Error fetching LGS exams list:", err));
 
-    // 4. AI Advisor study plan
-    loadAiPlan(sId);
+    // Fetch dynamic study plans
+    loadAiPlans(sId);
 }
 
-function loadAiPlan(sId) {
-    fetch(`${window.API_BASE}/api/student/${sId}/ai_study_plan`, {
+// Fetch & Render Study Plans list
+function loadAiPlans(sId) {
+    fetch(`${window.API_BASE}/api/student/${sId}/ai_study_plans`, {
         headers: { "Authorization": "Bearer " + token }
     })
     .then(res => res.json())
-    .then(plan => {
-        document.getElementById("ai-topic").innerText = plan.topic;
-        document.getElementById("ai-guide").innerText = plan.study_guide;
+    .then(data => {
+        const plans = data.plans || [];
+        updateAdvisorNameLabels(data.ai_advisor_name || "Yapay Zeka Rehberi");
         
-        const actionBox = document.getElementById("ai-action-box");
-        if (plan.status === "completed") {
-            actionBox.innerHTML = `
-                <div style="background:#dcfce7; border:1px solid #bbf7d0; padding:15px; border-radius:8px; margin-bottom:10px;">
-                    <span style="font-size:2rem; color:var(--success); display:block;">🎉</span>
-                    <strong style="color:var(--success); display:block; margin-bottom:5px;">Konu Tamamlandı!</strong>
-                    <span style="font-size:0.88rem; color:#166534;">Rehberiniz onayladı: <strong>"Tebrikler! Bu konunun pekiştirme testini başarıyla tamamladın."</strong></span>
+        const activePlan = plans.find(p => p.status === 'active');
+        const activeContainer = document.getElementById("active-study-plan-container");
+        
+        if (activePlan) {
+            activeContainer.innerHTML = `
+                <div class="study-plan-card">
+                    <div class="study-grid-row">
+                        <div class="study-left">
+                            <h4 style="margin:0 0 10px 0; font-size:1.15rem; color:var(--primary); font-weight:800;">${activePlan.topic}</h4>
+                            <p style="font-size:0.9rem; color:var(--text-muted); line-height:1.6; margin-bottom:15px;">
+                                Yapay Zeka Rehberiniz tarafından size özel hazırlanan konu çalışma rehberini okuyarak hazırlanın.
+                            </p>
+                            <button class="btn-solve" onclick="openLessonModal(\`${activePlan.study_guide.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`, \`${activePlan.topic.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`)" style="background:var(--accent);">Rehberi Oku</button>
+                        </div>
+                        <div class="study-right">
+                            <h4 style="margin:0 0 8px 0; font-size:1rem; color:var(--primary); font-weight:800;">Konu Pekiştirme Testi</h4>
+                            <p style="font-size:0.85rem; color:var(--text-muted); margin:0 0 12px 0;">
+                                Konuyu pekiştirmek için 3 soruluk kısa testi çözün. (%66 başarı gerekir)
+                            </p>
+                            <button class="btn-solve" onclick="openQuizModal(${activePlan.id}, \`${activePlan.topic.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`, ${JSON.stringify(activePlan.quiz_questions).replace(/"/g, '&quot;')})">Testi Çöz</button>
+                        </div>
+                    </div>
                 </div>
-                <button onclick="refreshNewPlan()" class="btn-solve" style="width:100%;">Yeni Çalışma Planı Yükle</button>
             `;
         } else {
-            actionBox.innerHTML = `
-                <p style="margin: 0 0 1rem 0; font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">
-                    Konuyu pekiştirmek için 3 soruluk kısa testi geçmelisiniz.
-                </p>
-                <a href="ai_quiz.html?student_id=${sId}&plan_id=${plan.plan_id}" class="btn-solve" style="text-align:center; width:100%; box-sizing:border-box;">Testi Çöz ve Konuyu Geç</a>
+            activeContainer.innerHTML = `
+                <div style="text-align: center; padding: 25px; background: #fafafa; border: 1.5px dashed #e2e8f0; border-radius: var(--radius-md);">
+                    <p style="margin-bottom: 15px; font-weight: 600; color: var(--text-muted); font-size:0.95rem;">Şu an aktif bir odak çalışma konunuz bulunmuyor.</p>
+                    <button class="btn-solve" onclick="generateNewPlan()" style="padding: 10px 20px;">Yeni Çalışma Konusu Yükle</button>
+                </div>
             `;
+        }
+        
+        renderArchive(plans);
+    })
+    .catch(err => {
+        console.error("Error loading study plans:", err);
+    });
+}
+
+// Generate new study plan
+function generateNewPlan() {
+    const container = document.getElementById("active-study-plan-container");
+    container.innerHTML = `<div style="text-align:center; padding:20px; color:var(--text-muted)">Yeni çalışma konusu üretiliyor (Bu işlem 5-10 saniye sürebilir)...</div>`;
+    
+    fetch(`${window.API_BASE}/api/student/${studentId}/ai_study_plan`, {
+        headers: { "Authorization": "Bearer " + token }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.error) {
+            alert(data.error);
+            loadAiPlans(studentId);
+            return;
+        }
+        loadAiPlans(studentId);
+    })
+    .catch(err => {
+        console.error(err);
+        alert("Plan oluşturulurken hata oluştu.");
+        loadAiPlans(studentId);
+    });
+}
+
+// Render finished study guides and quiz scores in archive panel
+function renderArchive(plans) {
+    const container = document.getElementById("learning-archive-list");
+    const completedPlans = plans.filter(p => p.status === 'completed');
+    
+    if (completedPlans.length === 0) {
+        container.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-muted)">Henüz tamamlanmış çalışma planınız bulunmuyor.</div>`;
+        return;
+    }
+    
+    container.innerHTML = completedPlans.map(plan => {
+        const dateStr = new Date(plan.created_at).toLocaleDateString('tr-TR');
+        return `
+            <div class="study-plan-card" style="margin-bottom: 12px;">
+                <div class="study-grid-row">
+                    <div class="study-left">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <h4 style="margin:0 0 5px 0; font-size:1.05rem; color:var(--primary); font-weight:700;">${plan.topic}</h4>
+                            <span style="font-size:0.75rem; color:var(--text-muted);">${dateStr}</span>
+                        </div>
+                        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:10px;">
+                            Tamamlanan Yapay Zeka Çalışma Rehberi
+                        </p>
+                        <button class="btn-solve" onclick="openLessonModal(\`${plan.study_guide.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`, \`${plan.topic.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`)" style="background:var(--accent-purple); padding:4px 10px; font-size:0.78rem;">Rehberi Oku</button>
+                    </div>
+                    <div class="study-right">
+                        <div style="background:#dcfce7; border:1px solid #bbf7d0; padding:10px; border-radius:6px; display:flex; align-items:center; gap:8px;">
+                            <span style="font-size:1rem; color:var(--success);">✓</span>
+                            <div>
+                                <strong style="color:var(--success); font-size:0.85rem;">Test Geçildi (%${plan.quiz_score})</strong>
+                                <a href="#" onclick="reviewQuizQuestions(${JSON.stringify(plan.quiz_questions).replace(/"/g, '&quot;')}, \`${plan.topic.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`, ${plan.quiz_score}); return false;" style="font-size:0.75rem; color:var(--accent); display:block; margin-top:2px; text-decoration:none; font-weight:700;">Soruları İncele</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// Study Guide Modal Control
+function openLessonModal(guideText, topicName) {
+    document.getElementById("lessonModalTitle").innerText = topicName;
+    document.getElementById("lessonModalBody").innerText = guideText;
+    document.getElementById("lessonModal").style.display = "flex";
+}
+
+function closeLessonModal() {
+    document.getElementById("lessonModal").style.display = "none";
+}
+
+// Quiz Modal Control & Solving
+function openQuizModal(planId, topic, questions) {
+    currentQuizPlanId = planId;
+    currentQuizQuestions = questions;
+    
+    document.getElementById("quizModalPlanTopic").innerText = topic;
+    const container = document.getElementById("quizModalQuestionsContainer");
+    
+    container.innerHTML = questions.map((q, idx) => {
+        return `
+            <div style="margin-bottom: 20px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 15px;">
+                <div style="font-weight: 700; margin-bottom: 10px; font-size: 0.95rem;">Soru ${idx + 1}: ${q.question}</div>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    ${q.options.map((opt, optIdx) => {
+                        return `
+                            <label style="display: flex; align-items: center; gap: 10px; font-size: 0.9rem; cursor: pointer; padding: 6px 10px; border-radius: 6px; background: #f8fafc; border: 1px solid #e2e8f0; transition: background 0.2s;">
+                                <input type="radio" name="q-${idx}" value="${opt}" style="margin: 0;">
+                                <span>${opt}</span>
+                            </label>
+                        `;
+                    }).join('')}
+                </div>
+            </div>
+        `;
+    }).join('');
+    
+    document.getElementById("quizModalQuestionsContainer").style.display = "block";
+    document.getElementById("quizModalResultContainer").style.display = "none";
+    
+    document.getElementById("quizModalFooter").innerHTML = `
+        <button class="btn-solve" onclick="submitInlineQuiz()" style="width: auto; padding: 10px 20px;">Cevapları Gönder</button>
+    `;
+    
+    document.getElementById("quizModal").style.display = "flex";
+}
+
+function closeQuizModal() {
+    document.getElementById("quizModal").style.display = "none";
+}
+
+function submitInlineQuiz() {
+    const answers = [];
+    const errorMsg = [];
+    
+    currentQuizQuestions.forEach((q, qIdx) => {
+        const selected = document.querySelector(`input[name="q-${qIdx}"]:checked`);
+        if (!selected) {
+            errorMsg.push(qIdx + 1);
+        } else {
+            answers.push(selected.value);
+        }
+    });
+    
+    if (errorMsg.length > 0) {
+        alert(`Lütfen şu soruları boş bırakmayın: ${errorMsg.join(', ')}`);
+        return;
+    }
+    
+    const submitBtn = document.querySelector("#quizModalFooter button");
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerText = "Gönderiliyor...";
+    }
+    
+    fetch(`${window.API_BASE}/api/student/${studentId}/ai_study_plan/submit`, {
+        method: "POST",
+        headers: {
+            "Authorization": "Bearer " + token,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            plan_id: currentQuizPlanId,
+            answers: answers
+        })
+    })
+    .then(res => res.json())
+    .then(result => {
+        if (result.error) {
+            alert(result.error);
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Cevapları Gönder";
+            }
+            return;
+        }
+        
+        document.getElementById("quizModalQuestionsContainer").style.display = "none";
+        
+        const rBox = document.getElementById("quizModalResultContainer");
+        const rIcon = document.getElementById("quizModalResultIcon");
+        const rTitle = document.getElementById("quizModalResultTitle");
+        const rFeedback = document.getElementById("quizModalResultFeedback");
+        
+        rBox.style.display = "block";
+        rFeedback.innerText = result.feedback;
+        
+        if (result.passed) {
+            rBox.style.background = "#dcfce7";
+            rBox.style.border = "1px solid #bbf7d0";
+            rBox.style.color = "#166534";
+            rIcon.innerText = "🎉";
+            rTitle.innerText = "Başarıyla Tamamlandı!";
+            
+            document.getElementById("quizModalFooter").innerHTML = `
+                <button class="btn-solve" onclick="closeQuizModalAndRefresh()" style="width: auto; padding: 10px 20px; background:var(--success);">Kapat ve Yenile</button>
+            `;
+        } else {
+            rBox.style.background = "#fee2e2";
+            rBox.style.border = "1px solid #fecaca";
+            rBox.style.color = "#991b1b";
+            rIcon.innerText = "⚠️";
+            rTitle.innerText = "Tekrar Çalışmalısın";
+            
+            document.getElementById("quizModalFooter").innerHTML = `
+                <button class="btn-solve" onclick="retryInlineQuiz()" style="width: auto; padding: 10px 20px; background:var(--danger);">Tekrar Dene</button>
+                <button class="btn-solve" onclick="closeQuizModal()" style="width: auto; padding: 10px 20px; background:var(--text-muted); margin-left:8px;">Kapat</button>
+            `;
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        alert("Bağlantı hatası!");
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerText = "Cevapları Gönder";
         }
     });
 }
 
-function refreshNewPlan() {
-    location.reload();
+function retryInlineQuiz() {
+    document.getElementById("quizModalQuestionsContainer").style.display = "block";
+    document.getElementById("quizModalResultContainer").style.display = "none";
+    currentQuizQuestions.forEach((q, qIdx) => {
+        const radios = document.getElementsByName(`q-${qIdx}`);
+        radios.forEach(r => r.checked = false);
+    });
+    document.getElementById("quizModalFooter").innerHTML = `
+        <button class="btn-solve" onclick="submitInlineQuiz()" style="width: auto; padding: 10px 20px;">Cevapları Gönder</button>
+    `;
+}
+
+function closeQuizModalAndRefresh() {
+    closeQuizModal();
+    loadAiPlans(studentId);
+    
+    // Refresh student core info
+    fetch(window.API_BASE + "/api/student/dashboard", {
+        headers: { "Authorization": "Bearer " + token }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.student && data.student.last_ai_analysis) {
+            document.getElementById("ai-analysis-welcome-text").innerText = data.student.last_ai_analysis;
+        }
+    });
+}
+
+// Review quiz questions in read-only mode under Archive
+function reviewQuizQuestions(questions, topic, score) {
+    document.getElementById("quizModalPlanTopic").innerText = `${topic} (Puan: %${score})`;
+    const container = document.getElementById("quizModalQuestionsContainer");
+    
+    container.innerHTML = questions.map((q, idx) => {
+        return `
+            <div style="margin-bottom: 20px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 15px;">
+                <div style="font-weight: 700; margin-bottom: 10px; font-size: 0.95rem;">Soru ${idx + 1}: ${q.question}</div>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    ${q.options.map((opt) => {
+                        const isCorrect = opt.trim().toLowerCase() === q.answer.trim().toLowerCase();
+                        let bg = "#f8fafc";
+                        let border = "1px solid #e2e8f0";
+                        let color = "var(--text-main)";
+                        let prefix = "";
+                        if (isCorrect) {
+                            bg = "#dcfce7";
+                            border = "1.5px solid var(--success)";
+                            color = "#166534";
+                            prefix = "<b>✓ (Doğru Cevap) </b>";
+                        }
+                        return `
+                            <div style="font-size: 0.9rem; padding: 8px 12px; border-radius: 6px; background: ${bg}; border: ${border}; color: ${color}; font-weight: 500;">
+                                ${prefix}${opt}
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            </div>
+        `;
+    }).join('');
+    
+    document.getElementById("quizModalQuestionsContainer").style.display = "block";
+    document.getElementById("quizModalResultContainer").style.display = "none";
+    
+    document.getElementById("quizModalFooter").innerHTML = `
+        <button class="btn-solve" onclick="closeQuizModal()" style="width: auto; padding: 10px 20px; background:var(--accent);">Kapat</button>
+    `;
+    
+    document.getElementById("quizModal").style.display = "flex";
 }
 </script>
-
 </body>
 </html>

@@ -850,6 +850,41 @@ def student_ai_study_plan(student_id):
     })
 
 
+@app.route("/api/student/<int:student_id>/ai_study_plans")
+@login_required()
+def student_ai_study_plans_list(student_id):
+    db = get_db()
+    
+    role = request.user.get("role")
+    ref_id = request.user.get("ref_id")
+    if role != "teacher" and not (role == "student" and ref_id == student_id):
+        return jsonify({"error": "Yetkisiz"}), 403
+        
+    plans = db.execute(
+        "SELECT id, topic, study_guide, quiz_questions, quiz_score, status, created_at FROM ai_study_plans WHERE student_id = ? ORDER BY id DESC",
+        (student_id,)
+    ).fetchall()
+    
+    student_row = db.execute("SELECT ai_advisor_name FROM students WHERE id = ?", (student_id,)).fetchone()
+    advisor_name = student_row["ai_advisor_name"] if student_row else "Yapay Zeka Rehberi"
+    
+    return jsonify({
+        "ai_advisor_name": advisor_name,
+        "plans": [
+            {
+                "id": p["id"],
+                "topic": p["topic"],
+                "study_guide": p["study_guide"],
+                "quiz_questions": json.loads(p["quiz_questions"]) if p["quiz_questions"] else [],
+                "quiz_score": p["quiz_score"],
+                "status": p["status"],
+                "created_at": p["created_at"]
+            }
+            for p in plans
+        ]
+    })
+
+
 @app.route("/api/student/<int:student_id>/ai_study_plan/submit", methods=["POST"])
 @login_required()
 def submit_student_ai_quiz(student_id):
