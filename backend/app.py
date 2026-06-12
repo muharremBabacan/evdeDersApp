@@ -33,7 +33,7 @@ def call_claude(system_prompt, user_prompt, max_tokens=1500, response_json=False
     }
     
     data = {
-        "model": "claude-3-5-sonnet-latest",
+        "model": "claude-3-5-sonnet-20241022",
         "max_tokens": max_tokens,
         "system": system_prompt,
         "messages": [
