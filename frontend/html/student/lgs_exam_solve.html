@@ -38,7 +38,7 @@
         }
 
         .container {
-            max-width: 1100px;
+            max-width: 1400px;
             margin: 0 auto;
             width: 100%;
             flex: 1;
@@ -97,11 +97,11 @@
         /* Layout Main Grid */
         .exam-grid {
             display: grid;
-            grid-template-columns: 1fr 2.8fr;
+            grid-template-columns: 1.4fr 1fr;
             gap: 20px;
             flex: 1;
         }
-        @media (max-width: 768px) {
+        @media (max-width: 992px) {
             .exam-grid { grid-template-columns: 1fr; }
         }
 
@@ -364,55 +364,63 @@
 
     <!-- Exam Layout Grid -->
     <div class="exam-grid">
-        <!-- Sidebar Navigation -->
-        <div class="sidebar-card">
-            <h4 style="margin:0; font-weight:800; font-size:0.9rem; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted)">Soru Listesi</h4>
-            <div class="navigator-grid" id="questionNavGrid">
-                <!-- Nav buttons injected here -->
-            </div>
-            
-            <div style="margin-top: 10px; font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">
-                <div>🟢 Çözüldü</div>
-                <div style="margin-top: 4px;">⚪ Boş Bırakıldı / Bekliyor</div>
-            </div>
+        <!-- Left Column: PDF Viewer -->
+        <div class="pdf-viewer-card" style="background: var(--white); border-radius: var(--radius-lg); box-shadow: var(--shadow); border: 1px solid var(--glass-border); overflow: hidden; display: flex; flex-direction: column;">
+            <iframe id="pdfViewer" src="" style="width: 100%; height: 78vh; border: none;"></iframe>
         </div>
 
-        <!-- Question Body Viewer -->
-        <div class="question-card">
-            <div>
-                <div class="question-header">
-                    <span class="question-meta" id="questionNumLabel">Soru 1/10</span>
-                    <span id="questionSubjectLabel" style="font-weight:700; font-size:0.9rem; color:var(--text-muted);">Matematik</span>
+        <!-- Right Column: Answer Sheet -->
+        <div style="display: flex; flex-direction: column; gap: 20px; height: 78vh;">
+            <!-- Navigator Card -->
+            <div class="sidebar-card">
+                <h4 style="margin:0; font-weight:800; font-size:0.9rem; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted)">Soru Listesi</h4>
+                <div class="navigator-grid" id="questionNavGrid" style="grid-template-columns: repeat(5, 1fr); max-height: 180px;">
+                    <!-- Nav buttons injected here -->
                 </div>
                 
-                <div class="question-text" id="questionText">
-                    Soru yükleniyor...
-                </div>
-
-                <div class="options-list">
-                    <button class="option-btn" onclick="selectOption('A')">
-                        <span class="option-letter">A</span> <span id="optLabelA">...</span>
-                    </button>
-                    <button class="option-btn" onclick="selectOption('B')">
-                        <span class="option-letter">B</span> <span id="optLabelB">...</span>
-                    </button>
-                    <button class="option-btn" onclick="selectOption('C')">
-                        <span class="option-letter">C</span> <span id="optLabelC">...</span>
-                    </button>
-                    <button class="option-btn" onclick="selectOption('D')">
-                        <span class="option-letter">D</span> <span id="optLabelD">...</span>
-                    </button>
+                <div style="display: flex; justify-content: space-between; margin-top: 5px; font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">
+                    <span>🟢 Çözüldü</span>
+                    <span>⚪ Boş Bırakıldı</span>
                 </div>
             </div>
 
-            <!-- Controls bar -->
-            <div class="controls-bar">
+            <!-- Question Body Viewer / Answer Selector -->
+            <div class="question-card" style="flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
                 <div>
-                    <button class="btn-nav" id="btnPrev" onclick="navigateQuestion(-1)" disabled>← Önceki</button>
-                    <button class="btn-nav" style="margin-left: 8px;" onclick="selectOption('')">Boş Bırak</button>
-                    <button class="btn-nav" style="margin-left: 8px;" id="btnNext" onclick="navigateQuestion(1)">Sonraki →</button>
+                    <div class="question-header" style="margin-bottom: 15px;">
+                        <span class="question-meta" id="questionNumLabel">Soru 1/40</span>
+                        <span id="questionSubjectLabel" style="font-weight:700; font-size:0.9rem; color:var(--text-muted);">Matematik</span>
+                    </div>
+                    
+                    <div class="question-text" id="questionText" style="font-size: 0.95rem; color: var(--text-muted); font-weight: 500; margin-bottom: 20px; line-height: 1.5;">
+                        Lütfen sol taraftaki PDF kitapçığından soruyu inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.
+                    </div>
+    
+                    <div class="options-list" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;">
+                        <button class="option-btn" onclick="selectOption('A')" style="padding: 10px 14px;">
+                            <span class="option-letter">A</span> <span id="optLabelA">A</span>
+                        </button>
+                        <button class="option-btn" onclick="selectOption('B')" style="padding: 10px 14px;">
+                            <span class="option-letter">B</span> <span id="optLabelB">B</span>
+                        </button>
+                        <button class="option-btn" onclick="selectOption('C')" style="padding: 10px 14px;">
+                            <span class="option-letter">C</span> <span id="optLabelC">C</span>
+                        </button>
+                        <button class="option-btn" onclick="selectOption('D')" style="padding: 10px 14px;">
+                            <span class="option-letter">D</span> <span id="optLabelD">D</span>
+                        </button>
+                    </div>
                 </div>
-                <button class="btn-submit-exam" onclick="confirmSubmit()">Sınavı Bitir</button>
+    
+                <!-- Controls bar -->
+                <div class="controls-bar" style="margin-top: 10px; padding-top: 15px;">
+                    <div>
+                        <button class="btn-nav" id="btnPrev" onclick="navigateQuestion(-1)" disabled>←</button>
+                        <button class="btn-nav" style="margin-left: 5px;" onclick="selectOption('')">Boş</button>
+                        <button class="btn-nav" style="margin-left: 5px;" id="btnNext" onclick="navigateQuestion(1)">→</button>
+                    </div>
+                    <button class="btn-submit-exam" onclick="confirmSubmit()">Sınavı Bitir</button>
+                </div>
             </div>
         </div>
     </div>
@@ -471,6 +479,13 @@ if (!token) {
     location.href = "/";
 }
 
+// Map JSON filename to PDF filename
+function getPdfFilename(jsonFile) {
+    const year = jsonFile.split('_')[0];
+    const isSozel = jsonFile.includes('sozel');
+    return `${year}_${isSozel ? 'sozel' : 'sayisal'}.pdf`;
+}
+
 // 1. Fetch Exam questions
 fetch(`${window.API_BASE}/api/lgs_exams/${examFile}/questions`, {
     headers: { "Authorization": "Bearer " + token }
@@ -481,10 +496,14 @@ fetch(`${window.API_BASE}/api/lgs_exams/${examFile}/questions`, {
 })
 .then(data => {
     document.getElementById("exam-name-header").innerText = data.exam_name;
-    document.getElementById("exam-session-badge").innerText = examFile.includes("sozel") ? "Sözel Bölüm (75 Dk)" : "Sayısal Bölüm (80 Dk)";
+    document.getElementById("exam-session-badge").innerText = examFile.includes("sozel") ? "Sözel Oturumu" : "Sayısal Oturumu";
     
     questionsList = data.questions;
     durationSeconds = data.duration_minutes * 60;
+    
+    // Set PDF iframe src
+    const pdfName = getPdfFilename(examFile);
+    document.getElementById("pdfViewer").src = `../../assets/lgs_pdfs/${pdfName}#toolbar=0&navpanes=0`;
     
     // Initialize question navigator grid
     const navGrid = document.getElementById("questionNavGrid");

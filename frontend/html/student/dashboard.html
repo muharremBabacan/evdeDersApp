@@ -583,7 +583,7 @@
                         </div>
                         <div style="display:flex; gap:8px;">
                             <a href="lgs_exam_solve.html?file=2025_sozel.json" class="btn-solve" style="background:var(--gradient);">Sınavı Çöz</a>
-                            <a href="../../assets/lgs_pdfs/2025_LGS_Sorulari_Sozel.pdf" download class="pdf-download-btn">PDF</a>
+                            <a href="../../assets/lgs_pdfs/2025_sozel.pdf" download class="pdf-download-btn">PDF</a>
                         </div>
                     </div>
                     <div class="pdf-item">
@@ -596,7 +596,7 @@
                         </div>
                         <div style="display:flex; gap:8px;">
                             <a href="lgs_exam_solve.html?file=2025_sayisal.json" class="btn-solve" style="background:var(--gradient);">Sınavı Çöz</a>
-                            <a href="../../assets/lgs_pdfs/2025_LGS_Sorulari_Sayisal.pdf" download class="pdf-download-btn">PDF</a>
+                            <a href="../../assets/lgs_pdfs/2025_sayisal.pdf" download class="pdf-download-btn">PDF</a>
                         </div>
                     </div>
                 </div>
@@ -1101,7 +1101,7 @@ function loadSupplementaryData(sId) {
                 const isSozel = exam.session === "sozel";
                 const icon = isSozel ? "📕" : "📘";
                 const sessionLabel = isSozel ? "Sözel Bölüm" : "Sayısal Bölüm";
-                const pdfName = isSozel ? `2025_LGS_Sorulari_Sozel.pdf` : `2025_LGS_Sorulari_Sayisal.pdf`; // fallback mapping
+                const pdfName = `${exam.year}_${exam.session}.pdf`;
                 
                 const score = solvedExamsMap[exam.exam_name];
                 const isSolved = score !== undefined;

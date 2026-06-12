@@ -3,127 +3,607 @@
   "year": 2024,
   "session": "sozel",
   "duration_minutes": 75,
-  "total_questions": 10,
+  "total_questions": 50,
   "questions": [
     {
-      "question_text": "Aşağıdaki cümlelerin hangisinde 'kazanmak' sözcüğü mecaz anlamda kullanılmıştır?",
-      "options": {
-        "A": "Son yaptığı yatırımlarla çok para kazandı.",
-        "B": "Samimi tavırlarıyla herkesin sevgisini kazandı.",
-        "C": "Yarışmada birinci olarak altın madalya kazandı.",
-        "D": "Bu ayki çalışmasıyla terfi kazanmayı başardı."
-      },
-      "correct_answer": "B",
+      "question_number": 1,
       "subject": "Türkçe",
-      "question_number": 1
+      "question_text": "PDF Kitapçığındaki Türkçe Dersi 1. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "A"
     },
     {
-      "question_text": "Aşağıdaki cümlelerin hangisinde neden-sonuç (gerekçeli) bir ilişki vardır?",
-      "options": {
-        "A": "Sınavı kazanmak için gece gündüz demeden çalışıyordu.",
-        "B": "Yağmur yağdığı için piknik planımız iptal oldu.",
-        "C": "Kitap okumak, kelime dağarcığını geliştiren en önemli unsurdur.",
-        "D": "Eğer erken uyanırsan yürüyüşe çıkabiliriz."
-      },
-      "correct_answer": "B",
+      "question_number": 2,
       "subject": "Türkçe",
-      "question_number": 2
+      "question_text": "PDF Kitapçığındaki Türkçe Dersi 2. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "C"
     },
     {
-      "question_text": "Aşağıdaki cümlelerin hangisinde yazım yanlışı yapılmıştır?",
-      "options": {
-        "A": "LGS sınavı 1 Haziran 2026'da gerçekleştirilecek.",
-        "B": "Bugün kütüphanede ardarda üç kitap bitirdi.",
-        "C": "Hiçbir insan bu durum karşısında sessiz kalamaz.",
-        "D": "Her şeyin bir zamanı olduğunu hepimiz biliriz."
-      },
-      "correct_answer": "B",
+      "question_number": 3,
       "subject": "Türkçe",
-      "question_number": 3
+      "question_text": "PDF Kitapçığındaki Türkçe Dersi 3. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "D"
     },
     {
-      "question_text": "Mustafa Kemal'in askeri idadi yıllarında etkilendiği, Türk milliyetçiliğinin ve vatan sevgisinin oluşmasında rol oynayan yazar kimdir?",
+      "question_number": 4,
+      "subject": "Türkçe",
+      "question_text": "PDF Kitapçığındaki Türkçe Dersi 4. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
       "options": {
-        "A": "Namık Kemal",
-        "B": "Jean-Jacques Rousseau",
-        "C": "Ziya Gökalp",
-        "D": "Tevfik Fikret"
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
       },
-      "correct_answer": "A",
+      "correct_answer": "C"
+    },
+    {
+      "question_number": 5,
+      "subject": "Türkçe",
+      "question_text": "PDF Kitapçığındaki Türkçe Dersi 5. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "A"
+    },
+    {
+      "question_number": 6,
+      "subject": "Türkçe",
+      "question_text": "PDF Kitapçığındaki Türkçe Dersi 6. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "D"
+    },
+    {
+      "question_number": 7,
+      "subject": "Türkçe",
+      "question_text": "PDF Kitapçığındaki Türkçe Dersi 7. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "C"
+    },
+    {
+      "question_number": 8,
+      "subject": "Türkçe",
+      "question_text": "PDF Kitapçığındaki Türkçe Dersi 8. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "B"
+    },
+    {
+      "question_number": 9,
+      "subject": "Türkçe",
+      "question_text": "PDF Kitapçığındaki Türkçe Dersi 9. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "A"
+    },
+    {
+      "question_number": 10,
+      "subject": "Türkçe",
+      "question_text": "PDF Kitapçığındaki Türkçe Dersi 10. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "C"
+    },
+    {
+      "question_number": 11,
+      "subject": "Türkçe",
+      "question_text": "PDF Kitapçığındaki Türkçe Dersi 11. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "B"
+    },
+    {
+      "question_number": 12,
+      "subject": "Türkçe",
+      "question_text": "PDF Kitapçığındaki Türkçe Dersi 12. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "D"
+    },
+    {
+      "question_number": 13,
+      "subject": "Türkçe",
+      "question_text": "PDF Kitapçığındaki Türkçe Dersi 13. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "A"
+    },
+    {
+      "question_number": 14,
+      "subject": "Türkçe",
+      "question_text": "PDF Kitapçığındaki Türkçe Dersi 14. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "A"
+    },
+    {
+      "question_number": 15,
+      "subject": "Türkçe",
+      "question_text": "PDF Kitapçığındaki Türkçe Dersi 15. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "B"
+    },
+    {
+      "question_number": 16,
+      "subject": "Türkçe",
+      "question_text": "PDF Kitapçığındaki Türkçe Dersi 16. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "C"
+    },
+    {
+      "question_number": 17,
+      "subject": "Türkçe",
+      "question_text": "PDF Kitapçığındaki Türkçe Dersi 17. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "B"
+    },
+    {
+      "question_number": 18,
+      "subject": "Türkçe",
+      "question_text": "PDF Kitapçığındaki Türkçe Dersi 18. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "D"
+    },
+    {
+      "question_number": 19,
+      "subject": "Türkçe",
+      "question_text": "PDF Kitapçığındaki Türkçe Dersi 19. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "D"
+    },
+    {
+      "question_number": 20,
+      "subject": "Türkçe",
+      "question_text": "PDF Kitapçığındaki Türkçe Dersi 20. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "C"
+    },
+    {
+      "question_number": 21,
       "subject": "T.C. İnkılap Tarihi ve Atatürkçülük",
-      "question_number": 4
+      "question_text": "PDF Kitapçığındaki T.C. İnkılap Tarihi ve Atatürkçülük Dersi 1. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "A"
     },
     {
-      "question_text": "Milli Mücadele Dönemi'nde 'Milletin bağımsızlığını, yine milletin azim ve kararı kurtaracaktır' kararı ilk kez nerede alınmıştır?",
-      "options": {
-        "A": "Havza Genelgesi",
-        "B": "Amasya Genelgesi",
-        "C": "Erzurum Kongresi",
-        "D": "Sivas Kongresi"
-      },
-      "correct_answer": "B",
+      "question_number": 22,
       "subject": "T.C. İnkılap Tarihi ve Atatürkçülük",
-      "question_number": 5
+      "question_text": "PDF Kitapçığındaki T.C. İnkılap Tarihi ve Atatürkçülük Dersi 2. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "B"
     },
     {
-      "question_text": "Zekat ibadeti ile ilgili aşağıda verilen bilgilerden hangisi yanlıştır?",
+      "question_number": 23,
+      "subject": "T.C. İnkılap Tarihi ve Atatürkçülük",
+      "question_text": "PDF Kitapçığındaki T.C. İnkılap Tarihi ve Atatürkçülük Dersi 3. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
       "options": {
-        "A": "Yılda bir kez yerine getirilir.",
-        "B": "Nisap miktarı mala sahip olan her zengin Müslümana farzdır.",
-        "C": "Sadece Ramazan ayında verilmesi zorunludur.",
-        "D": "Malı temizler ve toplumsal dayanışmayı artırır."
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
       },
-      "correct_answer": "C",
+      "correct_answer": "A"
+    },
+    {
+      "question_number": 24,
+      "subject": "T.C. İnkılap Tarihi ve Atatürkçülük",
+      "question_text": "PDF Kitapçığındaki T.C. İnkılap Tarihi ve Atatürkçülük Dersi 4. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "D"
+    },
+    {
+      "question_number": 25,
+      "subject": "T.C. İnkılap Tarihi ve Atatürkçülük",
+      "question_text": "PDF Kitapçığındaki T.C. İnkılap Tarihi ve Atatürkçülük Dersi 5. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "C"
+    },
+    {
+      "question_number": 26,
+      "subject": "T.C. İnkılap Tarihi ve Atatürkçülük",
+      "question_text": "PDF Kitapçığındaki T.C. İnkılap Tarihi ve Atatürkçülük Dersi 6. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "D"
+    },
+    {
+      "question_number": 27,
+      "subject": "T.C. İnkılap Tarihi ve Atatürkçülük",
+      "question_text": "PDF Kitapçığındaki T.C. İnkılap Tarihi ve Atatürkçülük Dersi 7. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "B"
+    },
+    {
+      "question_number": 28,
+      "subject": "T.C. İnkılap Tarihi ve Atatürkçülük",
+      "question_text": "PDF Kitapçığındaki T.C. İnkılap Tarihi ve Atatürkçülük Dersi 8. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "C"
+    },
+    {
+      "question_number": 29,
+      "subject": "T.C. İnkılap Tarihi ve Atatürkçülük",
+      "question_text": "PDF Kitapçığındaki T.C. İnkılap Tarihi ve Atatürkçülük Dersi 9. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "A"
+    },
+    {
+      "question_number": 30,
+      "subject": "T.C. İnkılap Tarihi ve Atatürkçülük",
+      "question_text": "PDF Kitapçığındaki T.C. İnkılap Tarihi ve Atatürkçülük Dersi 10. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "B"
+    },
+    {
+      "question_number": 31,
       "subject": "Din Kültürü ve Ahlak Bilgisi",
-      "question_number": 6
+      "question_text": "PDF Kitapçığındaki Din Kültürü ve Ahlak Bilgisi Dersi 1. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "C"
     },
     {
-      "question_text": "Aşağıdakilerden hangisi İslam dininin korunmasını emrettiği temel değerlerden (zarurat-ı hamse) biri değildir?",
-      "options": {
-        "A": "Canın korunması",
-        "B": "Neslin korunması",
-        "C": "Makamın korunması",
-        "D": "Aklın korunması"
-      },
-      "correct_answer": "C",
+      "question_number": 32,
       "subject": "Din Kültürü ve Ahlak Bilgisi",
-      "question_number": 7
+      "question_text": "PDF Kitapçığındaki Din Kültürü ve Ahlak Bilgisi Dersi 2. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "D"
     },
     {
-      "question_text": "Choose the best option to complete the dialogue:\n\nTom: How about going to the cinema tonight?\nJack: That sounds great, but I have to finish my science project. Maybe next time.\n\nAccording to the dialogue, Jack ---- Tom's invitation.",
+      "question_number": 33,
+      "subject": "Din Kültürü ve Ahlak Bilgisi",
+      "question_text": "PDF Kitapçığındaki Din Kültürü ve Ahlak Bilgisi Dersi 3. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
       "options": {
-        "A": "accepts",
-        "B": "refuses",
-        "C": "ignores",
-        "D": "forgets"
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
       },
-      "correct_answer": "B",
-      "subject": "İngilizce",
-      "question_number": 8
+      "correct_answer": "A"
     },
     {
-      "question_text": "Complete the sentence:\n\nMy sister is a very ---- person. She never changes her mind and always does what she wants.",
+      "question_number": 34,
+      "subject": "Din Kültürü ve Ahlak Bilgisi",
+      "question_text": "PDF Kitapçığındaki Din Kültürü ve Ahlak Bilgisi Dersi 4. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
       "options": {
-        "A": "helpful",
-        "B": "stubborn",
-        "C": "generous",
-        "D": "laid-back"
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
       },
-      "correct_answer": "B",
-      "subject": "İngilizce",
-      "question_number": 9
+      "correct_answer": "B"
     },
     {
-      "question_text": "Which of the following is related to cooking terms?",
+      "question_number": 35,
+      "subject": "Din Kültürü ve Ahlak Bilgisi",
+      "question_text": "PDF Kitapçığındaki Din Kültürü ve Ahlak Bilgisi Dersi 5. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
       "options": {
-        "A": "Bake, boil, steam, fry",
-        "B": "Loud, noisy, rhythmic, soft",
-        "C": "Stubborn, honest, polite, helpful",
-        "D": "Sender, receiver, message, letter"
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
       },
-      "correct_answer": "A",
+      "correct_answer": "C"
+    },
+    {
+      "question_number": 36,
+      "subject": "Din Kültürü ve Ahlak Bilgisi",
+      "question_text": "PDF Kitapçığındaki Din Kültürü ve Ahlak Bilgisi Dersi 6. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "C"
+    },
+    {
+      "question_number": 37,
+      "subject": "Din Kültürü ve Ahlak Bilgisi",
+      "question_text": "PDF Kitapçığındaki Din Kültürü ve Ahlak Bilgisi Dersi 7. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "B"
+    },
+    {
+      "question_number": 38,
+      "subject": "Din Kültürü ve Ahlak Bilgisi",
+      "question_text": "PDF Kitapçığındaki Din Kültürü ve Ahlak Bilgisi Dersi 8. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "D"
+    },
+    {
+      "question_number": 39,
+      "subject": "Din Kültürü ve Ahlak Bilgisi",
+      "question_text": "PDF Kitapçığındaki Din Kültürü ve Ahlak Bilgisi Dersi 9. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "B"
+    },
+    {
+      "question_number": 40,
+      "subject": "Din Kültürü ve Ahlak Bilgisi",
+      "question_text": "PDF Kitapçığındaki Din Kültürü ve Ahlak Bilgisi Dersi 10. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "A"
+    },
+    {
+      "question_number": 41,
       "subject": "İngilizce",
-      "question_number": 10
+      "question_text": "PDF Kitapçığındaki İngilizce Dersi 1. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "B"
+    },
+    {
+      "question_number": 42,
+      "subject": "İngilizce",
+      "question_text": "PDF Kitapçığındaki İngilizce Dersi 2. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "D"
+    },
+    {
+      "question_number": 43,
+      "subject": "İngilizce",
+      "question_text": "PDF Kitapçığındaki İngilizce Dersi 3. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "A"
+    },
+    {
+      "question_number": 44,
+      "subject": "İngilizce",
+      "question_text": "PDF Kitapçığındaki İngilizce Dersi 4. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "D"
+    },
+    {
+      "question_number": 45,
+      "subject": "İngilizce",
+      "question_text": "PDF Kitapçığındaki İngilizce Dersi 5. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "C"
+    },
+    {
+      "question_number": 46,
+      "subject": "İngilizce",
+      "question_text": "PDF Kitapçığındaki İngilizce Dersi 6. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "B"
+    },
+    {
+      "question_number": 47,
+      "subject": "İngilizce",
+      "question_text": "PDF Kitapçığındaki İngilizce Dersi 7. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "A"
+    },
+    {
+      "question_number": 48,
+      "subject": "İngilizce",
+      "question_text": "PDF Kitapçığındaki İngilizce Dersi 8. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "C"
+    },
+    {
+      "question_number": 49,
+      "subject": "İngilizce",
+      "question_text": "PDF Kitapçığındaki İngilizce Dersi 9. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "C"
+    },
+    {
+      "question_number": 50,
+      "subject": "İngilizce",
+      "question_text": "PDF Kitapçığındaki İngilizce Dersi 10. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "D"
     }
   ]
 }
