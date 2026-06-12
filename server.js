@@ -6,7 +6,7 @@ const PORT = process.env.PORT || 8080;
 
 // Reverse Proxy: Forward all /api requests to the Cloud Run backend
 app.use('/api', createProxyMiddleware({
-  target: 'https://flask-app-dvovxpdruq-uc.a.run.app',
+  target: 'https://flask-app-adxgpabdba-uc.a.run.app',
   changeOrigin: true
 }));
 
