@@ -33,7 +33,7 @@ def call_claude(system_prompt, user_prompt, max_tokens=1500, response_json=False
     }
     
     data = {
-        "model": "claude-3-5-sonnet-20241022",
+        "model": "claude-sonnet-4-6",
         "max_tokens": max_tokens,
         "system": system_prompt,
         "messages": [
@@ -359,8 +359,13 @@ def teacher_dashboard():
 # 🔥 TAM UYUMLU: TEACHER → STUDENT DETAIL
 # ======================================================
 @app.route("/api/teacher/student/<int:student_id>")
-@login_required(role="teacher")
+@login_required()
 def teacher_student_detail(student_id):
+    role = request.user.get("role")
+    ref_id = request.user.get("ref_id")
+    if role != "teacher" and not (role == "student" and ref_id == student_id):
+        return jsonify({"error": "Yetkisiz"}), 403
+
     db = get_db()
     
     # Check if student exists
@@ -993,8 +998,13 @@ def student_ai_analysis(student_id):
     if claude_key:
         prompt = f"""
         Öğrenci: {student['first_name']} {student['last_name']} ({student['grade_level']}. Sınıf).
-        Aşağıdaki verileri inceleyerek öğrenci için samimi, motive edici ve 4-5 cümlelik bir akademik durum analizi yap.
-        Analizde son deneme sınavı puanı, ödev tamamlama oranı, devamsızlık/geç kalma durumları ve ders çalışma tekrarlarını yorumla.
+        Aşağıdaki verileri inceleyerek öğrenci için ÇOK KISA, ÖZ, kolay okunabilir ve madde imleri (bullet points) kullanan bir analiz hazırlayacaksın. 
+        Gereksiz uzun cümlelerden kaçın. Önemli sayıları ve kelimeleri kalın yaz. Her madde arasında mutlaka satır boşluğu (paragraf) bırak.
+        
+        Analiz şu 3 maddeden oluşmalıdır:
+        - **Deneme Durumu**: Son deneme puanı ve genel gidişatın analizi.
+        - **Sorumluluk & Katılım**: Ödev tamamlama oranı ve devamsızlık durumunun kısa özeti.
+        - **Kritik Tavsiye**: Bir sonraki adımda neye odaklanması gerektiği.
         
         Veriler:
         - Son Denemeler: {', '.join([f"{e['exam_name']}: {e['score']}" for e in exams])}

@@ -602,6 +602,23 @@
                 </div>
             </div>
 
+            <!-- LGS Practice Exam Results Table -->
+            <div class="section-card">
+                <h3>📝 LGS Deneme Sınavı Sonuçlarım</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Sınav Adı</th>
+                            <th>Puan / Başarı</th>
+                            <th>Durum</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lgs-exam-results-table">
+                        <tr><td colspan="3" style="text-align:center; color:var(--text-muted)">Henüz çözülmüş sınav sonucu bulunmuyor.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
             <!-- Grades & Reviews Sub-grid -->
             <div style="display: grid; grid-template-columns: 1.1fr 1fr; gap: 20px;">
                 <!-- School Grades -->
@@ -734,6 +751,7 @@
 const token = localStorage.getItem("token");
 let studentId = null;
 let advisorName = "Yapay Zeka Rehberi";
+let solvedExamsMap = {};
 
 if (!token) {
     alert("Giriş yetkiniz bulunmuyor.");
@@ -859,10 +877,35 @@ fetch(window.API_BASE + "/api/student/dashboard", {
     
     // Target exam details
     document.getElementById("target-exam").innerText = data.target_exam || "BELİRTİLMEDİ";
-    // We fetch LGS target percentile if it exists in the detailed performance records.
     
     // Update advisor name badges
     updateAdvisorNameLabels(data.student.ai_advisor_name || "Yapay Zeka Rehberi");
+
+    // Populate solved exams map
+    solvedExamsMap = {};
+    if (data.recent_exams) {
+        data.recent_exams.forEach(e => {
+            solvedExamsMap[e.exam_name] = e.score;
+        });
+    }
+
+    // Render LGS Exam Results Table
+    const etable = document.getElementById("lgs-exam-results-table");
+    if (etable) {
+        if (data.recent_exams && data.recent_exams.length > 0) {
+            etable.innerHTML = data.recent_exams.map(e => {
+                return `
+                    <tr>
+                        <td><strong>${e.exam_name}</strong></td>
+                        <td><span class="score-badge" style="background:rgba(59, 130, 246, 0.1); color:#2563eb; font-weight:700; padding:4px 8px; border-radius:4px;">${e.score} Puan</span></td>
+                        <td><span style="color:var(--success); font-weight:600;">✓ Tamamlandı</span></td>
+                    </tr>
+                `;
+            }).join('');
+        } else {
+            etable.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-muted)">Henüz çözülmüş sınav sonucu bulunmuyor.</td></tr>`;
+        }
+    }
 
     // Render Assignments Table
     const atable = document.getElementById("assignments-table");
@@ -965,7 +1008,7 @@ function loadSupplementaryData(sId) {
                         ticks: { font: { family: 'Outfit', weight: '500' } }
                     },
                     y: {
-                        min: 240,
+                        min: 200,
                         max: 500,
                         ticks: { font: { family: 'Outfit', weight: '500' } }
                     }
@@ -1059,6 +1102,14 @@ function loadSupplementaryData(sId) {
                 const icon = isSozel ? "📕" : "📘";
                 const sessionLabel = isSozel ? "Sözel Bölüm" : "Sayısal Bölüm";
                 const pdfName = isSozel ? `2025_LGS_Sorulari_Sozel.pdf` : `2025_LGS_Sorulari_Sayisal.pdf`; // fallback mapping
+                
+                const score = solvedExamsMap[exam.exam_name];
+                const isSolved = score !== undefined;
+                
+                const actionBtn = isSolved
+                    ? `<span style="color:var(--success); font-weight:700; font-size:0.85rem; display:inline-flex; align-items:center; margin-right:8px;">✓ Çözüldü (${score} Puan)</span>`
+                    : `<a href="lgs_exam_solve.html?file=${exam.filename}" class="btn-solve">Sınavı Çöz</a>`;
+                
                 return `
                     <div class="pdf-item">
                         <div class="pdf-info">
@@ -1068,8 +1119,8 @@ function loadSupplementaryData(sId) {
                                 <span style="font-size:0.75rem; color:var(--text-muted)">Zamanlı Simülasyon (${exam.duration_minutes} Dk) / Soru Kitapçığı</span>
                             </div>
                         </div>
-                        <div style="display:flex; gap:8px;">
-                            <a href="lgs_exam_solve.html?file=${exam.filename}" class="btn-solve">Sınavı Çöz</a>
+                        <div style="display:flex; gap:8px; align-items:center;">
+                            ${actionBtn}
                             <a href="../../assets/lgs_pdfs/${pdfName}" download class="pdf-download-btn">PDF</a>
                         </div>
                     </div>
