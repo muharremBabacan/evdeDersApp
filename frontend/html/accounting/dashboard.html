@@ -210,6 +210,71 @@
             font-family: 'Outfit', sans-serif;
             font-size: 0.95rem;
         }
+        
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: var(--radius-sm);
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+            outline: none;
+        }
+
+        /* Tabs Nav */
+        .tabs-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            background: var(--white);
+            padding: 8px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--glass-border);
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            border-radius: var(--radius-md);
+            transition: all 0.2s ease-in-out;
+            font-family: 'Outfit', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .tab-btn:hover {
+            background: #f1f5f9;
+            color: var(--primary);
+        }
+        .tab-btn.active {
+            background: var(--gradient);
+            color: var(--white);
+            box-shadow: 0 4px 15px -3px rgba(16, 185, 129, 0.4);
+        }
+        .tab-panel {
+            display: none;
+        }
+        .tab-panel.active {
+            display: block;
+            animation: fadeIn 0.35s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .badge-income { background: #dcfce7; color: #10b981; padding: 4px 8px; border-radius: 6px; font-weight: 700; font-size: 0.85rem; }
+        .badge-expense { background: #fee2e2; color: #ef4444; padding: 4px 8px; border-radius: 6px; font-weight: 700; font-size: 0.85rem; }
+        .btn-edit-financials { color: var(--accent-blue); border-color: var(--accent-blue); margin-right: 5px; }
+        .btn-pay-salary { color: var(--danger); border-color: var(--danger); }
+        .btn-pay-salary:hover { background: var(--danger); color: var(--white); }
     </style>
     <script src="/js/config.js"></script>
 </head>
@@ -246,26 +311,228 @@
         </div>
     </div>
 
-    <!-- Student billing list -->
-    <div class="section-card">
-        <h3>👥 Öğrenci Faturalandırma & Ödeme Planları Listesi</h3>
-        <div style="overflow-x:auto;">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Öğrenci Adı Soyadı</th>
-                        <th>Sınıf / Okul</th>
-                        <th>Veli Adı & Telefon</th>
-                        <th>Ödeme Planı Durumu</th>
-                        <th>İşlemler</th>
-                    </tr>
-                </thead>
-                <tbody id="student-billing-body">
-                    <tr><td colspan="5" style="text-align:center; color:var(--text-muted)">Yükleniyor...</td></tr>
-                </tbody>
-            </table>
+    <!-- Navigation Tabs -->
+    <div class="tabs-nav">
+        <button class="tab-btn active" id="tab-btn-billing" onclick="switchTab('billing')">
+            <span>👥</span> Öğrenci Faturalandırma
+        </button>
+        <button class="tab-btn" id="tab-btn-cashflow" onclick="switchTab('cashflow')">
+            <span>💸</span> Kasa & Gelir-Gider Dökümü
+        </button>
+        <button class="tab-btn" id="tab-btn-payroll" onclick="switchTab('payroll')">
+            <span>👥</span> Çalışan Maaş & SSK Takip Masası
+        </button>
+    </div>
+
+    <!-- Panel 1: Student Billing -->
+    <div class="tab-panel active" id="panel-billing">
+        <div class="section-card">
+            <h3>👥 Öğrenci Faturalandırma & Ödeme Planları Listesi</h3>
+            <div style="overflow-x:auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Öğrenci Adı Soyadı</th>
+                            <th>Sınıf / Okul</th>
+                            <th>Veli Adı & Telefon</th>
+                            <th>Ödeme Planı Durumu</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody id="student-billing-body">
+                        <tr><td colspan="5" style="text-align:center; color:var(--text-muted)">Yükleniyor...</td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
+
+    <!-- Panel 2: Cash Flow (Gelir-Gider) -->
+    <div class="tab-panel" id="panel-cashflow">
+        <!-- Cashflow overview widgets -->
+        <div class="widgets-grid" style="margin-bottom: 25px;">
+            <div class="widget-card" style="border-left: 4px solid var(--accent);">
+                <label>Toplam Gelir (Tahsilat)</label>
+                <span id="cashflow-income" style="color: var(--accent);">0 TL</span>
+            </div>
+            <div class="widget-card" style="border-left: 4px solid var(--danger);">
+                <label>Toplam Gider</label>
+                <span id="cashflow-expense" style="color: var(--danger);">0 TL</span>
+            </div>
+            <div class="widget-card" style="border-left: 4px solid var(--accent-blue);">
+                <label>Kasa / Net Bakiye</label>
+                <span id="cashflow-balance">0 TL</span>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px;">
+            <!-- Gelir Listesi -->
+            <div class="section-card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1.5rem; border-bottom: 1.5px solid #f1f5f9; padding-bottom: 10px;">
+                    <h3 style="margin:0; border:none; padding:0;">🟢 Gelirler (Öğrenci Taksit Tahsilatları)</h3>
+                </div>
+                <div style="overflow-x:auto; max-height: 450px;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tarih</th>
+                                <th>Öğrenci</th>
+                                <th>Yöntem</th>
+                                <th>Tutar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cashflow-incomes-body">
+                            <tr><td colspan="4" style="text-align:center; color:var(--text-muted)">Yükleniyor...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Gider Listesi -->
+            <div class="section-card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1.5rem; border-bottom: 1.5px solid #f1f5f9; padding-bottom: 10px;">
+                    <h3 style="margin:0; border:none; padding:0;">🔴 Giderler</h3>
+                    <button onclick="openExpenseModal()" class="btn-action" style="padding: 6px 12px; font-size: 0.8rem; font-weight:700;">Gider Ekle</button>
+                </div>
+                <div style="overflow-x:auto; max-height: 450px;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tarih</th>
+                                <th>Açıklama</th>
+                                <th>Kategori</th>
+                                <th>Tutar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cashflow-expenses-body">
+                            <tr><td colspan="4" style="text-align:center; color:var(--text-muted)">Yükleniyor...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Panel 3: Çalışan Maaş & SSK -->
+    <div class="tab-panel" id="panel-payroll">
+        <div class="section-card">
+            <h3>👥 Çalışan Maaş & SSK Ödeme Masası</h3>
+            <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600; display:block; margin-bottom:15px;">
+                Çalışanların maaş ve SSK prim tutarlarını düzenleyebilir ve aylık tahakkuk ödemelerini tek tıkla gider tablosuna yansıtabilirsiniz.
+            </span>
+            <div style="overflow-x:auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Çalışan Adı Soyadı</th>
+                            <th>Kayıtlı Rolü</th>
+                            <th>Aylık Net Maaş (TL)</th>
+                            <th>Aylık SSK Primi (TL)</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody id="payroll-employees-body">
+                        <tr><td colspan="5" style="text-align:center; color:var(--text-muted)">Çalışanlar yükleniyor...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Financials Modal -->
+<div class="modal-overlay" id="editFinancialsModal">
+    <div class="modal-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h4 style="margin:0; font-size:1.15rem; font-weight:800; color:var(--primary)">Maaş & SSK Bilgilerini Güncelle</h4>
+            <button onclick="closeEditFinancialsModal()" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+        </div>
+        <form id="editFinancialsForm" onsubmit="submitEditFinancials(event)">
+            <input type="hidden" id="financials-emp-id">
+            <div class="form-group">
+                <label id="financials-emp-name" style="font-size:1rem; color:var(--accent-blue); text-transform:none; margin-bottom:15px; font-weight:700;">Çalışan</label>
+            </div>
+            <div class="form-group">
+                <label>Aylık Net Maaş (TL)</label>
+                <input type="number" id="financials-salary" placeholder="Ör: 45000" min="0" required>
+            </div>
+            <div class="form-group">
+                <label>Aylık SSK Primi (TL)</label>
+                <input type="number" id="financials-ssk" placeholder="Ör: 15000" min="0" required>
+            </div>
+            <button type="submit" class="btn-submit">Değişiklikleri Kaydet</button>
+        </form>
+    </div>
+</div>
+
+<!-- Pay Salary Modal -->
+<div class="modal-overlay" id="paySalaryModal">
+    <div class="modal-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h4 style="margin:0; font-size:1.15rem; font-weight:800; color:var(--primary)">Maaş & SSK Gideri Tahakkuk Ettir</h4>
+            <button onclick="closePaySalaryModal()" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+        </div>
+        <form id="paySalaryForm" onsubmit="submitPaySalary(event)">
+            <input type="hidden" id="pay-salary-emp-id">
+            <div class="form-group">
+                <label id="pay-salary-emp-name" style="font-size:1rem; color:var(--accent-blue); text-transform:none; margin-bottom:5px; font-weight:700;">Çalışan</label>
+                <div style="font-size:0.85rem; color:var(--text-muted); margin-bottom:15px;" id="pay-salary-amounts-label">Maaş: 0 TL | SSK: 0 TL</div>
+            </div>
+            <div class="form-group">
+                <label>Tahakkuk Edilecek Ay</label>
+                <select id="pay-salary-month" required>
+                    <option value="Ocak 2026">Ocak 2026</option>
+                    <option value="Şubat 2026">Şubat 2026</option>
+                    <option value="Mart 2026">Mart 2026</option>
+                    <option value="Nisan 2026">Nisan 2026</option>
+                    <option value="Mayıs 2026">Mayıs 2026</option>
+                    <option value="Haziran 2026" selected>Haziran 2026</option>
+                    <option value="Temmuz 2026">Temmuz 2026</option>
+                    <option value="Ağustos 2026">Ağustos 2026</option>
+                    <option value="Eylül 2026">Eylül 2026</option>
+                    <option value="Ekim 2026">Ekim 2026</option>
+                    <option value="Kasım 2026">Kasım 2026</option>
+                    <option value="Aralık 2026">Aralık 2026</option>
+                </select>
+            </div>
+            <button type="submit" class="btn-submit" style="background:var(--danger)">Gider Olarak Kaydet</button>
+        </form>
+    </div>
+</div>
+
+<!-- Add Expense Modal -->
+<div class="modal-overlay" id="expenseModal">
+    <div class="modal-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h4 style="margin:0; font-size:1.15rem; font-weight:800; color:var(--primary)">Yeni Gider Girişi</h4>
+            <button onclick="closeExpenseModal()" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+        </div>
+        <form id="expenseForm" onsubmit="submitExpense(event)">
+            <div class="form-group">
+                <label>Açıklama / Başlık</label>
+                <input type="text" id="exp-title" placeholder="Ör: Haziran Kira Ödemesi" required>
+            </div>
+            <div class="form-group">
+                <label>Kategori</label>
+                <select id="exp-category" required>
+                    <option value="Kira">Kira</option>
+                    <option value="Fatura">Fatura</option>
+                    <option value="Kırtasiye">Kırtasiye</option>
+                    <option value="Diğer">Diğer</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Tutar (TL)</label>
+                <input type="number" id="exp-amount" placeholder="Ör: 12000" min="0" required>
+            </div>
+            <div class="form-group">
+                <label>Gider Tarihi</label>
+                <input type="date" id="exp-date" required>
+            </div>
+            <button type="submit" class="btn-submit" style="background:var(--danger)">Gider Kaydet</button>
+        </form>
+    </div>
+</div>
 </div>
 
 <!-- Create Payment Plan Modal -->
@@ -435,6 +702,233 @@ function submitPaymentPlan(event) {
         console.error("Error creating payment plan:", err);
         alert("Bağlantı hatası!");
     });
+}
+
+// Tab Switching
+function switchTab(tabName) {
+    document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+    document.querySelectorAll(".tab-panel").forEach(panel => panel.classList.remove("active"));
+    
+    document.getElementById(`tab-btn-${tabName}`).classList.add("active");
+    document.getElementById(`panel-${tabName}`).classList.add("active");
+    
+    if (tabName === 'billing') {
+        loadStudentsBilling();
+        loadStats();
+    } else if (tabName === 'cashflow') {
+        loadCashflow();
+    } else if (tabName === 'payroll') {
+        loadPayroll();
+    }
+}
+
+// Cashflow operations
+function loadCashflow() {
+    fetch(`${window.API_BASE}/api/accounting/cashflow_summary`, {
+        headers: { "Authorization": "Bearer " + token }
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("cashflow-income").innerText = data.total_income.toLocaleString('tr-TR') + " TL";
+        document.getElementById("cashflow-expense").innerText = data.total_expense.toLocaleString('tr-TR') + " TL";
+        
+        const balanceEl = document.getElementById("cashflow-balance");
+        balanceEl.innerText = data.net_balance.toLocaleString('tr-TR') + " TL";
+        if (data.net_balance >= 0) {
+            balanceEl.style.color = "var(--accent)";
+        } else {
+            balanceEl.style.color = "var(--danger)";
+        }
+        
+        // Populate incomes
+        const incomesBody = document.getElementById("cashflow-incomes-body");
+        if (data.incomes.length === 0) {
+            incomesBody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted)">Gelir tahsilat kaydı bulunmuyor.</td></tr>`;
+        } else {
+            incomesBody.innerHTML = data.incomes.map(i => `
+                <tr>
+                    <td>${i.paid_date ? i.paid_date.split(' ')[0] : '-'}</td>
+                    <td><strong>${i.student_name}</strong> <br><span style="font-size:0.75rem; color:var(--text-muted)">${i.class_code || 'Sınıfsız'}</span></td>
+                    <td><span class="badge-income">${i.payment_method}</span></td>
+                    <td><strong>${i.amount_paid.toLocaleString('tr-TR')} TL</strong></td>
+                </tr>
+            `).join('');
+        }
+        
+        // Populate expenses
+        const expensesBody = document.getElementById("cashflow-expenses-body");
+        if (data.expenses.length === 0) {
+            expensesBody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted)">Gider kaydı bulunmuyor.</td></tr>`;
+        } else {
+            expensesBody.innerHTML = data.expenses.map(e => `
+                <tr>
+                    <td>${e.expense_date}</td>
+                    <td><strong>${e.title}</strong></td>
+                    <td><span class="badge-expense">${e.category}</span></td>
+                    <td><strong>${e.amount.toLocaleString('tr-TR')} TL</strong></td>
+                </tr>
+            `).join('');
+        }
+    })
+    .catch(err => console.error("Error loading cashflow summary:", err));
+}
+
+// Expense Modals & Submission
+function openExpenseModal() {
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById("exp-date").value = today;
+    document.getElementById("expenseModal").style.display = "flex";
+}
+function closeExpenseModal() {
+    document.getElementById("expenseModal").style.display = "none";
+}
+function submitExpense(event) {
+    event.preventDefault();
+    const payload = {
+        title: document.getElementById("exp-title").value.trim(),
+        category: document.getElementById("exp-category").value,
+        amount: parseFloat(document.getElementById("exp-amount").value),
+        expense_date: document.getElementById("exp-date").value
+    };
+    fetch(`${window.API_BASE}/api/accounting/expenses`, {
+        method: "POST",
+        headers: {
+            "Authorization": "Bearer " + token,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.error) {
+            alert(data.error);
+            return;
+        }
+        closeExpenseModal();
+        document.getElementById("expenseForm").reset();
+        loadCashflow();
+    })
+    .catch(err => console.error("Error posting expense:", err));
+}
+
+// Payroll Operations
+let activeEmployees = [];
+function loadPayroll() {
+    fetch(`${window.API_BASE}/api/accounting/employees/financials`, {
+        headers: { "Authorization": "Bearer " + token }
+    })
+    .then(res => res.json())
+    .then(employees => {
+        activeEmployees = employees;
+        const tbody = document.getElementById("payroll-employees-body");
+        if (employees.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted)">Aktif çalışan bulunmuyor.</td></tr>`;
+            return;
+        }
+        
+        const roleLabels = {
+            clerk: "Kayıt Memuru",
+            accounting: "Muhasebe",
+            teacher: "Öğretmen",
+            manager: "Yönetici"
+        };
+        
+        tbody.innerHTML = employees.map(emp => `
+            <tr>
+                <td><strong>${emp.first_name} ${emp.last_name}</strong></td>
+                <td><span style="font-size:0.85rem; color:var(--text-muted); font-weight:700;">${roleLabels[emp.employment_type] || emp.employment_type}</span></td>
+                <td><strong>${(emp.salary || 0).toLocaleString('tr-TR')} TL</strong></td>
+                <td><strong>${(emp.ssk_premium || 0).toLocaleString('tr-TR')} TL</strong></td>
+                <td>
+                    <button class="btn-action btn-edit-financials" onclick="openEditFinancialsModal(${emp.id})">Düzenle</button>
+                    <button class="btn-action btn-pay-salary" onclick="openPaySalaryModal(${emp.id})">Maaş & SSK Öde</button>
+                </td>
+            </tr>
+        `).join('');
+    })
+    .catch(err => console.error("Error loading employee financials:", err));
+}
+
+// Edit Financials
+function openEditFinancialsModal(empId) {
+    const emp = activeEmployees.find(e => e.id == empId);
+    if (!emp) return;
+    
+    document.getElementById("financials-emp-id").value = emp.id;
+    document.getElementById("financials-emp-name").innerText = `${emp.first_name} ${emp.last_name}`;
+    document.getElementById("financials-salary").value = emp.salary || 0;
+    document.getElementById("financials-ssk").value = emp.ssk_premium || 0;
+    
+    document.getElementById("editFinancialsModal").style.display = "flex";
+}
+function closeEditFinancialsModal() {
+    document.getElementById("editFinancialsModal").style.display = "none";
+}
+function submitEditFinancials(event) {
+    event.preventDefault();
+    const empId = document.getElementById("financials-emp-id").value;
+    const payload = {
+        salary: parseFloat(document.getElementById("financials-salary").value),
+        ssk_premium: parseFloat(document.getElementById("financials-ssk").value)
+    };
+    fetch(`${window.API_BASE}/api/accounting/employees/${empId}/financials`, {
+        method: "PUT",
+        headers: {
+            "Authorization": "Bearer " + token,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.error) {
+            alert(data.error);
+            return;
+        }
+        closeEditFinancialsModal();
+        loadPayroll();
+    })
+    .catch(err => console.error("Error updating financials:", err));
+}
+
+// Pay Salary
+function openPaySalaryModal(empId) {
+    const emp = activeEmployees.find(e => e.id == empId);
+    if (!emp) return;
+    
+    document.getElementById("pay-salary-emp-id").value = emp.id;
+    document.getElementById("pay-salary-emp-name").innerText = `${emp.first_name} ${emp.last_name}`;
+    document.getElementById("pay-salary-amounts-label").innerText = `Maaş: ${(emp.salary || 0).toLocaleString('tr-TR')} TL | SSK Primi: ${(emp.ssk_premium || 0).toLocaleString('tr-TR')} TL`;
+    
+    document.getElementById("paySalaryModal").style.display = "flex";
+}
+function closePaySalaryModal() {
+    document.getElementById("paySalaryModal").style.display = "none";
+}
+function submitPaySalary(event) {
+    event.preventDefault();
+    const empId = document.getElementById("pay-salary-emp-id").value;
+    const payload = {
+        month: document.getElementById("pay-salary-month").value
+    };
+    fetch(`${window.API_BASE}/api/accounting/employees/${empId}/pay_salary`, {
+        method: "POST",
+        headers: {
+            "Authorization": "Bearer " + token,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.error) {
+            alert(data.error);
+            return;
+        }
+        closePaySalaryModal();
+        alert("Maaş ve SSK gider tahakkuku başarıyla kaydedildi!");
+    })
+    .catch(err => console.error("Error paying salary:", err));
 }
 
 // Init

@@ -2250,6 +2250,187 @@ def public_online_register_pay():
         return jsonify({"error": str(e)}), 500
 
 
+# ======================================================
+# 💸 NEW: CASH FLOW, EXPENSES & EMPLOYEE PAYROLL
+# ======================================================
+
+@app.route("/api/accounting/expenses")
+@login_required()
+def get_expenses():
+    role = request.user.get("role")
+    if role not in ["manager", "accounting"]:
+        return jsonify({"error": "Yetkisiz"}), 403
+    db = get_db()
+    rows = db.execute("SELECT * FROM expenses ORDER BY id DESC").fetchall()
+    return jsonify([dict(r) for r in rows])
+
+
+@app.route("/api/accounting/expenses", methods=["POST"])
+@login_required()
+def create_expense():
+    role = request.user.get("role")
+    if role not in ["manager", "accounting"]:
+        return jsonify({"error": "Yetkisiz"}), 403
+    data = request.json or {}
+    title = data.get("title")
+    category = data.get("category")
+    amount = data.get("amount")
+    expense_date = data.get("expense_date")
+    if not (title and category and amount and expense_date):
+        return jsonify({"error": "Eksik parametreler"}), 400
+    
+    db = get_db()
+    db.execute(
+        "INSERT INTO expenses (title, category, amount, expense_date) VALUES (?, ?, ?, ?)",
+        (title, category, float(amount), expense_date)
+    )
+    db.commit()
+    return jsonify({"status": "ok"})
+
+
+@app.route("/api/accounting/employees/financials")
+@login_required()
+def get_employees_financials():
+    role = request.user.get("role")
+    if role not in ["manager", "accounting"]:
+        return jsonify({"error": "Yetkisiz"}), 403
+    db = get_db()
+    rows = db.execute("SELECT id, first_name, last_name, salary, ssk_premium, employment_type, status FROM employees WHERE status = 'Aktif' ORDER BY id DESC").fetchall()
+    return jsonify([dict(r) for r in rows])
+
+
+@app.route("/api/accounting/employees/<int:emp_id>/financials", methods=["PUT"])
+@login_required()
+def update_employee_financials(emp_id):
+    role = request.user.get("role")
+    if role not in ["manager", "accounting"]:
+        return jsonify({"error": "Yetkisiz"}), 403
+    data = request.json or {}
+    salary = data.get("salary")
+    ssk_premium = data.get("ssk_premium")
+    if salary is None or ssk_premium is None:
+        return jsonify({"error": "Maaş ve SSK prim tutarı gönderilmelidir"}), 400
+    
+    db = get_db()
+    db.execute(
+        "UPDATE employees SET salary = ?, ssk_premium = ? WHERE id = ?",
+        (float(salary), float(ssk_premium), emp_id)
+    )
+    db.commit()
+    return jsonify({"status": "ok"})
+
+
+@app.route("/api/accounting/employees/<int:emp_id>/pay_salary", methods=["POST"])
+@login_required()
+def pay_employee_salary(emp_id):
+    role = request.user.get("role")
+    if role not in ["manager", "accounting"]:
+        return jsonify({"error": "Yetkisiz"}), 403
+    data = request.json or {}
+    month = data.get("month")
+    if not month:
+        return jsonify({"error": "Ay bilgisi gönderilmelidir"}), 400
+    
+    db = get_db()
+    emp = db.execute("SELECT * FROM employees WHERE id = ?", (emp_id,)).fetchone()
+    if not emp:
+        return jsonify({"error": "Çalışan bulunamadı"}), 404
+        
+    salary = emp["salary"] or 0
+    ssk_premium = emp["ssk_premium"] or 0
+    
+    from datetime import datetime
+    today_str = datetime.now().strftime("%Y-%m-%d")
+    
+    try:
+        # Record Salary Expense
+        db.execute(
+            "INSERT INTO expenses (title, category, amount, expense_date) VALUES (?, 'Maaş', ?, ?)",
+            (f"{emp['first_name']} {emp['last_name']} - {month} Maaş Ödemesi", float(salary), today_str)
+        )
+        # Record SSK Premium Expense
+        db.execute(
+            "INSERT INTO expenses (title, category, amount, expense_date) VALUES (?, 'SSK', ?, ?)",
+            (f"{emp['first_name']} {emp['last_name']} - {month} SSK Primi", float(ssk_premium), today_str)
+        )
+        db.commit()
+        return jsonify({"status": "ok"})
+    except Exception as e:
+        db.rollback()
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/accounting/cashflow_summary")
+@login_required()
+def get_cashflow_summary():
+    role = request.user.get("role")
+    if role not in ["manager", "accounting"]:
+        return jsonify({"error": "Yetkisiz"}), 403
+    db = get_db()
+    
+    # Aggregate totals
+    total_income_row = db.execute("SELECT SUM(amount_paid) FROM installments_history").fetchone()
+    total_income = total_income_row[0] or 0.0
+    
+    total_expense_row = db.execute("SELECT SUM(amount) FROM expenses").fetchone()
+    total_expense = total_expense_row[0] or 0.0
+    
+    # Incomes list
+    incomes = db.execute("""
+        SELECT ih.id, ih.amount_paid, ih.payment_method, ih.paid_date,
+               s.first_name || ' ' || s.last_name as student_name, c.class_code
+        FROM installments_history ih
+        JOIN installments inst ON inst.id = ih.installment_id
+        JOIN payment_plans pp ON pp.id = inst.payment_plan_id
+        JOIN students s ON s.id = pp.student_id
+        LEFT JOIN classes c ON c.id = s.class_id
+        ORDER BY ih.id DESC
+    """).fetchall()
+    
+    # Expenses list
+    expenses = db.execute("SELECT * FROM expenses ORDER BY id DESC").fetchall()
+    
+    # Monthly cashflow stats (past 6 months)
+    # Group incomes by month
+    monthly_incomes = db.execute("""
+        SELECT strftime('%Y-%m', ih.paid_date) as month, SUM(ih.amount_paid) as total
+        FROM installments_history ih
+        WHERE ih.paid_date IS NOT NULL
+        GROUP BY month
+    """).fetchall()
+    
+    monthly_expenses = db.execute("""
+        SELECT strftime('%Y-%m', expense_date) as month, SUM(amount) as total
+        FROM expenses
+        GROUP BY month
+    """).fetchall()
+    
+    # Merge monthly data
+    months_map = {}
+    for r in monthly_incomes:
+        m = r["month"]
+        if m:
+            months_map[m] = {"month": m, "income": r["total"] or 0, "expense": 0}
+    for r in monthly_expenses:
+        m = r["month"]
+        if m:
+            if m not in months_map:
+                months_map[m] = {"month": m, "income": 0, "expense": r["total"] or 0}
+            else:
+                months_map[m]["expense"] = r["total"] or 0
+    
+    monthly_history = sorted(list(months_map.values()), key=lambda x: x["month"], reverse=True)[:6]
+    
+    return jsonify({
+        "total_income": total_income,
+        "total_expense": total_expense,
+        "net_balance": total_income - total_expense,
+        "incomes": [dict(r) for r in incomes],
+        "expenses": [dict(r) for r in expenses],
+        "monthly_history": monthly_history
+    })
+
+
 if __name__ == "__main__":
     app.run(debug=True)
 

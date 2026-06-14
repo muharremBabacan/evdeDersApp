@@ -103,6 +103,29 @@ def get_db():
         paid_date TEXT
     );
     """)
+    
+    # Add salary & ssk columns to employees (self-healing)
+    try:
+        cursor.execute("ALTER TABLE employees ADD COLUMN salary REAL DEFAULT 0;")
+    except sqlite3.OperationalError:
+        pass
+    try:
+        cursor.execute("ALTER TABLE employees ADD COLUMN ssk_premium REAL DEFAULT 0;")
+    except sqlite3.OperationalError:
+        pass
+        
+    # Create expenses table
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS expenses (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT,
+        category TEXT,
+        amount REAL,
+        expense_date TEXT,
+        created_at TEXT DEFAULT (datetime('now'))
+    );
+    """)
+    
     conn.commit()
     
     return conn
