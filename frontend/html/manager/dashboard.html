@@ -695,20 +695,12 @@
 <!-- AI Success Modal -->
 <div class="modal-overlay" id="aiSuccessModal">
     <div class="modal-card">
-        <span style="font-size:3.5rem; display:block; margin-bottom:10px;">🎉</span>
-        <h3 style="margin:0 0 10px 0; border:none; padding:0;">Yapay Zeka Kaydı Tamamladı!</h3>
-        <p style="font-size:0.92rem; color:var(--text-muted); margin:0 0 15px 0;">AI serbest metinden tüm bilgileri çıkardı ve kayıtları yaptı:</p>
+        <span id="ai-modal-emoji" style="font-size:3.5rem; display:block; margin-bottom:10px;">🎉</span>
+        <h3 id="ai-modal-title" style="margin:0 0 10px 0; border:none; padding:0;">Yapay Zeka İşlemi Tamamladı!</h3>
+        <p id="ai-modal-desc" style="font-size:0.92rem; color:var(--text-muted); margin:0 0 15px 0;">AI serbest metinden tüm bilgileri çıkardı ve işlemi gerçekleştirdi:</p>
         
-        <div class="summary-box">
-            <div><strong>Öğrenci:</strong> <span id="sum-student"></span></div>
-            <div><strong>Veli:</strong> <span id="sum-parent"></span></div>
-            <div><strong>Ödeme Planı:</strong> <span id="sum-plan"></span></div>
-        </div>
-        
-        <div class="credential-box">
-            <div><strong>Öğrenci Giriş Kullanıcı Adı:</strong> <span id="sum-s-user"></span></div>
-            <div><strong>Veli Giriş Kullanıcı Adı:</strong> <span id="sum-p-user"></span></div>
-            <div><strong>Şifre:</strong> <span>123</span></div>
+        <div id="ai-modal-body">
+            <!-- Dinamik özet alanı buraya yüklenecek -->
         </div>
 
         <button class="btn-submit" onclick="closeAiModal()" style="width:100%; margin-top:10px;">Tamam</button>
@@ -876,11 +868,11 @@ function toggleEmployee(userId) {
     .catch(err => console.error("Error toggling employee:", err));
 }
 
-// Submit natural language registration to AI assistant
+// Submit natural language registration / financials to AI assistant
 function submitAiRegister() {
     const textInput = document.getElementById("ai-text-input").value.trim();
     if (!textInput) {
-        alert("Lütfen kayıt detaylarını içeren bir metin girin.");
+        alert("Lütfen kayıt veya finans detayı içeren bir metin girin.");
         return;
     }
     
@@ -903,19 +895,74 @@ function submitAiRegister() {
             return;
         }
         
-        // Populate modal
-        const parsed = data.parsed;
-        document.getElementById("sum-student").innerText = `${parsed.student.first_name} ${parsed.student.last_name} (${parsed.student.school_name || 'Atatürk Ortaokulu'})`;
-        document.getElementById("sum-parent").innerText = `${parsed.parent.first_name} ${parsed.parent.last_name} (${parsed.parent.phone})`;
+        const emojiEl = document.getElementById("ai-modal-emoji");
+        const titleEl = document.getElementById("ai-modal-title");
+        const descEl = document.getElementById("ai-modal-desc");
+        const bodyEl = document.getElementById("ai-modal-body");
         
-        const discounted = parsed.payment_plan.total_price * (1 - parsed.payment_plan.discount_rate/100);
-        document.getElementById("sum-plan").innerText = `${parsed.payment_plan.total_price} TL (Discount: %${parsed.payment_plan.discount_rate}) -> Net: ${discounted} TL across ${parsed.payment_plan.installment_count} installments`;
+        const action = data.action || "register";
         
-        document.getElementById("sum-s-user").innerText = data.student_username;
-        document.getElementById("sum-p-user").innerText = data.parent_username;
+        if (action === "register") {
+            const parsed = data.parsed;
+            emojiEl.innerText = "🎉";
+            titleEl.innerText = "Yapay Zeka Kaydı Tamamladı!";
+            descEl.innerText = "AI serbest metinden tüm öğrenci ve veli bilgilerini çıkardı, kayıtları yaptı:";
+            
+            const discounted = parsed.payment_plan.total_price * (1 - parsed.payment_plan.discount_rate / 100);
+            bodyEl.innerHTML = `
+                <div class="summary-box" style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; font-size: 0.9rem; line-height: 1.5; margin-bottom: 12px; border: 1px solid var(--border-color);">
+                    <div><strong>Öğrenci:</strong> <span>${parsed.student.first_name} ${parsed.student.last_name} (${parsed.student.school_name || 'Atatürk Ortaokulu'})</span></div>
+                    <div><strong>Veli:</strong> <span>${parsed.parent.first_name} ${parsed.parent.last_name} (${parsed.parent.phone})</span></div>
+                    <div><strong>Ödeme Planı:</strong> <span>${parsed.payment_plan.total_price.toLocaleString('tr-TR')} TL (İndirim: %${parsed.payment_plan.discount_rate}) -> Net: ${discounted.toLocaleString('tr-TR')} TL, ${parsed.payment_plan.installment_count} Taksit</span></div>
+                </div>
+                <div class="credential-box" style="background: rgba(var(--success-rgb), 0.1); padding: 12px; border-radius: 8px; font-size: 0.9rem; line-height: 1.5; border: 1px solid var(--success);">
+                    <div><strong>Öğrenci Giriş K. Adı:</strong> <span style="font-family: monospace; font-weight: bold;">${data.student_username}</span></div>
+                    <div><strong>Veli Giriş K. Adı:</strong> <span style="font-family: monospace; font-weight: bold;">${data.parent_username}</span></div>
+                    <div><strong>Geçici Şifre:</strong> <span style="font-family: monospace; font-weight: bold;">123</span></div>
+                </div>
+            `;
+        } else if (action === "expense") {
+            emojiEl.innerText = "💸";
+            titleEl.innerText = "Gider Kaydedildi!";
+            descEl.innerText = "AI serbest metindeki gider kalemini çözümledi ve sisteme işledi:";
+            
+            bodyEl.innerHTML = `
+                <div class="summary-box" style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; font-size: 0.9rem; line-height: 1.6; border: 1px solid var(--border-color);">
+                    <div><strong>Gider Başlığı:</strong> <span>${data.expense.title}</span></div>
+                    <div><strong>Gider Kategorisi:</strong> <span>${data.expense.category}</span></div>
+                    <div><strong>Tutar:</strong> <span style="color: var(--danger); font-weight: bold;">${data.expense.amount.toLocaleString('tr-TR')} TL</span></div>
+                    <div><strong>Tarih:</strong> <span>${data.expense.expense_date}</span></div>
+                </div>
+            `;
+        } else if (action === "pay_salary") {
+            emojiEl.innerText = "💰";
+            titleEl.innerText = "Maaş ve SSK Gideri Kaydedildi!";
+            descEl.innerText = "AI çalışanın bu ayki maaş ve SSK prim giderlerini başarıyla kaydetti:";
+            
+            bodyEl.innerHTML = `
+                <div class="summary-box" style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; font-size: 0.9rem; line-height: 1.6; border: 1px solid var(--border-color);">
+                    <div><strong>Çalışan Personel:</strong> <span>${data.payroll.employee_name}</span></div>
+                    <div><strong>Hizmet Dönemi:</strong> <span>${data.payroll.month}</span></div>
+                    <div><strong>Ödenen Net Maaş:</strong> <span style="color: var(--danger);">${data.payroll.salary.toLocaleString('tr-TR')} TL</span></div>
+                    <div><strong>Ödenen SSK Primi:</strong> <span style="color: var(--danger);">${data.payroll.ssk_premium.toLocaleString('tr-TR')} TL</span></div>
+                    <div style="border-top: 1px solid var(--border-color); margin-top: 8px; padding-top: 8px;"><strong>Toplam Gider Kalemi:</strong> <span style="font-weight: 700; color: var(--danger);">${(data.payroll.salary + data.payroll.ssk_premium).toLocaleString('tr-TR')} TL</span></div>
+                </div>
+            `;
+        } else if (action === "financial_update") {
+            emojiEl.innerText = "⚙️";
+            titleEl.innerText = "Finansal Parametreler Güncellendi!";
+            descEl.innerText = "AI çalışanın aylık sözleşme ve vergi parametrelerini başarıyla güncelledi:";
+            
+            bodyEl.innerHTML = `
+                <div class="summary-box" style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; font-size: 0.9rem; line-height: 1.6; border: 1px solid var(--border-color);">
+                    <div><strong>Çalışan Personel:</strong> <span>${data.financial_update.employee_name}</span></div>
+                    <div><strong>Aylık Net Maaş:</strong> <span>${data.financial_update.salary.toLocaleString('tr-TR')} TL</span></div>
+                    <div><strong>Aylık SSK Primi:</strong> <span>${data.financial_update.ssk_premium.toLocaleString('tr-TR')} TL</span></div>
+                </div>
+            `;
+        }
         
         document.getElementById("aiSuccessModal").style.display = "flex";
-        
         document.getElementById("ai-text-input").value = "";
     })
     .catch(err => {
@@ -928,6 +975,10 @@ function submitAiRegister() {
 function closeAiModal() {
     document.getElementById("aiSuccessModal").style.display = "none";
     loadDashboardStats();
+    loadEmployees();
+    loadManagerStudents();
+    loadManagerFinance();
+    loadMgrPayroll();
 }
 
 // Manager Finance Dashboard Operations

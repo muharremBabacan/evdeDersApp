@@ -1962,24 +1962,27 @@ def ai_assisted_register():
         return jsonify({"error": "Giriş metni eksik"}), 400
         
     system_prompt = """
-    Sen bir dershane kayıt asistanı yapay zekasısın.
-    Kullanıcı tarafından girilen serbest metindeki kayıt bilgilerini çözümleyerek JSON formatında bir öğrenci, veli ve ödeme planı çıkar.
-    Metinde eksik olan veya bulunmayan bilgiler varsa bunları tahmin et veya varsayılan değerleri ata.
-    Örnek olarak doğum tarihi verilmemişse '2012-01-01', okul verilmemişse 'Atatürk Ortaokulu' atayabilirsin.
-    İndirim oranı belirtilmemişse 0.0 ata.
-    Taksit sayısı belirtilmemişse 1.0 veya 1 ata.
-    Start_date bugün tarihi 'YYYY-MM-DD' olmalıdır.
-    
+    Sen bir dershane yönetim ve finans asistanı yapay zekasısın.
+    Kullanıcı tarafından girilen serbest metindeki komutu veya bilgiyi çözümleyerek JSON formatında bir eylem planı çıkar.
+    Yapılabilecek eylemler (action) şunlardır:
+    1. 'register': Yeni öğrenci & veli kaydı ve taksitlendirme planı.
+    2. 'expense': Kira, fatura, kırtasiye, sosyal medya reklamı gibi gider girişi.
+    3. 'pay_salary': Bir çalışanın aylık maaş ve SSK prim ödemesini gider olarak kaydetme.
+    4. 'financial_update': Bir çalışanın aylık net maaş ve SSK prim tutarlarını güncelleme.
+
     Dönüş değerini sadece ham JSON olarak ver, markdown blockları arasına alma (örn. ```json yazma), sadece geçerli JSON döndür:
     {
+      "action": "register" | "expense" | "pay_salary" | "financial_update",
+      
+      // action = "register" ise doldurulacak alanlar:
       "student": {
         "first_name": "Öğrenci Adı",
         "last_name": "Öğrenci Soyadı",
-        "birth_date": "YYYY-MM-DD",
-        "phone": "Öğrenci Telefon veya boş string",
-        "email": "Öğrenci E-posta veya boş string",
-        "address": "Öğrenci Adresi",
-        "school_name": "Öğrenci Okulu",
+        "birth_date": "YYYY-MM-DD (varsayılan: 2012-01-01)",
+        "phone": "Öğrenci tel veya boş string",
+        "email": "Öğrenci e-posta veya boş string",
+        "address": "Öğrenci adresi",
+        "school_name": "Öğrenci okulu (varsayılan: Atatürk Ortaokulu)",
         "grade_level": 8
       },
       "parent": {
@@ -1987,13 +1990,34 @@ def ai_assisted_register():
         "last_name": "Veli Soyadı",
         "phone": "Veli Telefonu",
         "email": "Veli E-postası veya boş string",
-        "relation": "anne" veya "baba" veya "veli"
+        "relation": "anne" | "baba" | "veli"
       },
       "payment_plan": {
         "total_price": 50000.0,
         "discount_rate": 10.0,
         "installment_count": 5,
-        "start_date": "2026-06-14"
+        "start_date": "YYYY-MM-DD"
+      },
+
+      // action = "expense" ise doldurulacak alanlar (Kategori: Kira, Fatura, Kırtasiye, Diğer):
+      "expense": {
+        "title": "Gider Açıklaması (Örn: Sosyal Medya Reklam Gideri, Haziran Kira Ödemesi, Elektrik Faturası)",
+        "category": "Kira" | "Fatura" | "Kırtasiye" | "Diğer",
+        "amount": 7500.0,
+        "expense_date": "YYYY-MM-DD"
+      },
+
+      // action = "pay_salary" ise doldurulacak alanlar:
+      "payroll": {
+        "employee_name": "Çalışan Adı Soyadı",
+        "month": "Haziran 2026"
+      },
+
+      // action = "financial_update" ise doldurulacak alanlar:
+      "financial_update": {
+        "employee_name": "Çalışan Adı Soyadı",
+        "salary": 45000.0,
+        "ssk_premium": 15000.0
       }
     }
     """
@@ -2003,140 +2027,317 @@ def ai_assisted_register():
     if api_key:
         try:
             res = call_claude(system_prompt, text_input, response_json=True)
-            if res and "student" in res and "parent" in res and "payment_plan" in res:
+            if res and ("action" in res or "student" in res):
                 parsed_data = res
+                if "action" not in parsed_data:
+                    parsed_data["action"] = "register"
         except Exception as e:
-            print(">>> AI Register Claude error:", e)
+            print(">>> AI Register/Financials Claude error:", e)
             
+    from datetime import datetime
+    
+    # Fallback Parser if Claude fails or API key is missing
     if not parsed_data:
-        words = text_input.split()
-        s_first = "Bilinmeyen"
-        s_last = "Öğrenci"
-        p_first = "Bilinmeyen"
-        p_last = "Veli"
-        p_phone = "0555-000-0000"
-        
-        import re
-        phones = re.findall(r'0\s?\d{3}\s?\d{3}\s?\d{2}\s?\d{2}|\d{10,11}', text_input)
-        if phones:
-            p_phone = phones[0]
+        text_lower = text_input.lower()
+        if any(k in text_lower for k in ["güncelle", "ayarla", "belirle", "maaşı olsun", "ssk olsun"]):
+            import re
+            words = [w for w in text_input.split() if w[0].isupper() and w.isalpha()]
+            emp_name = "Ahmet"
+            if len(words) >= 1:
+                emp_name = " ".join(words[:2])
             
-        prices = re.findall(r'\d+[\.,]?\d*\s?[Tt][Ll]|\d+\s?Bin', text_input)
-        total_price = 45000.0
-        if prices:
-            p_str = re.sub(r'[^0-9]', '', prices[0])
-            if p_str:
-                total_price = float(p_str)
-                if "Bin" in prices[0] or "bin" in prices[0]:
-                    total_price *= 1000
-                    
-        inst_matches = re.findall(r'(\d+)\s?taksit', text_input, re.IGNORECASE)
-        installment_count = 3
-        if inst_matches:
-            installment_count = int(inst_matches[0])
-            
-        parsed_data = {
-            "student": {
-                "first_name": s_first,
-                "last_name": s_last,
-                "birth_date": "2012-01-01",
-                "phone": "",
-                "email": "",
-                "address": "İstanbul",
-                "school_name": "Atatürk Ortaokulu",
-                "grade_level": 8
-            },
-            "parent": {
-                "first_name": p_first,
-                "last_name": p_last,
-                "phone": p_phone,
-                "email": "",
-                "relation": "veli"
-            },
-            "payment_plan": {
-                "total_price": total_price,
-                "discount_rate": 0.0,
-                "installment_count": installment_count,
-                "start_date": "2026-06-14"
+            salary = 0.0
+            ssk = 0.0
+            digits = re.findall(r'\d+', text_input)
+            if len(digits) >= 2:
+                salary = float(digits[0])
+                ssk = float(digits[1])
+                if "bin" in text_lower:
+                    if salary < 1000: salary *= 1000
+                    if ssk < 1000: ssk *= 1000
+            elif len(digits) == 1:
+                salary = float(digits[0])
+                if salary < 1000 and "bin" in text_lower:
+                    salary *= 1000
+                ssk = salary * 0.3
+                
+            parsed_data = {
+                "action": "financial_update",
+                "financial_update": {
+                    "employee_name": emp_name,
+                    "salary": salary,
+                    "ssk_premium": ssk
+                }
             }
-        }
-        
+        elif any(k in text_lower for k in ["kira", "fatura", "elektrik", "reklam", "gider", "kırtasiye", "sosyal medya"]) or any(w == "su" for w in text_lower.replace(".", " ").replace(",", " ").split()):
+            import re
+            category = "Diğer"
+            title = "Gider Girişi"
+            if "kira" in text_lower:
+                category = "Kira"
+                title = "Kira Ödemesi"
+            elif "fatura" in text_lower or "elektrik" in text_lower or any(w == "su" for w in text_lower.replace(".", " ").replace(",", " ").split()):
+                category = "Fatura"
+                title = "Fatura Ödemesi"
+                if "elektrik" in text_lower: title = "Elektrik Faturası Ödemesi"
+                elif any(w == "su" for w in text_lower.replace(".", " ").replace(",", " ").split()): title = "Su Faturası Ödemesi"
+            elif "kırtasiye" in text_lower:
+                category = "Kırtasiye"
+                title = "Kırtasiye Gideri"
+            elif "reklam" in text_lower or "sosyal medya" in text_lower:
+                category = "Diğer"
+                title = "Sosyal Medya Reklam Gideri"
+                
+            amount = 1000.0
+            digits = re.findall(r'\d+', text_input)
+            if digits:
+                amount = float(digits[0])
+                if "bin" in text_lower:
+                    amount *= 1000
+                    
+            parsed_data = {
+                "action": "expense",
+                "expense": {
+                    "title": title,
+                    "category": category,
+                    "amount": amount,
+                    "expense_date": datetime.now().strftime("%Y-%m-%d")
+                }
+            }
+        elif any(k in text_lower for k in ["maaş", "ssk", "öde", "ödeme", "tahakkuk"]):
+            import re
+            words = [w for w in text_input.split() if w[0].isupper() and w.isalpha()]
+            emp_name = "Ahmet"
+            if len(words) >= 1:
+                emp_name = " ".join(words[:2])
+            
+            month = "Haziran 2026"
+            months = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"]
+            for m in months:
+                if m.lower() in text_lower:
+                    month = f"{m} 2026"
+                    break
+                    
+            parsed_data = {
+                "action": "pay_salary",
+                "payroll": {
+                    "employee_name": emp_name,
+                    "month": month
+                }
+            }
+        else:
+            words = text_input.split()
+            s_first = "Bilinmeyen"
+            s_last = "Öğrenci"
+            p_first = "Bilinmeyen"
+            p_last = "Veli"
+            p_phone = "0555-000-0000"
+            
+            import re
+            phones = re.findall(r'0\s?\d{3}\s?\d{3}\s?\d{2}\s?\d{2}|\d{10,11}', text_input)
+            if phones:
+                p_phone = phones[0]
+                
+            prices = re.findall(r'\d+[\.,]?\d*\s?[Tt][Ll]|\d+\s?Bin', text_input)
+            total_price = 45000.0
+            if prices:
+                p_str = re.sub(r'[^0-9]', '', prices[0])
+                if p_str:
+                    total_price = float(p_str)
+                    if "Bin" in prices[0] or "bin" in prices[0]:
+                        total_price *= 1000
+                        
+            inst_matches = re.findall(r'(\d+)\s?taksit', text_input, re.IGNORECASE)
+            installment_count = 3
+            if inst_matches:
+                installment_count = int(inst_matches[0])
+                
+            parsed_data = {
+                "action": "register",
+                "student": {
+                    "first_name": s_first,
+                    "last_name": s_last,
+                    "birth_date": "2012-01-01",
+                    "phone": "",
+                    "email": "",
+                    "address": "İstanbul",
+                    "school_name": "Atatürk Ortaokulu",
+                    "grade_level": 8
+                },
+                "parent": {
+                    "first_name": p_first,
+                    "last_name": p_last,
+                    "phone": p_phone,
+                    "email": "",
+                    "relation": "veli"
+                },
+                "payment_plan": {
+                    "total_price": total_price,
+                    "discount_rate": 0.0,
+                    "installment_count": installment_count,
+                    "start_date": datetime.now().strftime("%Y-%m-%d")
+                }
+            }
+            
     db = get_db()
+    action = parsed_data.get("action", "register")
+    
     try:
-        s_data = parsed_data["student"]
-        p_data = parsed_data["parent"]
-        pay_data = parsed_data["payment_plan"]
-        
-        cur_p = db.execute(
-            "INSERT INTO parents (first_name, last_name, phone, email) VALUES (?, ?, ?, ?)",
-            (p_data["first_name"], p_data["last_name"], p_data["phone"], p_data["email"])
-        )
-        parent_id = cur_p.lastrowid
-        
-        cur_s = db.execute(
-            """
-            INSERT INTO students (first_name, last_name, birth_date, phone, email, address, school_name, grade_level, status, registration_date, class_id)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'Aktif', datetime('now'), 1)
-            """,
-            (s_data["first_name"], s_data["last_name"], s_data["birth_date"], s_data["phone"], s_data["email"], s_data["address"], s_data["school_name"], s_data["grade_level"])
-        )
-        student_id = cur_s.lastrowid
-        
-        db.execute(
-            "INSERT INTO student_parents (student_id, parent_id, relation) VALUES (?, ?, ?)",
-            (student_id, parent_id, p_data["relation"])
-        )
-        
-        db.execute(
-            "INSERT INTO target_exams (student_id, exam_type, target_percentile) VALUES (?, 'LGS', 1.5)",
-            (student_id,)
-        )
-        
-        s_no = generate_student_no(db)
-        p_username = f"{p_data['first_name'].lower().replace(' ', '')}veli_S"
-        pass_hash = hashlib.sha256("123".encode()).hexdigest()
-        
-        db.execute(
-            "INSERT INTO users (username, password_hash, role, ref_id, is_active, created_at) VALUES (?, ?, 'student', ?, 1, datetime('now'))",
-            (s_no, pass_hash, student_id)
-        )
-        db.execute(
-            "INSERT INTO users (username, password_hash, role, ref_id, is_active, created_at) VALUES (?, ?, 'parent', ?, 1, datetime('now'))",
-            (p_username, pass_hash, parent_id)
-        )
-        
-        t_price = float(pay_data["total_price"])
-        d_rate = float(pay_data["discount_rate"])
-        inst_cnt = int(pay_data["installment_count"])
-        st_date = pay_data["start_date"]
-        
-        cur_plan = db.execute(
-            "INSERT INTO payment_plans (student_id, total_price, discount_rate, installment_count, start_date) VALUES (?, ?, ?, ?, ?)",
-            (student_id, t_price, d_rate, inst_cnt, st_date)
-        )
-        plan_id = cur_plan.lastrowid
-        
-        discounted_total = t_price * (1.0 - d_rate / 100.0)
-        inst_amount = round(discounted_total / inst_cnt, 2)
-        
-        from datetime import datetime, timedelta
-        base_date = datetime.strptime(st_date, "%Y-%m-%d")
-        for idx in range(inst_cnt):
-            due = base_date + timedelta(days=idx * 30)
+        if action == "register":
+            s_data = parsed_data["student"]
+            p_data = parsed_data["parent"]
+            pay_data = parsed_data["payment_plan"]
+            
+            cur_p = db.execute(
+                "INSERT INTO parents (first_name, last_name, phone, email) VALUES (?, ?, ?, ?)",
+                (p_data["first_name"], p_data["last_name"], p_data["phone"], p_data["email"])
+            )
+            parent_id = cur_p.lastrowid
+            
+            cur_s = db.execute(
+                """
+                INSERT INTO students (first_name, last_name, birth_date, phone, email, address, school_name, grade_level, status, registration_date, class_id)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'Aktif', datetime('now'), 1)
+                """,
+                (s_data["first_name"], s_data["last_name"], s_data["birth_date"], s_data["phone"], s_data["email"], s_data["address"], s_data["school_name"], s_data["grade_level"])
+            )
+            student_id = cur_s.lastrowid
+            
             db.execute(
-                "INSERT INTO installments (payment_plan_id, due_date, amount, is_paid, paid_date) VALUES (?, ?, ?, 0, NULL)",
-                (plan_id, due.strftime("%Y-%m-%d"), inst_amount)
+                "INSERT INTO student_parents (student_id, parent_id, relation) VALUES (?, ?, ?)",
+                (student_id, parent_id, p_data["relation"])
             )
             
-        db.commit()
-        return jsonify({
-            "status": "ok",
-            "parsed": parsed_data,
-            "student_id": student_id,
-            "student_username": s_no,
-            "parent_username": p_username,
-            "temporary_password": "123"
-        })
+            db.execute(
+                "INSERT INTO target_exams (student_id, exam_type, target_percentile) VALUES (?, 'LGS', 1.5)",
+                (student_id,)
+            )
+            
+            s_no = generate_student_no(db)
+            p_username = f"{p_data['first_name'].lower().replace(' ', '')}veli_S"
+            pass_hash = hashlib.sha256("123".encode()).hexdigest()
+            
+            db.execute(
+                "INSERT INTO users (username, password_hash, role, ref_id, is_active, created_at) VALUES (?, ?, 'student', ?, 1, datetime('now'))",
+                (s_no, pass_hash, student_id)
+            )
+            db.execute(
+                "INSERT INTO users (username, password_hash, role, ref_id, is_active, created_at) VALUES (?, ?, 'parent', ?, 1, datetime('now'))",
+                (p_username, pass_hash, parent_id)
+            )
+            
+            t_price = float(pay_data["total_price"])
+            d_rate = float(pay_data["discount_rate"])
+            inst_cnt = int(pay_data["installment_count"])
+            st_date = pay_data["start_date"]
+            
+            cur_plan = db.execute(
+                "INSERT INTO payment_plans (student_id, total_price, discount_rate, installment_count, start_date) VALUES (?, ?, ?, ?, ?)",
+                (student_id, t_price, d_rate, inst_cnt, st_date)
+            )
+            plan_id = cur_plan.lastrowid
+            
+            discounted_total = t_price * (1.0 - d_rate / 100.0)
+            inst_amount = round(discounted_total / inst_cnt, 2)
+            
+            from datetime import timedelta
+            base_date = datetime.strptime(st_date, "%Y-%m-%d")
+            for idx in range(inst_cnt):
+                due = base_date + timedelta(days=idx * 30)
+                db.execute(
+                    "INSERT INTO installments (payment_plan_id, due_date, amount, is_paid, paid_date) VALUES (?, ?, ?, 0, NULL)",
+                    (plan_id, due.strftime("%Y-%m-%d"), inst_amount)
+                )
+                
+            db.commit()
+            return jsonify({
+                "status": "ok",
+                "action": "register",
+                "parsed": parsed_data,
+                "student_username": s_no,
+                "parent_username": p_username,
+                "temporary_password": "123"
+            })
+            
+        elif action == "expense":
+            exp = parsed_data["expense"]
+            db.execute(
+                "INSERT INTO expenses (title, category, amount, expense_date) VALUES (?, ?, ?, ?)",
+                (exp["title"], exp["category"], float(exp["amount"]), exp["expense_date"])
+            )
+            db.commit()
+            return jsonify({
+                "status": "ok",
+                "action": "expense",
+                "expense": exp
+            })
+            
+        elif action == "pay_salary":
+            payroll = parsed_data["payroll"]
+            emp_name = payroll["employee_name"]
+            month = payroll["month"]
+            
+            emp = db.execute(
+                "SELECT * FROM employees WHERE (first_name || ' ' || last_name) LIKE ? AND status = 'Aktif' LIMIT 1",
+                (f"%{emp_name}%",)
+            ).fetchone()
+            
+            if not emp:
+                return jsonify({"error": f"'{emp_name}' isimli aktif çalışan bulunamadı"}), 404
+                
+            salary = emp["salary"] or 0
+            ssk = emp["ssk_premium"] or 0
+            today_str = datetime.now().strftime("%Y-%m-%d")
+            
+            db.execute(
+                "INSERT INTO expenses (title, category, amount, expense_date) VALUES (?, 'Maaş', ?, ?)",
+                (f"{emp['first_name']} {emp['last_name']} - {month} Maaş Ödemesi", float(salary), today_str)
+            )
+            db.execute(
+                "INSERT INTO expenses (title, category, amount, expense_date) VALUES (?, 'SSK', ?, ?)",
+                (f"{emp['first_name']} {emp['last_name']} - {month} SSK Primi", float(ssk), today_str)
+            )
+            db.commit()
+            return jsonify({
+                "status": "ok",
+                "action": "pay_salary",
+                "payroll": {
+                    "employee_name": f"{emp['first_name']} {emp['last_name']}",
+                    "month": month,
+                    "salary": salary,
+                    "ssk_premium": ssk
+                }
+            })
+            
+        elif action == "financial_update":
+            upd = parsed_data["financial_update"]
+            emp_name = upd["employee_name"]
+            salary = upd["salary"]
+            ssk = upd["ssk_premium"]
+            
+            emp = db.execute(
+                "SELECT * FROM employees WHERE (first_name || ' ' || last_name) LIKE ? AND status = 'Aktif' LIMIT 1",
+                (f"%{emp_name}%",)
+            ).fetchone()
+            
+            if not emp:
+                return jsonify({"error": f"'{emp_name}' isimli aktif çalışan bulunamadı"}), 404
+                
+            db.execute(
+                "UPDATE employees SET salary = ?, ssk_premium = ? WHERE id = ?",
+                (float(salary), float(ssk), emp["id"])
+            )
+            db.commit()
+            return jsonify({
+                "status": "ok",
+                "action": "financial_update",
+                "financial_update": {
+                    "employee_name": f"{emp['first_name']} {emp['last_name']}",
+                    "salary": salary,
+                    "ssk_premium": ssk
+                }
+            })
+            
     except Exception as e:
         db.rollback()
         return jsonify({"error": str(e)}), 500
