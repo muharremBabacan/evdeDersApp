@@ -351,7 +351,7 @@ function fetchStudentProfile() {
         const student = students.find(s => s.id == studentId);
         if (student) {
             studentDetails = student;
-            document.getElementById("student-name").innerText = `${student.first_name} ${student.last_name}`;
+            document.getElementById("student-name").innerHTML = `<a href="/html/teacher/ogrenci_durum_karti.html?id=${studentId}" style="text-decoration: none; color: var(--accent-blue); font-weight: 700; transition: color 0.2s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--accent-blue)'">${student.first_name} ${student.last_name}</a>`;
             document.getElementById("student-class").innerText = `${student.class_code || 'Sınıfsız'} / ${student.school_name || '-'}`;
             document.getElementById("parent-info").innerText = `${student.parent_name || '-'} (${student.parent_phone || '-'})`;
         }

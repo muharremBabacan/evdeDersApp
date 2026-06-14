@@ -123,7 +123,7 @@
 
 <div class="container">
     <div class="header-nav">
-        <a href="dashboard.html" class="back-link">← Öğretmen Paneline Dön</a>
+        <a href="#" id="back-button" class="back-link">← Geri Dön</a>
     </div>
 
     <div id="content">
@@ -253,9 +253,11 @@
 
                 <!-- Danışman Rehberlik Notu Formu & Feed -->
                 <div class="section-card">
-                    <h3>👨‍🏫 Danışmanlık Tavsiyesi Yaz</h3>
-                    <textarea id="newNoteText" rows="4" placeholder="Öğrenci ve velisine yönelik çalışma önerileri, uyarılar veya övgü notları yazın..."></textarea>
-                    <button onclick="submitNote()" class="btn-note-submit">Rehberlik Tavsiyesini Yayınla</button>
+                    <div id="new-note-form-area">
+                        <h3>👨‍🏫 Danışmanlık Tavsiyesi Yaz</h3>
+                        <textarea id="newNoteText" rows="4" placeholder="Öğrenci ve velisine yönelik çalışma önerileri, uyarılar veya övgü notları yazın..."></textarea>
+                        <button onclick="submitNote()" class="btn-note-submit" style="margin-bottom: 20px;">Rehberlik Tavsiyesini Yayınla</button>
+                    </div>
 
                     <h4 style="margin-top:20px; border-top:1px solid #f1f5f9; padding-top:15px; color:var(--text-muted); font-size:0.85rem; text-transform:uppercase; letter-spacing:1px;">Geçmiş Rehberlik Notları</h4>
                     <div id="notes-list" style="margin-top:10px;">
@@ -426,6 +428,36 @@ function submitNote() {
             loadStudentData(); // Feed'i yenile
         }
     });
+}
+
+// Dinamik Geri Dönüş ve Tavsiye Formu Yetkilendirmesi
+const userRole = localStorage.getItem("user_role");
+const backBtn = document.getElementById("back-button");
+if (backBtn) {
+    if (userRole === "clerk") {
+        backBtn.href = "/html/clerk/dashboard.html";
+        backBtn.innerText = "← Memur Paneline Dön";
+    } else if (userRole === "accounting") {
+        if (document.referrer && document.referrer.includes("odeme_takip.html")) {
+            backBtn.href = document.referrer;
+        } else {
+            backBtn.href = "/html/accounting/dashboard.html";
+        }
+        backBtn.innerText = "← Muhasebe Paneline Dön";
+    } else if (userRole === "manager") {
+        backBtn.href = "/html/manager/dashboard.html";
+        backBtn.innerText = "← Yönetici Paneline Dön";
+    } else {
+        backBtn.href = "/html/teacher/dashboard.html";
+        backBtn.innerText = "← Öğretmen Paneline Dön";
+    }
+}
+
+if (userRole !== "teacher") {
+    const formArea = document.getElementById("new-note-form-area");
+    if (formArea) {
+        formArea.style.display = "none";
+    }
 }
 
 loadStudentData();

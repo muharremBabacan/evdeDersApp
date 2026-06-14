@@ -363,7 +363,7 @@ def teacher_dashboard():
 def teacher_student_detail(student_id):
     role = request.user.get("role")
     ref_id = request.user.get("ref_id")
-    if role != "teacher" and not (role == "student" and ref_id == student_id):
+    if role not in ["teacher", "manager", "clerk", "accounting"] and not (role == "student" and ref_id == student_id):
         return jsonify({"error": "Yetkisiz"}), 403
 
     db = get_db()
@@ -1711,7 +1711,7 @@ def clerk_register_student():
 @login_required()
 def clerk_list_students():
     role = request.user.get("role")
-    if role not in ["clerk", "manager"]:
+    if role not in ["clerk", "manager", "accounting"]:
         return jsonify({"error": "Yetkisiz"}), 403
     db = get_db()
     students = db.execute("""

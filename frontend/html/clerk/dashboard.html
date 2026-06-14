@@ -560,7 +560,13 @@ function loadStudents() {
             
             return `
                 <tr>
-                    <td><strong>${s.first_name} ${s.last_name}</strong></td>
+                    <td>
+                        <strong>
+                            <a href="/html/teacher/ogrenci_durum_karti.html?id=${s.id}" style="text-decoration: none; color: var(--accent); font-weight: 700; transition: color 0.2s;" onmouseover="this.style.color='var(--accent-purple)'" onmouseout="this.style.color='var(--accent)'">
+                                ${s.first_name} ${s.last_name}
+                            </a>
+                        </strong>
+                    </td>
                     <td>${s.school_name || '-'} / ${s.grade_level}. Sınıf</td>
                     <td>${s.parent_name || '-'} <br><span style="font-size:0.8rem; color:var(--text-muted)">${s.parent_phone || '-'}</span></td>
                     <td><span style="font-weight: 700; color: var(--accent);">${s.class_code || 'Sınıfsız'}</span></td>
