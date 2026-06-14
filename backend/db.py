@@ -94,6 +94,15 @@ def get_db():
         expires_at TEXT
     );
     """)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS installments_history (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        installment_id INTEGER,
+        amount_paid REAL,
+        payment_method TEXT,
+        paid_date TEXT
+    );
+    """)
     conn.commit()
     
     return conn

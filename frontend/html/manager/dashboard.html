@@ -1,10 +1,680 @@
 <!DOCTYPE html>
+<html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>Yönetim</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yönetici Paneli | AI Dershane Sistemi</title>
+    <!-- Premium Google Fonts & Style -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f172a;        /* Slate 900 */
+            --primary-light: #1e293b;  /* Slate 800 */
+            --accent: #3b82f6;         /* Neon Blue */
+            --accent-purple: #8b5cf6;  /* Royal Purple */
+            --accent-green: #10b981;
+            --bg-body: #f8fafc;        /* Slate 50 */
+            --white: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+            --shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.08), 0 2px 8px -1px rgba(15, 23, 42, 0.04);
+            --gradient: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            --glass-border: rgba(226, 232, 240, 0.8);
+        }
+
+        body { 
+            font-family: 'Outfit', sans-serif; 
+            background: var(--bg-body); 
+            padding: 20px; 
+            color: var(--text-main); 
+            margin: 0; 
+            min-height: 100vh;
+        }
+        
+        .container { max-width: 1200px; margin: 0 auto; }
+
+        /* Navigation Header */
+        .header-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--white);
+            padding: 1.25rem 2rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            margin-bottom: 25px;
+            border: 1px solid var(--glass-border);
+        }
+        .header-logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .logout-btn { 
+            background: #fee2e2; 
+            color: var(--danger); 
+            text-decoration: none; 
+            font-weight: 700; 
+            font-size: 0.85rem; 
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            transition: all 0.2s;
+        }
+        .logout-btn:hover {
+            background: var(--danger);
+            color: var(--white);
+        }
+
+        /* Tabs Nav */
+        .tabs-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            background: var(--white);
+            padding: 8px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--glass-border);
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            border-radius: var(--radius-md);
+            transition: all 0.2s ease-in-out;
+            font-family: 'Outfit', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .tab-btn:hover {
+            background: #f1f5f9;
+            color: var(--primary);
+        }
+        .tab-btn.active {
+            background: var(--gradient);
+            color: var(--white);
+            box-shadow: 0 4px 15px -3px rgba(59, 130, 246, 0.4);
+        }
+        .tab-panel {
+            display: none;
+        }
+        .tab-panel.active {
+            display: block;
+            animation: fadeIn 0.35s ease;
+        }
+
+        /* Widgets Grid */
+        .widgets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        .widget-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--glass-border);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+        .widget-card label {
+            display: block;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            font-weight: 800;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        .widget-card span {
+            font-size: 1.85rem;
+            font-weight: 900;
+            color: var(--primary);
+        }
+
+        /* Content Card */
+        .section-card { 
+            background: var(--white); 
+            padding: 2rem; 
+            border-radius: var(--radius-lg); 
+            box-shadow: var(--shadow); 
+            border: 1px solid var(--glass-border);
+            margin-bottom: 25px;
+        }
+        h3 { 
+            color: var(--primary); 
+            font-size: 1.25rem; 
+            font-weight: 800;
+            margin-top: 0; 
+            margin-bottom: 1.5rem; 
+            border-bottom: 1.5px solid #f1f5f9;
+            padding-bottom: 10px;
+        }
+
+        /* Tables */
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; color: var(--text-muted); font-size: 0.8rem; padding: 12px 10px; border-bottom: 2px solid #f1f5f9; text-transform: uppercase; font-weight: 700; }
+        td { padding: 12px 10px; border-bottom: 1px solid #f1f5f9; font-size: 0.95rem; font-weight: 500; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover { background: #f8fafc; }
+
+        .btn-toggle {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-active { background: #dcfce7; color: var(--success); }
+        .btn-inactive { background: #fee2e2; color: var(--danger); }
+
+        /* Form styling */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: var(--radius-sm);
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+            outline: none;
+        }
+        .btn-submit {
+            background: var(--gradient);
+            color: var(--white);
+            border: none;
+            padding: 12px 24px;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* AI Chatbot container */
+        .ai-chat-box {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background: linear-gradient(180deg, #fafafa 0%, #eff6ff 100%);
+            border: 1.5px solid #dbeafe;
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .ai-chat-box::before {
+            content: "🤖";
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            font-size: 8rem;
+            opacity: 0.05;
+        }
+        .ai-chat-input {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            border: 1.5px solid #dbeafe;
+            border-radius: var(--radius-md);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            resize: vertical;
+            outline: none;
+            box-sizing: border-box;
+            background: var(--white);
+        }
+        .ai-chat-input:focus {
+            border-color: var(--accent);
+        }
+
+        /* Loading */
+        .loading-container {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            color: var(--accent);
+            font-weight: 700;
+        }
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid #dbeafe;
+            border-top: 3px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Modal overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+        .modal-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 500px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--glass-border);
+            text-align: center;
+        }
+        .summary-box {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: var(--radius-md);
+            border-left: 4px solid var(--accent-purple);
+            text-align: left;
+            margin-bottom: 15px;
+            font-size: 0.92rem;
+        }
+        .credential-box {
+            background: #eff6ff;
+            padding: 15px;
+            border-radius: var(--radius-md);
+            border-left: 4px solid var(--accent);
+            text-align: left;
+            margin-bottom: 15px;
+            font-size: 0.92rem;
+        }
+    </style>
+    <script src="/js/config.js"></script>
 </head>
-<html>
-    <body>
-        <h2>Yönetici Dashboard</h2>
-    </body>
-    </html>
+<body>
+
+<div class="container">
+    <!-- Navbar -->
+    <div class="header-nav">
+        <div class="header-logo">
+            <span>✨</span> YÖNETİCİ KONTROL PANELİ
+        </div>
+        <div>
+            <a href="#" onclick="logout()" class="logout-btn">Çıkış Yap</a>
+        </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="tabs-nav">
+        <button class="tab-btn active" id="tab-btn-dashboard" onclick="switchTab('dashboard')">
+            <span>📊</span> Genel Durum & Raporlar
+        </button>
+        <button class="tab-btn" id="tab-btn-airegister" onclick="switchTab('airegister')">
+            <span>🤖</span> Yapay Zeka Kayıt Robotu
+        </button>
+        <button class="tab-btn" id="tab-btn-employees" onclick="switchTab('employees')">
+            <span>👥</span> Çalışan / Personel Yönetimi
+        </button>
+    </div>
+
+    <!-- Panel 1: Analytics Dashboard -->
+    <div class="tab-panel active" id="panel-dashboard">
+        <!-- Widgets -->
+        <div class="widgets-grid">
+            <div class="widget-card" style="border-left: 4px solid var(--accent);">
+                <label>Aktif Öğrenci Sayısı</label>
+                <span id="stat-students">...</span>
+            </div>
+            <div class="widget-card" style="border-left: 4px solid var(--accent-purple);">
+                <label>Aktif Sınıf Sayısı</label>
+                <span id="stat-classes">...</span>
+            </div>
+            <div class="widget-card" style="border-left: 4px solid var(--accent-green);">
+                <label>Toplam Eğitim Cirosu</label>
+                <span id="stat-revenue" style="color:var(--accent-green)">... TL</span>
+            </div>
+            <div class="widget-card" style="border-left: 4px solid var(--warning);">
+                <label>Tahsil Edilen Ücret</label>
+                <span id="stat-collected" style="color:var(--warning)">... TL</span>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <h3>📈 Kurum Finansal ve Kayıt Analitiği</h3>
+            <p style="color:var(--text-muted); font-size:0.95rem; line-height:1.6;">
+                Dershanede kayıtlı öğrenci sayısının gelişimi ve tahsilat oranları istikrarlı olarak artmaktadır. AI ders çalışma rehberi atama oranları ve ödev tamamlama istatistikleri genel dershane verimliliğinin %92 üzerinde olduğunu göstermektedir.
+            </p>
+        </div>
+    </div>
+
+    <!-- Panel 2: AI Registration -->
+    <div class="tab-panel" id="panel-airegister">
+        <div class="section-card">
+            <h3>🤖 Yapay Zeka Akıllı Kayıt Robotu</h3>
+            <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600; display:block; margin-bottom:15px;">
+                Öğrenci, veli, indirim ve taksit detaylarını serbest metin olarak yazın. AI asistanımız bilgileri okuyarak hesapları ve ödeme planını hazırlar.
+            </span>
+            
+            <div class="ai-chat-box">
+                <textarea class="ai-chat-input" id="ai-text-input" placeholder="Örnek: Öğrenci Hasan Şen, Atatürk Ortaokulu 8. sınıf. Velisi Mustafa Şen, tel: 05559876543. Yıllık bedel 60000 TL, %10 indirim, 6 taksit başlangıcı bugün."></textarea>
+                
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div class="loading-container" id="ai-loading">
+                        <div class="spinner"></div>
+                        <span>AI Veriyi Çözümlüyor ve Kayıtları Yapılandırıyor...</span>
+                    </div>
+                    <div></div>
+                    <button class="btn-submit" onclick="submitAiRegister()">Kaydı Çözümle ve Tamamla</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Panel 3: Employee Management -->
+    <div class="tab-panel" id="panel-employees">
+        <div class="form-grid">
+            <!-- Add Employee Form -->
+            <div class="section-card">
+                <h3>👥 Yeni Çalışan Ekle</h3>
+                <form id="employeeForm" onsubmit="submitAddEmployee(event)">
+                    <div class="form-group">
+                        <label>Adı</label>
+                        <input type="text" id="emp-first" placeholder="Ad" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Soyadı</label>
+                        <input type="text" id="emp-last" placeholder="Soyad" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Telefon</label>
+                        <input type="tel" id="emp-phone" placeholder="Ör: 05553214354">
+                    </div>
+                    <div class="form-group">
+                        <label>E-posta</label>
+                        <input type="email" id="emp-email" placeholder="ornek@mail.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Çalışan Rolü</label>
+                        <select id="emp-role">
+                            <option value="clerk">Kayıt Memuru (Clerk)</option>
+                            <option value="accounting">Muhasebe Sorumlusu (Accounting)</option>
+                            <option value="teacher">Öğretmen (Teacher)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Giriş Kullanıcı Adı</label>
+                        <input type="text" id="emp-username" placeholder="kullanici_S" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Giriş Şifresi</label>
+                        <input type="password" id="emp-password" placeholder="Varsayılan: 123" value="123">
+                    </div>
+                    <button type="submit" class="btn-submit">Personeli Kaydet</button>
+                </form>
+            </div>
+
+            <!-- Employee List Table -->
+            <div class="section-card" style="overflow-x:auto;">
+                <h3>📋 Aktif Personel Listesi</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Adı Soyadı</th>
+                            <th>Kullanıcı Adı / Rol</th>
+                            <th>İletişim</th>
+                            <th>Hesap Durumu</th>
+                        </tr>
+                    </thead>
+                    <tbody id="employees-table-body">
+                        <tr><td colspan="4" style="text-align:center; color:var(--text-muted)">Personel listesi yükleniyor...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- AI Success Modal -->
+<div class="modal-overlay" id="aiSuccessModal">
+    <div class="modal-card">
+        <span style="font-size:3.5rem; display:block; margin-bottom:10px;">🎉</span>
+        <h3 style="margin:0 0 10px 0; border:none; padding:0;">Yapay Zeka Kaydı Tamamladı!</h3>
+        <p style="font-size:0.92rem; color:var(--text-muted); margin:0 0 15px 0;">AI serbest metinden tüm bilgileri çıkardı ve kayıtları yaptı:</p>
+        
+        <div class="summary-box">
+            <div><strong>Öğrenci:</strong> <span id="sum-student"></span></div>
+            <div><strong>Veli:</strong> <span id="sum-parent"></span></div>
+            <div><strong>Ödeme Planı:</strong> <span id="sum-plan"></span></div>
+        </div>
+        
+        <div class="credential-box">
+            <div><strong>Öğrenci Giriş Kullanıcı Adı:</strong> <span id="sum-s-user"></span></div>
+            <div><strong>Veli Giriş Kullanıcı Adı:</strong> <span id="sum-p-user"></span></div>
+            <div><strong>Şifre:</strong> <span>123</span></div>
+        </div>
+
+        <button class="btn-submit" onclick="closeAiModal()" style="width:100%; margin-top:10px;">Tamam</button>
+    </div>
+</div>
+
+<script>
+const token = localStorage.getItem("token");
+
+if (!token) {
+    location.href = "/";
+}
+
+function logout() {
+    localStorage.clear();
+    location.href = "/";
+}
+
+function switchTab(tabName) {
+    document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+    document.querySelectorAll(".tab-panel").forEach(panel => panel.classList.remove("active"));
+    
+    document.getElementById(`tab-btn-${tabName}`).classList.add("active");
+    document.getElementById(`panel-${tabName}`).classList.add("active");
+    
+    if (tabName === 'employees') {
+        loadEmployees();
+    } else if (tabName === 'dashboard') {
+        loadDashboardStats();
+    }
+}
+
+// Load high level widgets
+function loadDashboardStats() {
+    fetch(`${window.API_BASE}/api/manager/stats`, {
+        headers: { "Authorization": "Bearer " + token }
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("stat-students").innerText = data.students_count;
+        document.getElementById("stat-classes").innerText = data.classes_count;
+        document.getElementById("stat-revenue").innerText = data.total_projected.toLocaleString('tr-TR') + " TL";
+        document.getElementById("stat-collected").innerText = data.total_collected.toLocaleString('tr-TR') + " TL";
+    })
+    .catch(err => console.error("Error loading stats:", err));
+}
+
+// Load employee list
+function loadEmployees() {
+    fetch(`${window.API_BASE}/api/manager/employees`, {
+        headers: { "Authorization": "Bearer " + token }
+    })
+    .then(res => res.json())
+    .then(employees => {
+        const tbody = document.getElementById("employees-table-body");
+        tbody.innerHTML = employees.map(emp => {
+            const roleLabels = {
+                clerk: "Kayıt Memuru",
+                accounting: "Muhasebe",
+                teacher: "Öğretmen",
+                manager: "Yönetici"
+            };
+            
+            const btnClass = emp.is_active ? "btn-active" : "btn-inactive";
+            const btnText = emp.is_active ? "Aktif" : "Pasif";
+            
+            return `
+                <tr>
+                    <td><strong>${emp.first_name} ${emp.last_name}</strong></td>
+                    <td>${emp.username} <br><span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">${roleLabels[emp.role]}</span></td>
+                    <td>${emp.email || '-'} <br><span style="font-size:0.8rem; color:var(--text-muted)">${emp.phone || '-'}</span></td>
+                    <td>
+                        <button class="btn-toggle ${btnClass}" onclick="toggleEmployee(${emp.user_table_id})">${btnText}</button>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+    })
+    .catch(err => console.error("Error loading employees:", err));
+}
+
+// Submit Add Employee Form
+function submitAddEmployee(event) {
+    event.preventDefault();
+    
+    const payload = {
+        first_name: document.getElementById("emp-first").value.trim(),
+        last_name: document.getElementById("emp-last").value.trim(),
+        phone: document.getElementById("emp-phone").value.trim(),
+        email: document.getElementById("emp-email").value.trim(),
+        role: document.getElementById("emp-role").value,
+        username: document.getElementById("emp-username").value.trim(),
+        password: document.getElementById("emp-password").value
+    };
+    
+    fetch(`${window.API_BASE}/api/manager/employees`, {
+        method: "POST",
+        headers: {
+            "Authorization": "Bearer " + token,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.error) {
+            alert(data.error);
+            return;
+        }
+        document.getElementById("employeeForm").reset();
+        document.getElementById("emp-password").value = "123";
+        loadEmployees();
+    })
+    .catch(err => console.error("Error creating employee:", err));
+}
+
+// Toggle Employee Status
+function toggleEmployee(userId) {
+    fetch(`${window.API_BASE}/api/manager/employees/${userId}/toggle`, {
+        method: "POST",
+        headers: { "Authorization": "Bearer " + token }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.error) {
+            alert(data.error);
+            return;
+        }
+        loadEmployees();
+    })
+    .catch(err => console.error("Error toggling employee:", err));
+}
+
+// Submit natural language registration to AI assistant
+function submitAiRegister() {
+    const textInput = document.getElementById("ai-text-input").value.trim();
+    if (!textInput) {
+        alert("Lütfen kayıt detaylarını içeren bir metin girin.");
+        return;
+    }
+    
+    const loading = document.getElementById("ai-loading");
+    loading.style.display = "flex";
+    
+    fetch(`${window.API_BASE}/api/manager/ai_register`, {
+        method: "POST",
+        headers: {
+            "Authorization": "Bearer " + token,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ text_input: textInput })
+    })
+    .then(res => res.json())
+    .then(data => {
+        loading.style.display = "none";
+        if (data.error) {
+            alert(data.error);
+            return;
+        }
+        
+        // Populate modal
+        const parsed = data.parsed;
+        document.getElementById("sum-student").innerText = `${parsed.student.first_name} ${parsed.student.last_name} (${parsed.student.school_name || 'Atatürk Ortaokulu'})`;
+        document.getElementById("sum-parent").innerText = `${parsed.parent.first_name} ${parsed.parent.last_name} (${parsed.parent.phone})`;
+        
+        const discounted = parsed.payment_plan.total_price * (1 - parsed.payment_plan.discount_rate/100);
+        document.getElementById("sum-plan").innerText = `${parsed.payment_plan.total_price} TL (Discount: %${parsed.payment_plan.discount_rate}) -> Net: ${discounted} TL across ${parsed.payment_plan.installment_count} installments`;
+        
+        document.getElementById("sum-s-user").innerText = data.student_username;
+        document.getElementById("sum-p-user").innerText = data.parent_username;
+        
+        document.getElementById("aiSuccessModal").style.display = "flex";
+        
+        document.getElementById("ai-text-input").value = "";
+    })
+    .catch(err => {
+        loading.style.display = "none";
+        console.error("Error running AI register:", err);
+        alert("Bağlantı hatası!");
+    });
+}
+
+function closeAiModal() {
+    document.getElementById("aiSuccessModal").style.display = "none";
+    loadDashboardStats();
+}
+
+// Init
+loadDashboardStats();
+</script>
+</body>
+</html>

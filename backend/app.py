@@ -1620,6 +1620,636 @@ def get_submission_detail(submission_id):
         "questions": q_list
     })
 
+# Helper to generate student number
+def generate_student_no(db):
+    row = db.execute("SELECT username FROM users WHERE role = 'student' AND username LIKE '2026%' ORDER BY username DESC LIMIT 1").fetchone()
+    if row:
+        val = int(row["username"].split("_")[0])
+        return f"{val + 1}"
+    return "20260006"
+
+@app.route("/api/clerk/students/register", methods=["POST"])
+@login_required()
+def clerk_register_student():
+    role = request.user.get("role")
+    if role not in ["clerk", "manager"]:
+        return jsonify({"error": "Yetkisiz"}), 403
+        
+    data = request.json or {}
+    s_first = data.get("student_first_name")
+    s_last = data.get("student_last_name")
+    s_birth = data.get("student_birth_date", "2012-01-01")
+    s_phone = data.get("student_phone", "")
+    s_email = data.get("student_email", "")
+    s_address = data.get("student_address", "")
+    s_school = data.get("student_school", "")
+    s_grade = data.get("student_grade", 8)
+    s_class = data.get("student_class_id", 1)
+    
+    p_first = data.get("parent_first_name")
+    p_last = data.get("parent_last_name")
+    p_phone = data.get("parent_phone")
+    p_email = data.get("parent_email", "")
+    p_relation = data.get("parent_relation", "veli")
+    
+    if not (s_first and s_last and p_first and p_last and p_phone):
+        return jsonify({"error": "Zorunlu alanlar eksik"}), 400
+        
+    db = get_db()
+    try:
+        cur_p = db.execute(
+            "INSERT INTO parents (first_name, last_name, phone, email) VALUES (?, ?, ?, ?)",
+            (p_first, p_last, p_phone, p_email)
+        )
+        parent_id = cur_p.lastrowid
+        
+        cur_s = db.execute(
+            """
+            INSERT INTO students (first_name, last_name, birth_date, phone, email, address, school_name, grade_level, status, registration_date, class_id)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'Aktif', datetime('now'), ?)
+            """,
+            (s_first, s_last, s_birth, s_phone, s_email, s_address, s_school, s_grade, s_class)
+        )
+        student_id = cur_s.lastrowid
+        
+        db.execute(
+            "INSERT INTO student_parents (student_id, parent_id, relation) VALUES (?, ?, ?)",
+            (student_id, parent_id, p_relation)
+        )
+        
+        db.execute(
+            "INSERT INTO target_exams (student_id, exam_type, target_percentile) VALUES (?, 'LGS', 1.5)",
+            (student_id,)
+        )
+        
+        s_no = generate_student_no(db)
+        p_username = f"{p_first.lower().replace(' ', '')}veli_S"
+        pass_hash = hashlib.sha256("123".encode()).hexdigest()
+        
+        db.execute(
+            "INSERT INTO users (username, password_hash, role, ref_id, is_active, created_at) VALUES (?, ?, 'student', ?, 1, datetime('now'))",
+            (s_no, pass_hash, student_id)
+        )
+        db.execute(
+            "INSERT INTO users (username, password_hash, role, ref_id, is_active, created_at) VALUES (?, ?, 'parent', ?, 1, datetime('now'))",
+            (p_username, pass_hash, parent_id)
+        )
+        
+        db.commit()
+        return jsonify({
+            "status": "ok",
+            "student_id": student_id,
+            "student_username": s_no,
+            "parent_username": p_username,
+            "temporary_password": "123"
+        })
+    except Exception as e:
+        db.rollback()
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/api/clerk/students")
+@login_required()
+def clerk_list_students():
+    role = request.user.get("role")
+    if role not in ["clerk", "manager"]:
+        return jsonify({"error": "Yetkisiz"}), 403
+    db = get_db()
+    students = db.execute("""
+        SELECT s.*, c.class_code, p.first_name || ' ' || p.last_name as parent_name, p.phone as parent_phone
+        FROM students s
+        LEFT JOIN classes c ON c.id = s.class_id
+        LEFT JOIN student_parents sp ON sp.student_id = s.id
+        LEFT JOIN parents p ON p.id = sp.parent_id
+        ORDER BY s.id DESC
+    """).fetchall()
+    return jsonify([dict(row) for row in students])
+
+@app.route("/api/clerk/students/<int:student_id>/assign_class", methods=["POST"])
+@login_required()
+def clerk_assign_class(student_id):
+    role = request.user.get("role")
+    if role not in ["clerk", "manager"]:
+        return jsonify({"error": "Yetkisiz"}), 403
+    class_id = (request.json or {}).get("class_id")
+    if not class_id:
+        return jsonify({"error": "Sınıf ID eksik"}), 400
+    db = get_db()
+    db.execute("UPDATE students SET class_id = ? WHERE id = ?", (class_id, student_id))
+    db.commit()
+    return jsonify({"status": "ok"})
+
+@app.route("/api/clerk/classes")
+@login_required()
+def clerk_list_classes():
+    role = request.user.get("role")
+    if role not in ["clerk", "manager", "teacher"]:
+        return jsonify({"error": "Yetkisiz"}), 403
+    db = get_db()
+    classes = db.execute("SELECT * FROM classes").fetchall()
+    return jsonify([dict(row) for row in classes])
+
+@app.route("/api/accounting/payment_plans", methods=["POST"])
+@login_required()
+def create_payment_plan():
+    role = request.user.get("role")
+    if role not in ["accounting", "manager"]:
+        return jsonify({"error": "Yetkisiz"}), 403
+        
+    data = request.json or {}
+    student_id = data.get("student_id")
+    total_price = float(data.get("total_price", 0))
+    discount_rate = float(data.get("discount_rate", 0))
+    inst_count = int(data.get("installment_count", 1))
+    start_date = data.get("start_date")
+    
+    if not student_id or total_price <= 0:
+        return jsonify({"error": "Öğrenci veya tutar bilgisi hatalı"}), 400
+        
+    if not start_date:
+        from datetime import datetime
+        start_date = datetime.now().strftime("%Y-%m-%d")
+        
+    db = get_db()
+    try:
+        existing = db.execute("SELECT id FROM payment_plans WHERE student_id = ?", (student_id,)).fetchone()
+        if existing:
+            db.execute("DELETE FROM installments WHERE payment_plan_id = ?", (existing["id"],))
+            db.execute("DELETE FROM payment_plans WHERE id = ?", (existing["id"],))
+            
+        cur = db.execute(
+            "INSERT INTO payment_plans (student_id, total_price, discount_rate, installment_count, start_date) VALUES (?, ?, ?, ?, ?)",
+            (student_id, total_price, discount_rate, inst_count, start_date)
+        )
+        plan_id = cur.lastrowid
+        
+        discounted_total = total_price * (1.0 - discount_rate / 100.0)
+        inst_amount = round(discounted_total / inst_count, 2)
+        
+        from datetime import datetime, timedelta
+        base_date = datetime.strptime(start_date.split("T")[0], "%Y-%m-%d")
+        
+        for idx in range(inst_count):
+            due = base_date + timedelta(days=idx * 30)
+            db.execute(
+                "INSERT INTO installments (payment_plan_id, due_date, amount, is_paid, paid_date) VALUES (?, ?, ?, 0, NULL)",
+                (plan_id, due.strftime("%Y-%m-%d"), inst_amount)
+            )
+            
+        db.commit()
+        return jsonify({"status": "ok", "payment_plan_id": plan_id})
+    except Exception as e:
+        db.rollback()
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/api/accounting/payment_plans/<int:student_id>")
+@login_required()
+def get_student_payment_plan(student_id):
+    db = get_db()
+    plan = db.execute("SELECT * FROM payment_plans WHERE student_id = ?", (student_id,)).fetchone()
+    if not plan:
+        return jsonify({"plans": None})
+        
+    installments = db.execute("SELECT * FROM installments WHERE payment_plan_id = ? ORDER BY due_date ASC", (plan["id"],)).fetchall()
+    return jsonify({
+        "plan": dict(plan),
+        "installments": [dict(row) for row in installments]
+    })
+
+@app.route("/api/accounting/installments/<int:installment_id>/pay", methods=["POST"])
+@login_required()
+def pay_installment(installment_id):
+    role = request.user.get("role")
+    if role not in ["accounting", "manager"]:
+        return jsonify({"error": "Yetkisiz"}), 403
+        
+    data = request.json or {}
+    pay_method = data.get("payment_method", "Nakit")
+    amount = float(data.get("amount", 0))
+    
+    db = get_db()
+    inst = db.execute("SELECT * FROM installments WHERE id = ?", (installment_id,)).fetchone()
+    if not inst:
+        return jsonify({"error": "Taksit bulunamadı"}), 404
+        
+    if inst["is_paid"]:
+        return jsonify({"error": "Taksit zaten ödenmiş"}), 400
+        
+    if amount <= 0:
+        amount = inst["amount"]
+        
+    try:
+        db.execute(
+            "UPDATE installments SET is_paid = 1, paid_date = datetime('now') WHERE id = ?",
+            (installment_id,)
+        )
+        db.execute(
+            "INSERT INTO installments_history (installment_id, amount_paid, payment_method, paid_date) VALUES (?, ?, ?, datetime('now'))",
+            (installment_id, amount, pay_method)
+        )
+        db.commit()
+        return jsonify({"status": "ok"})
+    except Exception as e:
+        db.rollback()
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/api/accounting/dashboard_stats")
+@login_required()
+def get_accounting_stats():
+    role = request.user.get("role")
+    if role not in ["accounting", "manager"]:
+        return jsonify({"error": "Yetkisiz"}), 403
+        
+    db = get_db()
+    
+    plans = db.execute("SELECT total_price, discount_rate FROM payment_plans").fetchall()
+    total_projected = sum(p["total_price"] * (1 - p["discount_rate"]/100) for p in plans)
+    
+    total_collected = db.execute("SELECT SUM(amount) FROM installments WHERE is_paid = 1").fetchone()[0] or 0.0
+    total_outstanding = db.execute("SELECT SUM(amount) FROM installments WHERE is_paid = 0").fetchone()[0] or 0.0
+    
+    from datetime import datetime
+    today = datetime.now().strftime("%Y-%m-%d")
+    overdue_count = db.execute("SELECT COUNT(*) FROM installments WHERE is_paid = 0 AND due_date < ?", (today,)).fetchone()[0]
+    
+    return jsonify({
+        "total_projected": total_projected,
+        "total_collected": total_collected,
+        "total_outstanding": total_outstanding,
+        "overdue_count": overdue_count
+    })
+
+@app.route("/api/manager/stats")
+@login_required(role="manager")
+def get_manager_stats():
+    db = get_db()
+    
+    total_students = db.execute("SELECT COUNT(*) FROM students").fetchone()[0]
+    total_employees = db.execute("SELECT COUNT(*) FROM employees").fetchone()[0]
+    total_classes = db.execute("SELECT COUNT(*) FROM classes").fetchone()[0]
+    
+    plans = db.execute("SELECT total_price, discount_rate FROM payment_plans").fetchall()
+    total_projected = sum(p["total_price"] * (1 - p["discount_rate"]/100) for p in plans)
+    total_collected = db.execute("SELECT SUM(amount) FROM installments WHERE is_paid = 1").fetchone()[0] or 0.0
+    
+    return jsonify({
+        "students_count": total_students,
+        "employees_count": total_employees,
+        "classes_count": total_classes,
+        "total_projected": total_projected,
+        "total_collected": total_collected
+    })
+
+@app.route("/api/manager/employees", methods=["GET", "POST"])
+@login_required(role="manager")
+def manager_manage_employees():
+    db = get_db()
+    if request.method == "POST":
+        data = request.json or {}
+        first = data.get("first_name")
+        last = data.get("last_name")
+        phone = data.get("phone", "")
+        email = data.get("email")
+        role_type = data.get("role")
+        username = data.get("username")
+        password = data.get("password", "123")
+        
+        if not (first and last and email and role_type and username):
+            return jsonify({"error": "Zorunlu alanlar eksik"}), 400
+            
+        try:
+            cur = db.execute(
+                "INSERT INTO employees (first_name, last_name, phone, email) VALUES (?, ?, ?, ?)",
+                (first, last, phone, email)
+            )
+            emp_id = cur.lastrowid
+            
+            pass_hash = hashlib.sha256(password.encode()).hexdigest()
+            db.execute(
+                "INSERT INTO users (username, password_hash, role, ref_id, is_active, created_at) VALUES (?, ?, ?, ?, 1, datetime('now'))",
+                (username, pass_hash, role_type, emp_id)
+            )
+            db.commit()
+            return jsonify({"status": "ok", "employee_id": emp_id})
+        except Exception as e:
+            db.rollback()
+            return jsonify({"error": str(e)}), 500
+            
+    employees = db.execute("""
+        SELECT e.*, u.id as user_table_id, u.username, u.role, u.is_active
+        FROM employees e
+        JOIN users u ON u.ref_id = e.id AND u.role IN ('manager', 'teacher', 'accounting', 'clerk')
+    """).fetchall()
+    return jsonify([dict(row) for row in employees])
+
+@app.route("/api/manager/employees/<int:user_id>/toggle", methods=["POST"])
+@login_required(role="manager")
+def manager_toggle_employee(user_id):
+    db = get_db()
+    user = db.execute("SELECT is_active FROM users WHERE id = ?", (user_id,)).fetchone()
+    if not user:
+        return jsonify({"error": "Kullanıcı bulunamadı"}), 404
+    new_state = 0 if user["is_active"] else 1
+    db.execute("UPDATE users SET is_active = ? WHERE id = ?", (new_state, user_id))
+    db.commit()
+    return jsonify({"status": "ok", "is_active": new_state})
+
+@app.route("/api/manager/ai_register", methods=["POST"])
+@login_required(role="manager")
+def ai_assisted_register():
+    data = request.json or {}
+    text_input = data.get("text_input", "")
+    if not text_input or not text_input.strip():
+        return jsonify({"error": "Giriş metni eksik"}), 400
+        
+    system_prompt = """
+    Sen bir dershane kayıt asistanı yapay zekasısın.
+    Kullanıcı tarafından girilen serbest metindeki kayıt bilgilerini çözümleyerek JSON formatında bir öğrenci, veli ve ödeme planı çıkar.
+    Metinde eksik olan veya bulunmayan bilgiler varsa bunları tahmin et veya varsayılan değerleri ata.
+    Örnek olarak doğum tarihi verilmemişse '2012-01-01', okul verilmemişse 'Atatürk Ortaokulu' atayabilirsin.
+    İndirim oranı belirtilmemişse 0.0 ata.
+    Taksit sayısı belirtilmemişse 1.0 veya 1 ata.
+    Start_date bugün tarihi 'YYYY-MM-DD' olmalıdır.
+    
+    Dönüş değerini sadece ham JSON olarak ver, markdown blockları arasına alma (örn. ```json yazma), sadece geçerli JSON döndür:
+    {
+      "student": {
+        "first_name": "Öğrenci Adı",
+        "last_name": "Öğrenci Soyadı",
+        "birth_date": "YYYY-MM-DD",
+        "phone": "Öğrenci Telefon veya boş string",
+        "email": "Öğrenci E-posta veya boş string",
+        "address": "Öğrenci Adresi",
+        "school_name": "Öğrenci Okulu",
+        "grade_level": 8
+      },
+      "parent": {
+        "first_name": "Veli Adı",
+        "last_name": "Veli Soyadı",
+        "phone": "Veli Telefonu",
+        "email": "Veli E-postası veya boş string",
+        "relation": "anne" veya "baba" veya "veli"
+      },
+      "payment_plan": {
+        "total_price": 50000.0,
+        "discount_rate": 10.0,
+        "installment_count": 5,
+        "start_date": "2026-06-14"
+      }
+    }
+    """
+    
+    parsed_data = None
+    api_key = os.environ.get("CLAUDE_API_KEY", "") or os.environ.get("ANTHROPIC_API_KEY", "")
+    if api_key:
+        try:
+            res = call_claude(system_prompt, text_input, response_json=True)
+            if res and "student" in res and "parent" in res and "payment_plan" in res:
+                parsed_data = res
+        except Exception as e:
+            print(">>> AI Register Claude error:", e)
+            
+    if not parsed_data:
+        words = text_input.split()
+        s_first = "Bilinmeyen"
+        s_last = "Öğrenci"
+        p_first = "Bilinmeyen"
+        p_last = "Veli"
+        p_phone = "0555-000-0000"
+        
+        import re
+        phones = re.findall(r'0\s?\d{3}\s?\d{3}\s?\d{2}\s?\d{2}|\d{10,11}', text_input)
+        if phones:
+            p_phone = phones[0]
+            
+        prices = re.findall(r'\d+[\.,]?\d*\s?[Tt][Ll]|\d+\s?Bin', text_input)
+        total_price = 45000.0
+        if prices:
+            p_str = re.sub(r'[^0-9]', '', prices[0])
+            if p_str:
+                total_price = float(p_str)
+                if "Bin" in prices[0] or "bin" in prices[0]:
+                    total_price *= 1000
+                    
+        inst_matches = re.findall(r'(\d+)\s?taksit', text_input, re.IGNORECASE)
+        installment_count = 3
+        if inst_matches:
+            installment_count = int(inst_matches[0])
+            
+        parsed_data = {
+            "student": {
+                "first_name": s_first,
+                "last_name": s_last,
+                "birth_date": "2012-01-01",
+                "phone": "",
+                "email": "",
+                "address": "İstanbul",
+                "school_name": "Atatürk Ortaokulu",
+                "grade_level": 8
+            },
+            "parent": {
+                "first_name": p_first,
+                "last_name": p_last,
+                "phone": p_phone,
+                "email": "",
+                "relation": "veli"
+            },
+            "payment_plan": {
+                "total_price": total_price,
+                "discount_rate": 0.0,
+                "installment_count": installment_count,
+                "start_date": "2026-06-14"
+            }
+        }
+        
+    db = get_db()
+    try:
+        s_data = parsed_data["student"]
+        p_data = parsed_data["parent"]
+        pay_data = parsed_data["payment_plan"]
+        
+        cur_p = db.execute(
+            "INSERT INTO parents (first_name, last_name, phone, email) VALUES (?, ?, ?, ?)",
+            (p_data["first_name"], p_data["last_name"], p_data["phone"], p_data["email"])
+        )
+        parent_id = cur_p.lastrowid
+        
+        cur_s = db.execute(
+            """
+            INSERT INTO students (first_name, last_name, birth_date, phone, email, address, school_name, grade_level, status, registration_date, class_id)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'Aktif', datetime('now'), 1)
+            """,
+            (s_data["first_name"], s_data["last_name"], s_data["birth_date"], s_data["phone"], s_data["email"], s_data["address"], s_data["school_name"], s_data["grade_level"])
+        )
+        student_id = cur_s.lastrowid
+        
+        db.execute(
+            "INSERT INTO student_parents (student_id, parent_id, relation) VALUES (?, ?, ?)",
+            (student_id, parent_id, p_data["relation"])
+        )
+        
+        db.execute(
+            "INSERT INTO target_exams (student_id, exam_type, target_percentile) VALUES (?, 'LGS', 1.5)",
+            (student_id,)
+        )
+        
+        s_no = generate_student_no(db)
+        p_username = f"{p_data['first_name'].lower().replace(' ', '')}veli_S"
+        pass_hash = hashlib.sha256("123".encode()).hexdigest()
+        
+        db.execute(
+            "INSERT INTO users (username, password_hash, role, ref_id, is_active, created_at) VALUES (?, ?, 'student', ?, 1, datetime('now'))",
+            (s_no, pass_hash, student_id)
+        )
+        db.execute(
+            "INSERT INTO users (username, password_hash, role, ref_id, is_active, created_at) VALUES (?, ?, 'parent', ?, 1, datetime('now'))",
+            (p_username, pass_hash, parent_id)
+        )
+        
+        t_price = float(pay_data["total_price"])
+        d_rate = float(pay_data["discount_rate"])
+        inst_cnt = int(pay_data["installment_count"])
+        st_date = pay_data["start_date"]
+        
+        cur_plan = db.execute(
+            "INSERT INTO payment_plans (student_id, total_price, discount_rate, installment_count, start_date) VALUES (?, ?, ?, ?, ?)",
+            (student_id, t_price, d_rate, inst_cnt, st_date)
+        )
+        plan_id = cur_plan.lastrowid
+        
+        discounted_total = t_price * (1.0 - d_rate / 100.0)
+        inst_amount = round(discounted_total / inst_cnt, 2)
+        
+        from datetime import datetime, timedelta
+        base_date = datetime.strptime(st_date, "%Y-%m-%d")
+        for idx in range(inst_cnt):
+            due = base_date + timedelta(days=idx * 30)
+            db.execute(
+                "INSERT INTO installments (payment_plan_id, due_date, amount, is_paid, paid_date) VALUES (?, ?, ?, 0, NULL)",
+                (plan_id, due.strftime("%Y-%m-%d"), inst_amount)
+            )
+            
+        db.commit()
+        return jsonify({
+            "status": "ok",
+            "parsed": parsed_data,
+            "student_id": student_id,
+            "student_username": s_no,
+            "parent_username": p_username,
+            "temporary_password": "123"
+        })
+    except Exception as e:
+        db.rollback()
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/api/public/online_register_pay", methods=["POST"])
+def public_online_register_pay():
+    data = request.json or {}
+    s_first = data.get("student_first_name")
+    s_last = data.get("student_last_name")
+    s_birth = data.get("student_birth_date", "2012-01-01")
+    s_phone = data.get("student_phone", "")
+    s_email = data.get("student_email", "")
+    s_address = data.get("student_address", "")
+    s_school = data.get("student_school", "")
+    s_grade = data.get("student_grade", 8)
+    
+    p_first = data.get("parent_first_name")
+    p_last = data.get("parent_last_name")
+    p_phone = data.get("parent_phone")
+    p_email = data.get("parent_email", "")
+    p_relation = data.get("parent_relation", "veli")
+    
+    total_price = float(data.get("total_price", 45000))
+    discount_rate = 0.0
+    inst_count = int(data.get("installment_count", 3))
+    
+    card_number = data.get("card_number")
+    
+    if not (s_first and s_last and p_first and p_last and p_phone and card_number):
+        return jsonify({"error": "Zorunlu alanlar veya ödeme bilgileri eksik"}), 400
+        
+    db = get_db()
+    try:
+        cur_p = db.execute(
+            "INSERT INTO parents (first_name, last_name, phone, email) VALUES (?, ?, ?, ?)",
+            (p_first, p_last, p_phone, p_email)
+        )
+        parent_id = cur_p.lastrowid
+        
+        cur_s = db.execute(
+            """
+            INSERT INTO students (first_name, last_name, birth_date, phone, email, address, school_name, grade_level, status, registration_date, class_id)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'Aktif', datetime('now'), 1)
+            """,
+            (s_first, s_last, s_birth, s_phone, s_email, s_address, s_school, s_grade)
+        )
+        student_id = cur_s.lastrowid
+        
+        db.execute(
+            "INSERT INTO student_parents (student_id, parent_id, relation) VALUES (?, ?, ?)",
+            (student_id, parent_id, p_relation)
+        )
+        
+        db.execute(
+            "INSERT INTO target_exams (student_id, exam_type, target_percentile) VALUES (?, 'LGS', 1.5)",
+            (student_id,)
+        )
+        
+        s_no = generate_student_no(db)
+        p_username = f"{p_first.lower().replace(' ', '')}veli_S"
+        pass_hash = hashlib.sha256("123".encode()).hexdigest()
+        
+        db.execute(
+            "INSERT INTO users (username, password_hash, role, ref_id, is_active, created_at) VALUES (?, ?, 'student', ?, 1, datetime('now'))",
+            (s_no, pass_hash, student_id)
+        )
+        db.execute(
+            "INSERT INTO users (username, password_hash, role, ref_id, is_active, created_at) VALUES (?, ?, 'parent', ?, 1, datetime('now'))",
+            (p_username, pass_hash, parent_id)
+        )
+        
+        cur_plan = db.execute(
+            "INSERT INTO payment_plans (student_id, total_price, discount_rate, installment_count, start_date) VALUES (?, ?, ?, ?, datetime('now'))",
+            (student_id, total_price, discount_rate, inst_count)
+        )
+        plan_id = cur_plan.lastrowid
+        
+        inst_amount = round(total_price / inst_count, 2)
+        
+        from datetime import datetime, timedelta
+        base_date = datetime.now()
+        
+        for idx in range(inst_count):
+            due = base_date + timedelta(days=idx * 30)
+            is_paid = 1 if idx == 0 else 0
+            paid_d = base_date.strftime("%Y-%m-%d %H:%M:%S") if idx == 0 else None
+            
+            cur_inst = db.execute(
+                "INSERT INTO installments (payment_plan_id, due_date, amount, is_paid, paid_date) VALUES (?, ?, ?, ?, ?)",
+                (plan_id, due.strftime("%Y-%m-%d"), inst_amount, is_paid, paid_d)
+            )
+            
+            if idx == 0:
+                inst_id = cur_inst.lastrowid
+                db.execute(
+                    "INSERT INTO installments_history (installment_id, amount_paid, payment_method, paid_date) VALUES (?, ?, 'Kredi Kartı', datetime('now'))",
+                    (inst_id, inst_amount)
+                )
+                
+        db.commit()
+        return jsonify({
+            "status": "ok",
+            "student_id": student_id,
+            "student_username": s_no,
+            "parent_username": p_username,
+            "temporary_password": "123",
+            "collected_amount": inst_amount
+        })
+    except Exception as e:
+        db.rollback()
+        return jsonify({"error": str(e)}), 500
+
 
 if __name__ == "__main__":
     app.run(debug=True)
+

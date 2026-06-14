@@ -1,1 +1,479 @@
-<!DOCTYPE html><html><body><h2>Ödeme Takip</h2></body></html>
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ödeme Takip & Tahsilat | AI Dershane Sistemi</title>
+    <!-- Premium Google Fonts & Style -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f172a;
+            --primary-light: #1e293b;
+            --accent: #10b981;
+            --accent-blue: #3b82f6;
+            --bg-body: #f8fafc;
+            --white: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+            --shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.08), 0 2px 8px -1px rgba(15, 23, 42, 0.04);
+            --glass-border: rgba(226, 232, 240, 0.8);
+        }
+
+        body { 
+            font-family: 'Outfit', sans-serif; 
+            background: var(--bg-body); 
+            padding: 20px; 
+            color: var(--text-main); 
+            margin: 0; 
+            min-height: 100vh;
+        }
+        
+        .container { max-width: 900px; margin: 0 auto; }
+
+        /* Navigation Header */
+        .header-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--white);
+            padding: 1.25rem 2rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            margin-bottom: 25px;
+            border: 1px solid var(--glass-border);
+        }
+        .header-logo {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .back-btn {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--accent-blue);
+            text-decoration: none;
+        }
+
+        /* Profile details card */
+        .student-profile-bar {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--glass-border);
+            margin-bottom: 25px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .profile-item label {
+            display: block;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 800;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+        .profile-item span {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* List Card */
+        .section-card { 
+            background: var(--white); 
+            padding: 2rem; 
+            border-radius: var(--radius-lg); 
+            box-shadow: var(--shadow); 
+            border: 1px solid var(--glass-border);
+            margin-bottom: 25px;
+        }
+        h3 { 
+            color: var(--primary); 
+            font-size: 1.25rem; 
+            font-weight: 800;
+            margin-top: 0; 
+            margin-bottom: 1.5rem; 
+            border-bottom: 1.5px solid #f1f5f9;
+            padding-bottom: 10px;
+        }
+
+        /* Table */
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; color: var(--text-muted); font-size: 0.8rem; padding: 12px 10px; border-bottom: 2px solid #f1f5f9; text-transform: uppercase; font-weight: 700; }
+        td { padding: 12px 10px; border-bottom: 1px solid #f1f5f9; font-size: 0.95rem; font-weight: 500; }
+        tr:last-child td { border-bottom: none; }
+
+        .status-paid { color: var(--accent); font-weight: 700; }
+        .status-unpaid { color: var(--warning); font-weight: 700; }
+        .status-overdue { color: var(--danger); font-weight: 700; }
+
+        .btn-collect {
+            background: var(--accent);
+            color: var(--white);
+            border: none;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .btn-collect:hover { opacity: 0.9; }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+        .modal-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 450px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--glass-border);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+        .form-group select, .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: var(--radius-sm);
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+            outline: none;
+        }
+        .btn-submit {
+            background: var(--accent);
+            color: var(--white);
+            border: none;
+            padding: 12px 24px;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+        }
+
+        /* Receipt styling */
+        .receipt-container {
+            border: 2px dashed #94a3b8;
+            padding: 20px;
+            border-radius: 8px;
+            background: #fafafa;
+            position: relative;
+            text-align: left;
+        }
+        .receipt-header {
+            text-align: center;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .receipt-stamp {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            border: 3px double #10b981;
+            color: #10b981;
+            font-size: 1.1rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            padding: 8px 16px;
+            transform: rotate(-15deg);
+            border-radius: 6px;
+            opacity: 0.85;
+            letter-spacing: 1.5px;
+        }
+    </style>
+    <script src="/js/config.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <!-- Navbar -->
+    <div class="header-nav">
+        <a href="dashboard.html" class="header-logo">
+            <span>←</span> Ödeme Takip Masası
+        </a>
+        <a href="dashboard.html" class="back-btn">Panele Dön</a>
+    </div>
+
+    <!-- Student details bar -->
+    <div class="student-profile-bar">
+        <div class="profile-item">
+            <label>Öğrenci Adı Soyadı</label>
+            <span id="student-name">...</span>
+        </div>
+        <div class="profile-item">
+            <label>Sınıfı / Okulu</label>
+            <span id="student-class">...</span>
+        </div>
+        <div class="profile-item">
+            <label>Veli Adı & İletişim</label>
+            <span id="parent-info">...</span>
+        </div>
+        <div class="profile-item">
+            <label>Toplam Eğitim Bedeli</label>
+            <span id="total-price-val" style="color:var(--accent-blue); font-weight:900;">... TL</span>
+        </div>
+    </div>
+
+    <!-- Installments Table -->
+    <div class="section-card">
+        <h3>📅 Taksit Dağılımı & Vade Takip Çizelgesi</h3>
+        <div style="overflow-x:auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Taksit No</th>
+                        <th>Vade Tarihi</th>
+                        <th>Taksit Tutarı</th>
+                        <th>Ödeme Durumu</th>
+                        <th>Ödeme Tarihi</th>
+                        <th>İşlem</th>
+                    </tr>
+                </thead>
+                <tbody id="installments-body">
+                    <tr><td colspan="6" style="text-align:center; color:var(--text-muted)">Yükleniyor...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Collect Payment Modal -->
+<div class="modal-overlay" id="paymentModal">
+    <div class="modal-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h4 style="margin:0; font-size:1.15rem; font-weight:800; color:var(--primary)">Taksit Tahsilatı Al</h4>
+            <button onclick="closePaymentModal()" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+        </div>
+        <form id="collectPaymentForm" onsubmit="submitCollectPayment(event)">
+            <input type="hidden" id="modal-installment-id">
+            <div class="form-group">
+                <label>Ödenecek Tutar</label>
+                <input type="number" id="modal-amount" readonly>
+            </div>
+            <div class="form-group">
+                <label>Ödeme Tipi / Yöntemi</label>
+                <select id="modal-method">
+                    <option value="Nakit">Nakit</option>
+                    <option value="Kredi Kartı">Kredi Kartı</option>
+                    <option value="Havale/EFT">Banka Havalesi / EFT</option>
+                </select>
+            </div>
+            <button type="submit" class="btn-submit">Tahsilatı Onayla</button>
+        </form>
+    </div>
+</div>
+
+<!-- Receipt Modal -->
+<div class="modal-overlay" id="receiptModal">
+    <div class="modal-card" style="max-width: 500px;">
+        <h4 style="margin:0 0 15px 0; font-size:1.1rem; font-weight:800; color:var(--accent)">Tahsilat Makbuzu Hazır!</h4>
+        
+        <div class="receipt-container" id="receipt-print-area">
+            <div class="receipt-header">
+                <h3 style="margin:0 0 5px 0; border:none; padding:0; font-size:1.15rem; color:var(--primary);">AI DERSHANE SİSTEMİ</h3>
+                <span style="font-size:0.75rem; color:var(--text-muted);">Müşteri Tahsilat Makbuzu / Fatura Bilgi Fişi</span>
+            </div>
+            <div style="font-size: 0.88rem; line-height: 1.6;">
+                <div style="margin-bottom: 4px;"><strong>Öğrenci:</strong> <span id="rec-student"></span></div>
+                <div style="margin-bottom: 4px;"><strong>Veli:</strong> <span id="rec-parent"></span></div>
+                <div style="margin-bottom: 4px;"><strong>Tarih:</strong> <span id="rec-date"></span></div>
+                <div style="margin-bottom: 4px;"><strong>Ödeme Tipi:</strong> <span id="rec-method"></span></div>
+                <div style="margin-bottom: 12px; border-bottom:1px solid #e2e8f0; padding-bottom:6px;"><strong>Taksit No / Vade:</strong> <span id="rec-due"></span></div>
+                <div style="font-size:1.1rem; color:var(--primary); font-weight:900;">Tutar: <span id="rec-amount"></span> TL</div>
+            </div>
+            <div class="receipt-stamp">TAHSİL EDİLDİ</div>
+        </div>
+
+        <button class="btn-submit" onclick="closeReceiptAndRefresh()" style="margin-top:20px; background:var(--accent-blue);">Kapat ve Listeyi Yenile</button>
+    </div>
+</div>
+
+<script>
+const token = localStorage.getItem("token");
+const params = new URLSearchParams(window.location.search);
+const studentId = params.get("student_id");
+
+let studentDetails = {};
+
+if (!token || !studentId) {
+    location.href = "dashboard.html";
+}
+
+function logout() {
+    localStorage.clear();
+    location.href = "/";
+}
+
+// Fetch student profile details
+function fetchStudentProfile() {
+    fetch(`${window.API_BASE}/api/clerk/students`, {
+        headers: { "Authorization": "Bearer " + token }
+    })
+    .then(res => res.json())
+    .then(students => {
+        const student = students.find(s => s.id == studentId);
+        if (student) {
+            studentDetails = student;
+            document.getElementById("student-name").innerText = `${student.first_name} ${student.last_name}`;
+            document.getElementById("student-class").innerText = `${student.class_code || 'Sınıfsız'} / ${student.school_name || '-'}`;
+            document.getElementById("parent-info").innerText = `${student.parent_name || '-'} (${student.parent_phone || '-'})`;
+        }
+    })
+    .catch(err => console.error("Error loading student profile:", err));
+}
+
+// Fetch student payment plans
+function loadInstallments() {
+    fetch(`${window.API_BASE}/api/accounting/payment_plans/${studentId}`, {
+        headers: { "Authorization": "Bearer " + token }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (!data.plan) {
+            document.getElementById("installments-body").innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted)">Ödeme planı bulunmuyor.</td></tr>`;
+            return;
+        }
+        
+        // Show total tuition price with discount
+        const plan = data.plan;
+        const discountedTotal = plan.total_price * (1.0 - plan.discount_rate / 100.0);
+        document.getElementById("total-price-val").innerText = discountedTotal.toLocaleString('tr-TR') + " TL";
+        
+        // Render installments
+        const today = new Date().toISOString().split('T')[0];
+        const tbody = document.getElementById("installments-body");
+        
+        tbody.innerHTML = data.installments.map((inst, idx) => {
+            const isPaid = inst.is_paid === 1;
+            let statusLabel = "";
+            let actionBtn = "";
+            
+            if (isPaid) {
+                statusLabel = `<span class="status-paid">✓ Ödendi</span>`;
+                actionBtn = `<span style="font-size:0.82rem; color:var(--text-muted); font-weight:700;">Tamamlandı</span>`;
+            } else {
+                const isOverdue = inst.due_date < today;
+                statusLabel = isOverdue 
+                    ? `<span class="status-overdue">⌛ Gecikmiş</span>` 
+                    : `<span class="status-unpaid">Bekliyor</span>`;
+                    
+                actionBtn = `<button class="btn-collect" onclick="openPaymentModal(${inst.id}, ${inst.amount})">Tahsil Et</button>`;
+            }
+            
+            return `
+                <tr>
+                    <td><strong>${idx + 1}. Taksit</strong></td>
+                    <td>${inst.due_date}</td>
+                    <td><strong>${inst.amount.toLocaleString('tr-TR')} TL</strong></td>
+                    <td>${statusLabel}</td>
+                    <td>${inst.paid_date ? inst.paid_date.split(' ')[0] : '-'}</td>
+                    <td>${actionBtn}</td>
+                </tr>
+            `;
+        }).join('');
+    })
+    .catch(err => console.error("Error loading installments:", err));
+}
+
+function openPaymentModal(instId, amount) {
+    document.getElementById("modal-installment-id").value = instId;
+    document.getElementById("modal-amount").value = amount;
+    document.getElementById("paymentModal").style.display = "flex";
+}
+
+function closePaymentModal() {
+    document.getElementById("paymentModal").style.display = "none";
+}
+
+// Submit payment capture
+function submitCollectPayment(event) {
+    event.preventDefault();
+    
+    const instId = parseInt(document.getElementById("modal-installment-id").value);
+    const method = document.getElementById("modal-method").value;
+    const amount = parseFloat(document.getElementById("modal-amount").value);
+    
+    fetch(`${window.API_BASE}/api/accounting/installments/${instId}/pay`, {
+        method: "POST",
+        headers: {
+            "Authorization": "Bearer " + token,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            payment_method: method,
+            amount: amount
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.error) {
+            alert(data.error);
+            return;
+        }
+        
+        closePaymentModal();
+        
+        // Show Receipt
+        document.getElementById("rec-student").innerText = `${studentDetails.first_name} ${studentDetails.last_name}`;
+        document.getElementById("rec-parent").innerText = studentDetails.parent_name || "-";
+        document.getElementById("rec-date").innerText = new Date().toLocaleString('tr-TR');
+        document.getElementById("rec-method").innerText = method;
+        document.getElementById("rec-due").innerText = `#${instId}`;
+        document.getElementById("rec-amount").innerText = amount.toLocaleString('tr-TR');
+        
+        document.getElementById("receiptModal").style.display = "flex";
+    })
+    .catch(err => {
+        console.error("Error processing payment:", err);
+        alert("Bağlantı hatası!");
+    });
+}
+
+function closeReceiptAndRefresh() {
+    document.getElementById("receiptModal").style.display = "none";
+    loadInstallments();
+}
+
+// Init
+fetchStudentProfile();
+loadInstallments();
+</script>
+</body>
+</html>
