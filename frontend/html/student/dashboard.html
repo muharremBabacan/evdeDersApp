@@ -3,445 +3,775 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Öğrenci Paneli | AI Dershane Sistemi</title>
-    <!-- Premium Google Fonts & Chart.js -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <title>Öğrenci Paneli | EduMentor AI</title>
+    <!-- Google Fonts Outfit & Inter & FontAwesome Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/js/config.js"></script>
     <style>
+        /* --- BRANDING & COLOR SYSTEM --- */
         :root {
-            --primary: #0f172a;        /* Slate 900 */
-            --primary-light: #1e293b;  /* Slate 800 */
-            --accent: #3b82f6;         /* Neon Blue */
-            --accent-purple: #8b5cf6;  /* Royal Purple */
-            --bg-body: #f8fafc;        /* Slate 50 */
+            --primary: #6366f1;          /* Indigo Accent */
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --bg-body: #f8fafc;          /* Light slate gray */
             --white: #ffffff;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --radius-lg: 16px;
-            --radius-md: 12px;
-            --radius-sm: 8px;
-            --shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.08), 0 2px 8px -1px rgba(15, 23, 42, 0.04);
-            --gradient: linear-gradient(135deg, #3b82f6, #8b5cf6);
-            --glass: rgba(255, 255, 255, 0.7);
+            --sidebar-bg: #ffffff;
+            --text-main: #0f172a;        /* Dark Navy */
+            --text-muted: #64748b;       /* Slate muted */
+            --border-light: #e2e8f0;
             --glass-border: rgba(226, 232, 240, 0.8);
+            --radius-lg: 20px;
+            --radius-md: 14px;
+            --radius-sm: 8px;
+            --shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.05), 0 4px 12px -2px rgba(99, 102, 241, 0.02);
+            --shadow-hover: 0 20px 35px -10px rgba(99, 102, 241, 0.15);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --gradient: linear-gradient(135deg, #6366f1, #8b5cf6);
+            --gradient-profile: linear-gradient(135deg, #4f46e5, #818cf8);
         }
 
-        body { 
-            font-family: 'Outfit', sans-serif; 
-            background: var(--bg-body); 
-            padding: 20px; 
-            color: var(--text-main); 
-            margin: 0; 
+        /* --- DARK MODE SYSTEM --- */
+        body.dark-mode {
+            --bg-body: #0b0f19;          /* Deep dark navy */
+            --white: #1e293b;            /* Dark slate 800 */
+            --sidebar-bg: #0f172a;       /* Dark slate 900 */
+            --text-main: #f8fafc;        /* Slate 50 */
+            --text-muted: #94a3b8;       /* Slate 400 */
+            --border-light: #334155;     /* Slate 700 */
+            --glass-border: rgba(51, 65, 85, 0.8);
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            font-family: 'Outfit', 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* --- VIEWPORT CONTAINER --- */
+        .app-container {
+            display: flex;
+            width: 100%;
             min-height: 100vh;
         }
-        
-        .container { max-width: 1300px; margin: 0 auto; }
 
-        /* Premium Header */
-        .header-nav {
+        /* --- SIDEBAR DESIGN --- */
+        .sidebar {
+            width: 280px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border-light);
+            display: flex;
+            flex-direction: column;
+            padding: 2rem 1.5rem;
+            box-sizing: border-box;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            flex-shrink: 0;
+            z-index: 10;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 2rem;
+            text-decoration: none;
+            color: var(--text-main);
+        }
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.4rem;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+        .logo-text h1 {
+            font-size: 1.25rem;
+            font-weight: 850;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+        .logo-text span {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-top: 1px;
+        }
+
+        /* Nav menu */
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px;
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.95rem;
+            border-radius: var(--radius-md);
+            transition: all 0.25s ease-in-out;
+            cursor: pointer;
+            box-sizing: border-box;
+        }
+        .nav-item:hover {
+            background-color: var(--bg-body);
+            color: var(--primary);
+        }
+        .nav-item.active {
+            background: var(--gradient);
+            color: white;
+            box-shadow: 0 8px 16px rgba(99, 102, 241, 0.2);
+        }
+        .nav-item .icon {
+            font-size: 1.15rem;
+            width: 24px;
+            display: flex;
+            justify-content: center;
+        }
+        .nav-item .badge {
+            margin-left: auto;
+            background-color: var(--primary-light);
+            color: white;
+            font-size: 0.68rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-weight: 800;
+        }
+        .nav-item.active .badge {
+            background-color: white;
+            color: var(--primary);
+        }
+
+        /* Profile widget card */
+        .profile-sidebar-card {
+            background: var(--gradient-profile);
+            color: white;
+            padding: 1.25rem;
+            border-radius: var(--radius-lg);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 1.5rem;
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.15);
+            box-sizing: border-box;
+        }
+        .profile-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .profile-user img {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            object-fit: cover;
+        }
+        .profile-user-info {
+            display: flex;
+            flex-direction: column;
+        }
+        .profile-user-info h3 {
+            font-size: 0.95rem;
+            font-weight: 800;
+            margin: 0;
+        }
+        .profile-user-info span {
+            font-size: 0.75rem;
+            opacity: 0.85;
+        }
+        .profile-points-badge {
+            font-size: 0.8rem;
+            font-weight: 850;
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 4px 10px;
+            border-radius: 6px;
+            width: fit-content;
+        }
+        .profile-level {
+            font-size: 0.78rem;
+            opacity: 0.9;
+            font-weight: 600;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: var(--white);
-            padding: 1.25rem 2rem;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow);
-            margin-bottom: 25px;
-            border: 1px solid var(--glass-border);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 8px;
+            margin-top: 4px;
         }
-        .header-logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .profile-level a {
+            color: white;
+            text-decoration: none;
+            font-weight: 750;
+        }
+
+        /* --- MAIN CONTENT AREA --- */
+        .main-content {
+            flex-grow: 1;
+            padding: 2.25rem 2.5rem;
+            box-sizing: border-box;
+            overflow-y: auto;
+            max-height: 100vh;
+        }
+
+        /* --- HEADER & TOP ROW --- */
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        .top-header-welcome h2 {
+            font-size: 1.85rem;
+            font-weight: 850;
+            margin: 0 0 6px 0;
+            letter-spacing: -0.5px;
+        }
+        .top-header-welcome p {
+            color: var(--text-muted);
+            margin: 0;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+        .top-header-stats {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .top-stat-item {
+            background-color: var(--white);
+            border: 1px solid var(--border-light);
+            padding: 10px 16px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow);
             display: flex;
             align-items: center;
             gap: 8px;
+            font-weight: 800;
+            font-size: 0.9rem;
+            transition: all 0.3s;
         }
-        .header-profile-info {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-        .header-profile-text {
-            text-align: right;
-        }
-        .header-profile-text h4 {
-            margin: 0;
-            font-size: 1.05rem;
-            font-weight: 700;
-        }
-        .header-profile-text span {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-        .logout-btn { 
-            background: #fee2e2; 
-            color: var(--danger); 
-            text-decoration: none; 
-            font-weight: 700; 
-            font-size: 0.85rem; 
-            padding: 8px 16px;
-            border-radius: var(--radius-sm);
-            transition: all 0.2s;
-        }
-        .logout-btn:hover {
-            background: var(--danger);
-            color: var(--white);
-        }
-
-        /* AI Performance Hero Panel */
-        .ai-hero-card {
-            background: var(--white);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow);
-            border: 1px solid var(--glass-border);
-            padding: 2rem;
-            margin-bottom: 25px;
-            display: grid;
-            grid-template-columns: 1.5fr 1fr;
-            gap: 30px;
-        }
-        @media (max-width: 992px) {
-            .ai-hero-card { grid-template-columns: 1fr; }
-        }
-
-        .chart-container {
-            position: relative;
-            min-height: 280px;
-        }
-
-        .ai-analysis-container {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            background: linear-gradient(180deg, #f8fafc 0%, #eff6ff 100%);
-            border: 1.5px solid #dbeafe;
+        .top-stat-item.streak { color: #f97316; }
+        .top-stat-item.target { color: var(--primary); }
+        
+        .notification-bell-btn {
+            background-color: var(--white);
+            border: 1px solid var(--border-light);
+            width: 44px;
+            height: 44px;
             border-radius: var(--radius-md);
-            padding: 1.5rem;
-            position: relative;
-            overflow: hidden;
-        }
-        .ai-analysis-container::before {
-            content: "🤖";
-            position: absolute;
-            top: -15px;
-            right: -10px;
-            font-size: 5rem;
-            opacity: 0.08;
-        }
-        .ai-analysis-header {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 12px;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            position: relative;
+            font-size: 1.2rem;
+            transition: all 0.3s;
         }
-        .ai-pulse-dot {
+        .notification-bell-btn .dot {
+            position: absolute;
+            top: -2px;
+            right: -2px;
             width: 8px;
             height: 8px;
-            background: var(--accent);
+            background-color: var(--danger);
             border-radius: 50%;
-            box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
-            animation: pulse 1.6s infinite;
-        }
-        @keyframes pulse {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); }
-            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(59, 130, 246, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
-        }
-        .ai-analysis-title {
-            font-size: 0.95rem;
-            font-weight: 800;
-            color: var(--accent);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .ai-analysis-text {
-            font-size: 1rem;
-            line-height: 1.6;
-            color: var(--primary-light);
-            margin: 0;
-            font-weight: 500;
+            border: 2px solid var(--white);
         }
 
-        /* 3-Column Info Bar */
-        .target-box-card {
-            background: var(--white);
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--glass-border);
-            padding: 1.5rem;
-            box-shadow: var(--shadow);
-            margin-bottom: 25px;
+        /* --- DASHBOARD HOME VIEW GRID --- */
+        .dashboard-home-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            text-align: center;
-        }
-        .target-box-item {
-            border-right: 1px solid #e2e8f0;
-        }
-        .target-box-item:last-child { border-right: none; }
-        .target-box-item label {
-            display: block;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            font-weight: 800;
-            color: var(--text-muted);
-            letter-spacing: 1.5px;
-            margin-bottom: 5px;
-        }
-        .target-box-item span {
-            font-size: 1.6rem;
-            font-weight: 900;
-            color: var(--primary);
-        }
-
-        /* Main Dashboard Grid */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: 1.8fr 1fr;
+            grid-template-columns: 1.5fr 1fr;
             gap: 25px;
         }
-        @media (max-width: 992px) {
-            .dashboard-grid { grid-template-columns: 1fr; }
+        @media (max-width: 1100px) {
+            .dashboard-home-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
-        /* Tab Navigation styles */
-        .tabs-nav {
+        /* --- CARDS & PANELS --- */
+        .dashboard-card {
+            background-color: var(--white);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 1.75rem;
+            box-shadow: var(--shadow);
+            box-sizing: border-box;
+            margin-bottom: 25px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .dashboard-card h3 {
+            font-size: 1.15rem;
+            font-weight: 850;
+            color: var(--text-main);
+            margin-top: 0;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .dashboard-card h3 span.action-link {
+            font-size: 0.8rem;
+            color: var(--primary);
+            cursor: pointer;
+            font-weight: 750;
+        }
+
+        /* AI Coach card special layout */
+        .ai-coach-card-layout {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: linear-gradient(180deg, var(--white) 0%, rgba(99, 102, 241, 0.03) 100%);
+        }
+        .ai-avatar-wrap {
+            width: 70px;
+            height: 70px;
+            background-color: rgba(99, 102, 241, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            flex-shrink: 0;
+        }
+        .ai-speech-bubble-wrap {
+            flex-grow: 1;
+        }
+        .ai-speech-bubble {
+            background-color: var(--white);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            border-top-left-radius: 2px;
+            padding: 12px 16px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: var(--text-main);
+            margin-bottom: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+            position: relative;
+        }
+        .ai-coach-actions {
             display: flex;
             gap: 10px;
-            margin-bottom: 25px;
-            background: var(--white);
-            padding: 8px;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow);
-            border: 1px solid var(--glass-border);
         }
-        .main-tab-btn {
-            flex: 1;
-            padding: 12px 20px;
-            border: none;
-            background: transparent;
-            color: var(--text-muted);
-            font-weight: 700;
-            font-size: 0.95rem;
-            cursor: pointer;
-            border-radius: var(--radius-md);
-            transition: all 0.2s ease-in-out;
-            font-family: 'Outfit', sans-serif;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .main-tab-btn:hover {
-            background: #f1f5f9;
-            color: var(--primary);
-        }
-        .main-tab-btn.active {
+        .btn-card-primary {
             background: var(--gradient);
-            color: var(--white);
-            box-shadow: 0 4px 15px -3px rgba(59, 130, 246, 0.4);
+            color: white;
+            border: none;
+            padding: 9px 18px;
+            border-radius: var(--radius-sm);
+            font-weight: 750;
+            font-size: 0.85rem;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(99, 102, 241, 0.15);
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
         }
-        .tab-panel {
-            display: none;
+        .btn-card-primary:hover {
+            transform: translateY(-1px);
         }
-        .tab-panel.active {
-            display: block;
-            animation: fadeIn 0.35s ease;
+        .btn-card-secondary {
+            background: var(--white);
+            color: var(--text-main);
+            border: 1px solid var(--border-light);
+            padding: 9px 18px;
+            border-radius: var(--radius-sm);
+            font-weight: 750;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
+        .btn-card-secondary:hover {
+            background-color: var(--bg-body);
         }
 
-        /* Modal Styles */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(15, 23, 42, 0.65);
-            backdrop-filter: blur(8px);
-            display: none;
+        /* Circular Progress Rings */
+        .daily-progress-row {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .progress-circle-wrap {
+            position: relative;
+            width: 110px;
+            height: 110px;
+            display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 1000;
-            padding: 20px;
-            animation: fadeInOverlay 0.25s ease;
+            flex-shrink: 0;
         }
-        @keyframes fadeInOverlay {
-            from { opacity: 0; } to { opacity: 1; }
-        }
-        .modal-content-card {
-            background: var(--white);
-            border-radius: var(--radius-lg);
+        .progress-circle-wrap canvas {
             width: 100%;
-            max-width: 700px;
-            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.15), 0 10px 10px -5px rgba(0,0,0,0.04);
-            border: 1px solid var(--glass-border);
-            overflow: hidden;
+            height: 100%;
+        }
+        .progress-circle-label {
+            position: absolute;
+            text-align: center;
+        }
+        .progress-circle-label h4 {
+            font-size: 1.35rem;
+            font-weight: 900;
+            margin: 0;
+            color: var(--text-main);
+        }
+        .progress-circle-label span {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 750;
+        }
+        
+        .progress-tasks-list {
+            flex-grow: 1;
             display: flex;
             flex-direction: column;
-            max-height: 90vh;
-            animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            gap: 8px;
         }
-        @keyframes slideUp {
-            from { transform: translateY(40px) scale(0.95); opacity: 0; }
-            to { transform: translateY(0) scale(1); opacity: 1; }
+        .progress-task-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            background-color: var(--bg-body);
+            border: 1px solid var(--border-light);
+            font-size: 0.88rem;
+            font-weight: 700;
+            cursor: pointer;
+            user-select: none;
         }
-        .modal-header {
-            padding: 1.25rem 1.75rem;
-            border-bottom: 1px solid #e2e8f0;
+        .progress-task-item.completed {
+            border-color: rgba(16, 185, 129, 0.2);
+        }
+        .progress-task-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .progress-task-title .dot-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--text-muted);
+        }
+        .progress-task-item.completed .dot-indicator {
+            background-color: var(--success);
+        }
+        .progress-task-item.in-progress .dot-indicator {
+            background-color: var(--warning);
+        }
+        .progress-task-time {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        /* Bugünkü Çalışma Planı */
+        .today-plan-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .today-plan-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background-color: var(--bg-body);
+            border: 1.5px solid var(--border-light);
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        .today-plan-item.completed {
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+        .today-plan-item.in-progress {
+            border-color: rgba(245, 158, 11, 0.3);
+        }
+        .plan-item-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .plan-item-icon-box {
+            width: 38px;
+            height: 38px;
+            border-radius: var(--radius-sm);
+            background-color: var(--white);
+            border: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.15rem;
+        }
+        .plan-item-info h4 {
+            margin: 0;
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+        .plan-item-info p {
+            margin: 2px 0 0 0;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+        .plan-item-status {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+        .today-plan-item.completed .plan-item-status {
+            background-color: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+        .today-plan-item.in-progress .plan-item-status {
+            border-color: var(--warning);
+            color: var(--warning);
+        }
+        .plan-item-status::after {
+            content: "";
+        }
+        .today-plan-item.completed .plan-item-status::after {
+            content: "✓";
+        }
+        .today-plan-item.in-progress .plan-item-status::after {
+            content: "•";
+            font-size: 1.3rem;
+            line-height: 1;
+        }
+        
+        .daily-test-banner-card {
+            background-color: rgba(99, 102, 241, 0.05);
+            border: 1.5px solid rgba(99, 102, 241, 0.2);
+            border-radius: var(--radius-lg);
+            padding: 1.25rem 1.5rem;
+            margin-top: 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #f8fafc;
         }
-        .modal-header h3 {
+        .daily-test-info h4 {
+            margin: 0 0 4px 0;
+            font-size: 0.95rem;
+            font-weight: 850;
+            color: var(--primary);
+        }
+        .daily-test-info p {
             margin: 0;
-            font-size: 1.2rem;
-            font-weight: 800;
-        }
-        .modal-close-btn {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
+            font-size: 0.8rem;
             color: var(--text-muted);
-            transition: color 0.2s;
-            line-height: 1;
-            padding: 0;
+            font-weight: 600;
+        }
+
+        /* Radar Chart container */
+        .radar-chart-container {
+            width: 100%;
+            height: 230px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Recommended Studies */
+        .recommendation-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .recommendation-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 14px;
+            background-color: var(--bg-body);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            transition: transform 0.2s;
+        }
+        .recommendation-item:hover {
+            transform: translateY(-1px);
+        }
+        .rec-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .rec-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: var(--radius-sm);
+            background-color: var(--white);
+            border: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+        .rec-info h4 {
+            margin: 0;
+            font-size: 0.88rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+        .rec-info p {
+            margin: 2px 0 0 0;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        .rec-action-btn {
+            background-color: var(--white);
+            color: var(--primary);
+            border: 1px solid var(--border-light);
             width: 32px;
             height: 32px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
         }
-        .modal-close-btn:hover {
-            background: #e2e8f0;
-            color: var(--primary);
-        }
-        .modal-body {
-            padding: 1.75rem;
-            overflow-y: auto;
-            flex: 1;
-            font-size: 1rem;
-            line-height: 1.6;
-        }
-        .modal-footer {
-            padding: 1rem 1.75rem;
-            border-top: 1px solid #e2e8f0;
-            display: flex;
-            justify-content: flex-end;
-            background: #f8fafc;
+        .rec-action-btn:hover {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
         }
 
-        /* Active Study list styles */
-        .study-plan-card {
-            background: var(--white);
+        /* Mock Exam Results horizontal row */
+        .exams-row-card {
+            background-color: var(--white);
+            border: 1px solid var(--border-light);
             border-radius: var(--radius-lg);
-            padding: 1.5rem;
-            border: 1px solid var(--glass-border);
+            padding: 1.5rem 1.75rem;
             box-shadow: var(--shadow);
-            margin-bottom: 20px;
-            transition: transform 0.2s;
+            margin-top: 1.5rem;
+            box-sizing: border-box;
         }
-        .study-plan-card:hover {
-            transform: translateY(-2px);
-        }
-        .study-grid-row {
-            display: grid;
-            grid-template-columns: 1.2fr 1fr;
-            gap: 20px;
+        .exams-row-card h3 {
+            font-size: 1.15rem;
+            font-weight: 850;
+            margin-top: 0;
+            margin-bottom: 1.25rem;
+            display: flex;
+            justify-content: space-between;
             align-items: center;
         }
-        .study-left {
-            border-right: 1.5px dashed #e2e8f0;
-            padding-right: 20px;
-        }
-        .study-right {
-            padding-left: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        /* Welcome Banner Card */
-        .welcome-hero-card {
+        .exams-row-grid {
             display: grid;
-            grid-template-columns: 1.6fr 1fr;
-            gap: 25px;
-            background: var(--white);
-            border-radius: var(--radius-lg);
-            padding: 2.25rem;
-            box-shadow: var(--shadow);
-            margin-bottom: 25px;
-            border: 1px solid var(--glass-border);
-            position: relative;
-            overflow: hidden;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 15px;
         }
-        .welcome-hero-card::before {
-            content: '';
-            position: absolute;
-            top: -50%; right: -20%;
-            width: 350px; height: 350px;
-            background: radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, rgba(255,255,255,0) 70%);
-            z-index: 0;
-            pointer-events: none;
-        }
-        .welcome-left {
-            z-index: 1;
-        }
-        .welcome-right {
-            z-index: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: #f8fafc;
+        .exam-subject-score-item {
+            background-color: var(--bg-body);
+            border: 1px solid var(--border-light);
+            padding: 10px 14px;
             border-radius: var(--radius-md);
-            padding: 1.5rem;
-            border: 1px solid var(--glass-border);
+            text-align: center;
         }
-        @media (max-width: 768px) {
-            .welcome-hero-card { grid-template-columns: 1fr; }
+        .exam-subject-score-item h4 {
+            margin: 0 0 4px 0;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 800;
+        }
+        .exam-subject-score-item .score-val {
+            font-size: 1.2rem;
+            font-weight: 900;
+            color: var(--text-main);
+            display: block;
+        }
+        .exam-subject-score-item .net-trend {
+            font-size: 0.72rem;
+            font-weight: 750;
+            display: block;
+            margin-top: 2px;
+        }
+        .exam-subject-score-item .net-trend.up { color: var(--success); }
+        .exam-subject-score-item .net-trend.down { color: var(--danger); }
+        .exam-subject-score-item .net-trend.stable { color: var(--text-muted); }
+
+        /* --- OTHER TABS / PANELS --- */
+        .tab-panel {
+            display: none;
+        }
+        .tab-panel.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Section Cards */
-        .section-card { 
-            background: var(--white); 
-            padding: 1.75rem; 
-            border-radius: var(--radius-lg); 
-            box-shadow: var(--shadow); 
+        /* --- LEGACY REUSED STYLES --- */
+        .section-card {
+            background: var(--white);
+            padding: 1.75rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-light);
             margin-bottom: 25px;
-            border: 1px solid var(--glass-border);
+            box-sizing: border-box;
         }
-        h3 { 
-            color: var(--primary); 
-            font-size: 1.2rem; 
-            font-weight: 800;
-            margin-top: 0; 
-            margin-bottom: 1.25rem; 
-            display: flex; 
-            align-items: center; 
-            gap: 10px; 
-            border-bottom: 1.5px solid #f1f5f9;
+        .section-card h3 {
+            color: var(--text-main);
+            font-size: 1.2rem;
+            font-weight: 850;
+            margin-top: 0;
+            margin-bottom: 1.25rem;
+            border-bottom: 1.5px solid var(--border-light);
             padding-bottom: 10px;
         }
-
-        /* Custom Tables */
         table { width: 100%; border-collapse: collapse; }
-        th { text-align: left; color: var(--text-muted); font-size: 0.8rem; padding: 12px 10px; border-bottom: 2px solid #f1f5f9; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
-        td { padding: 12px 10px; border-bottom: 1px solid #f1f5f9; font-size: 0.95rem; font-weight: 500; }
+        th { text-align: left; color: var(--text-muted); font-size: 0.8rem; padding: 12px 10px; border-bottom: 2px solid var(--border-light); text-transform: uppercase; font-weight: 800; letter-spacing: 0.5px; }
+        td { padding: 12px 10px; border-bottom: 1px solid var(--border-light); font-size: 0.95rem; font-weight: 600; }
         tr:last-child td { border-bottom: none; }
-        tr:hover { background: #f8fafc; }
+        tr:hover { background: var(--bg-body); }
         
-        .score-badge { background: #eff6ff; color: var(--accent); padding: 4px 10px; border-radius: 6px; font-weight: 800; border: 1px solid #dbeafe; }
+        .score-badge { background: rgba(99, 102, 241, 0.08); color: var(--primary); padding: 4px 10px; border-radius: 6px; font-weight: 800; border: 1px solid rgba(99, 102, 241, 0.15); }
         .status-badge { padding: 4px 10px; border-radius: 20px; font-size: 0.78rem; font-weight: 700; display: inline-block; }
         .status-completed { background: #dcfce7; color: var(--success); }
         .status-pending { background: #fef3c7; color: var(--warning); }
@@ -456,534 +786,773 @@
             font-weight: 700; 
             transition: transform 0.2s, box-shadow 0.2s;
             display: inline-block;
-            box-shadow: 0 4px 10px rgba(59, 130, 246, 0.2);
+            box-shadow: 0 4px 10px rgba(99, 102, 241, 0.2);
+            border: none;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
         }
         .btn-solve:hover {
             transform: translateY(-1px);
-            box-shadow: 0 6px 14px rgba(59, 130, 246, 0.3);
+            box-shadow: 0 6px 14px rgba(99, 102, 241, 0.3);
         }
 
-        /* LGS Archives Section */
-        .pdf-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+        .pdf-list { display: flex; flex-direction: column; gap: 10px; }
         .pdf-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 12px 15px;
-            background: #f8fafc;
+            background: var(--bg-body);
             border-radius: var(--radius-sm);
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border-light);
             transition: border-color 0.2s;
         }
-        .pdf-item:hover {
-            border-color: var(--accent);
-        }
-        .pdf-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        .pdf-item:hover { border-color: var(--primary); }
+        .pdf-info { display: flex; align-items: center; gap: 10px; }
         .pdf-icon { font-size: 1.5rem; }
         .pdf-title { font-weight: 600; font-size: 0.95rem; }
         .pdf-download-btn {
             background: var(--white);
-            color: var(--accent);
-            border: 1.5px solid var(--accent);
+            color: var(--primary);
+            border: 1.5px solid var(--primary);
             padding: 5px 12px;
             border-radius: 6px;
             font-size: 0.8rem;
-            font-weight: 700;
+            font-weight: 750;
             text-decoration: none;
             transition: all 0.2s;
         }
-        .pdf-download-btn:hover {
-            background: var(--accent);
-            color: var(--white);
-        }
+        .pdf-download-btn:hover { background: var(--primary); color: var(--white); }
 
-        /* AI Advisor Tab Center */
-        .ai-tab-card {
-            background: var(--white);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow);
-            border: 1px solid var(--glass-border);
-            margin-bottom: 25px;
-            overflow: hidden;
-        }
-        .ai-tab-header {
-            display: flex;
-            background: #f8fafc;
-            border-bottom: 1px solid #e2e8f0;
-        }
-        .tab-btn {
-            flex: 1;
-            padding: 15px;
-            border: none;
-            background: transparent;
-            font-family: 'Outfit', sans-serif;
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: var(--text-muted);
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .tab-btn.active {
-            color: var(--accent);
-            background: var(--white);
-            border-bottom: 3px solid var(--accent);
-        }
-        .tab-content {
-            padding: 1.75rem;
-        }
-        .tab-content.hidden { display: none; }
-
-        /* AI Advisor Branding */
-        .ai-branding {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-        .ai-badge {
-            background: var(--gradient);
-            color: var(--white);
-            padding: 8px 12px;
-            border-radius: var(--radius-sm);
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            box-shadow: 0 4px 10px rgba(139, 92, 246, 0.2);
-        }
-        .ai-rename-trigger {
-            background: transparent;
-            border: none;
-            color: var(--accent);
-            font-weight: 700;
-            font-size: 0.8rem;
-            cursor: pointer;
-        }
-
-        .ai-advisor-text-section {
-            background: #f8fafc;
-            padding: 1.25rem;
-            border-radius: var(--radius-md);
-            border-left: 4px solid var(--accent-purple);
-            margin-bottom: 1.5rem;
-            font-size: 0.95rem;
-            line-height: 1.5;
-        }
-
-        /* Interactive Advisor Chat Panel */
-        .chat-container {
-            display: flex;
-            flex-direction: column;
-            height: 350px;
-            border: 1px solid #e2e8f0;
-            border-radius: var(--radius-md);
-            background: #fafafa;
-            overflow: hidden;
-        }
-        .chat-messages {
-            flex: 1;
-            padding: 15px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .chat-bubble {
-            max-width: 80%;
-            padding: 10px 14px;
-            border-radius: var(--radius-md);
-            font-size: 0.92rem;
-            line-height: 1.4;
-            font-weight: 500;
-        }
-        .chat-bubble.advisor {
-            align-self: flex-start;
-            background: var(--white);
-            color: var(--text-main);
-            border: 1px solid #e2e8f0;
-            border-bottom-left-radius: 2px;
-        }
-        .chat-bubble.student {
-            align-self: flex-end;
-            background: var(--gradient);
-            color: var(--white);
-            border-bottom-right-radius: 2px;
-            box-shadow: 0 4px 10px rgba(59, 130, 246, 0.15);
-        }
-        .chat-typing {
-            align-self: flex-start;
-            background: rgba(226, 232, 240, 0.6);
-            padding: 8px 12px;
-            border-radius: var(--radius-md);
-            display: flex;
-            gap: 4px;
-            align-items: center;
-        }
-        .chat-typing span {
-            width: 6px;
-            height: 6px;
-            background: var(--text-muted);
-            border-radius: 50%;
-            animation: bounce 1.4s infinite;
-            display: inline-block;
-        }
-        .chat-typing span:nth-child(2) { animation-delay: 0.2s; }
-        .chat-typing span:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes bounce {
-            0%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-5px); }
-        }
-        .chat-input-bar {
-            display: flex;
-            border-top: 1px solid #e2e8f0;
-            background: var(--white);
-        }
-        .chat-input-bar input {
-            flex: 1;
-            border: none;
-            padding: 12px 15px;
-            font-family: 'Outfit', sans-serif;
-            font-size: 0.92rem;
-            outline: none;
-        }
-        .chat-input-bar button {
-            border: none;
-            background: var(--accent);
-            color: var(--white);
-            padding: 0 18px;
-            font-weight: 700;
-            font-family: 'Outfit', sans-serif;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .chat-input-bar button:hover {
-            background: var(--primary-light);
-        }
-
-        /* Attendance Card styling */
-        .attendance-summary {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-top: 10px;
-        }
-        .attendance-box {
-            padding: 15px 10px;
-            border-radius: var(--radius-md);
-            text-align: center;
-            font-weight: bold;
-        }
+        .attendance-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 10px; }
+        .attendance-box { padding: 15px 10px; border-radius: var(--radius-md); text-align: center; font-weight: bold; }
         .att-present { background: #dcfce7; color: var(--success); border: 1px solid #bbf7d0; }
         .att-absent { background: #fee2e2; color: var(--danger); border: 1px solid #fecaca; }
         .att-late { background: #fef3c7; color: var(--warning); border: 1px solid #fde68a; }
         .att-val { font-size: 1.8rem; display: block; font-weight: 900; }
+
+        /* AI Coach chat panel styles */
+        .chat-container { display: flex; flex-direction: column; height: 420px; border: 1px solid var(--border-light); border-radius: var(--radius-md); background: var(--bg-body); overflow: hidden; }
+        .chat-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+        .chat-bubble { max-width: 80%; padding: 10px 14px; border-radius: var(--radius-md); font-size: 0.92rem; line-height: 1.4; font-weight: 500; }
+        .chat-bubble.advisor { align-self: flex-start; background: var(--white); color: var(--text-main); border: 1px solid var(--border-light); border-bottom-left-radius: 2px; }
+        .chat-bubble.student { align-self: flex-end; background: var(--gradient); color: var(--white); border-bottom-right-radius: 2px; box-shadow: 0 4px 10px rgba(99, 102, 241, 0.15); }
+        
+        .chat-typing { align-self: flex-start; background: rgba(226, 232, 240, 0.6); padding: 8px 12px; border-radius: var(--radius-md); display: flex; gap: 4px; align-items: center; }
+        .chat-typing span { width: 6px; height: 6px; background: var(--text-muted); border-radius: 50%; animation: bounce 1.4s infinite; display: inline-block; }
+        .chat-typing span:nth-child(2) { animation-delay: 0.2s; }
+        .chat-typing span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes bounce { 0%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-5px); } }
+        
+        .chat-input-bar { display: flex; border-top: 1px solid var(--border-light); background: var(--white); }
+        .chat-input-bar input { flex: 1; border: none; padding: 14px 15px; font-family: 'Outfit', sans-serif; font-size: 0.92rem; outline: none; background: transparent; color: var(--text-main); }
+        .chat-input-bar button { border: none; background: var(--primary); color: var(--white); padding: 0 20px; font-weight: 700; font-family: 'Outfit', sans-serif; cursor: pointer; transition: background 0.2s; }
+        .chat-input-bar button:hover { background: var(--primary-dark); }
+
+        /* Gauge target Card inside Hedeflerim tab */
+        .gauge-flex-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--white); border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow); max-width: 400px; margin: 0 auto; box-sizing: border-box; }
+        
+        /* Modals */
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+        .modal-content-card { background: var(--white); border-radius: var(--radius-lg); width: 100%; max-width: 600px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); border: 1px solid var(--border-light); overflow: hidden; display: flex; flex-direction: column; max-height: 90vh; animation: slideUp 0.25s ease-out; }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .modal-header { padding: 1.25rem 1.75rem; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; background: var(--bg-body); }
+        .modal-header h3 { margin: 0; font-size: 1.2rem; font-weight: 800; }
+        .modal-close-btn { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .modal-close-btn:hover { background: var(--border-light); color: var(--text-main); }
+        .modal-body { padding: 1.75rem; overflow-y: auto; flex: 1; }
+        .modal-footer { padding: 1rem 1.75rem; border-top: 1px solid var(--border-light); display: flex; justify-content: flex-end; background: var(--bg-body); }
+
+        /* Interactive Flashcards Game styles */
+        .flashcard-game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            padding: 10px;
+        }
+        .flashcard-perspective {
+            perspective: 1000px;
+            width: 320px;
+            height: 200px;
+            cursor: pointer;
+        }
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border-radius: var(--radius-md);
+        }
+        .flashcard-perspective.flipped .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+        .flashcard-front, .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            box-sizing: border-box;
+            border-radius: var(--radius-md);
+            border: 1.5px solid var(--border-light);
+        }
+        .flashcard-front {
+            background-color: var(--white);
+            color: var(--text-main);
+        }
+        .flashcard-back {
+            background: var(--gradient);
+            color: white;
+            transform: rotateY(180deg);
+            border-color: transparent;
+        }
+        .flashcard-tip-text {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 10px;
+        }
+        .flashcard-back .flashcard-tip-text {
+            color: rgba(255,255,255,0.7);
+        }
     </style>
-    <script src="/js/config.js"></script>
 </head>
 <body>
 
-<div class="container">
-    <!-- Navbar -->
-    <div class="header-nav">
-        <div class="header-logo">
-            <span>✨</span> AI DERSHANE SİSTEMİ
-        </div>
-        <div class="header-profile-info">
-            <div class="header-profile-text">
-                <h4 id="student-name">...</h4>
-                <span id="student-school">...</span>
+<div class="app-container">
+    <!-- LEFT SIDEBAR -->
+    <aside class="sidebar">
+        <a href="/" class="sidebar-logo">
+            <div class="logo-icon">✨</div>
+            <div class="logo-text">
+                <h1>EduMentor AI</h1>
+                <span>Akıllı Öğrenme Koçun</span>
             </div>
-            <a href="#" onclick="logout()" class="logout-btn">Çıkış Yap</a>
-        </div>
-    </div>
-     <!-- AI Welcome & Motivation Card (Hoşgeldin & Motivasyon Kartı) -->
-    <div class="welcome-hero-card">
-        <div class="welcome-left">
-            <span style="font-size:0.85rem; color:var(--accent-purple); font-weight:800; text-transform:uppercase; letter-spacing:1px;">LGS Hazırlık Portalı</span>
-            <h2 style="margin: 5px 0 15px 0; font-size: 1.85rem; font-weight: 800;">Merhaba, <span id="welcome-student-name">...</span>! 🌟</h2>
-            
-            <div style="background: rgba(99, 102, 241, 0.03); border-left: 4px solid var(--accent-purple); padding: 15px; border-radius: 4px; font-size: 0.95rem; line-height: 1.6; color: var(--primary-light);">
-                <div style="font-weight: 700; color: var(--accent-purple); display: flex; align-items: center; gap: 6px; margin-bottom: 8px;">
-                    <span>🤖</span> Yapay Zeka Rehber Öğretmen Analizi:
-                </div>
-                <div id="ai-analysis-welcome-text" style="white-space: pre-line;">
-                    Akademik durumunuz analiz ediliyor, tavsiyeler hazırlanıyor...
-                </div>
-            </div>
-        </div>
-        <div class="welcome-right">
-            <h4 style="margin: 0 0 10px 0; font-weight: 800; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">🎯 LGS Hedef Durumu</h4>
-            <div style="position: relative; width: 140px; height: 140px; display: flex; align-items: center; justify-content: center;">
-                <canvas id="targetGaugeChart" style="width: 100%; height: 100%;"></canvas>
-                <div style="position: absolute; text-align: center;">
-                    <span id="gaugeCurrentScore" style="font-size: 1.5rem; font-weight: 900; color: var(--primary); display: block; line-height: 1;">...</span>
-                    <span style="font-size: 0.65rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Mevcut</span>
-                </div>
-            </div>
-            <div style="margin-top: 12px; text-align: center;">
-                <span style="font-size: 0.95rem; font-weight: 800; color: var(--primary); display: block;">Hedef: 450 Puan</span>
-                <span id="gaugeRemainingDistance" style="font-size: 0.8rem; font-weight: 700; color: var(--accent); display: block; margin-top: 2px;">Hedefe kalan hesaplanıyor...</span>
-            </div>
-        </div>
-    </div>
+        </a>
 
-    <!-- Main Tabs Navigation -->
-    <div class="tabs-nav">
-        <button class="main-tab-btn active" id="btn-tab-study" onclick="switchMainTab('study')">
-            <span>🎯</span> Çalışma Programı & Testlerim
-        </button>
-        <button class="main-tab-btn" id="btn-tab-exams" onclick="switchMainTab('exams')">
-            <span>📈</span> Deneme Sınavlarım & Gelişim
-        </button>
-        <button class="main-tab-btn" id="btn-tab-archive" onclick="switchMainTab('archive')">
-            <span>📂</span> Eğitim Arşivi
-        </button>
-    </div>
+        <nav class="sidebar-nav">
+            <a onclick="switchPanel('home')" class="nav-item active" id="nav-home">
+                <span class="icon">🏠</span> Ana Sayfa
+            </a>
+            <a onclick="switchPanel('study-plan')" class="nav-item" id="nav-study-plan">
+                <span class="icon">📅</span> Çalışma Planım
+            </a>
+            <a onclick="switchPanel('lessons')" class="nav-item" id="nav-lessons">
+                <span class="icon">📖</span> Derslerim
+            </a>
+            <a onclick="openQuizFromNav()" class="nav-item" id="nav-solve">
+                <span class="icon">✏️</span> Soru Çöz
+            </a>
+            <a onclick="switchPanel('exams')" class="nav-item" id="nav-exams">
+                <span class="icon">📈</span> Denemelerim
+            </a>
+            <a onclick="switchPanel('notes')" class="nav-item" id="nav-notes">
+                <span class="icon">📝</span> Notlarım
+            </a>
+            <a onclick="switchPanel('ai-coach')" class="nav-item" id="nav-ai-coach">
+                <span class="icon">🤖</span> AI Koçum <span class="badge">Yeni</span>
+            </a>
+            <a onclick="switchPanel('reports')" class="nav-item" id="nav-reports">
+                <span class="icon">📊</span> Raporlarım
+            </a>
+            <a onclick="switchPanel('goals')" class="nav-item" id="nav-goals">
+                <span class="icon">🎯</span> Hedeflerim
+            </a>
+            <a onclick="switchPanel('achievements')" class="nav-item" id="nav-achievements">
+                <span class="icon">🏅</span> Başarılarım
+            </a>
+        </nav>
 
-    <!-- Tab Panel 1: Active Study & Tests -->
-    <div class="tab-panel active" id="panel-study">
-        <div class="dashboard-grid">
-            <!-- Left Column: Study Topics & Homeworks -->
-            <div>
-                <!-- Active study card (Ders & Test split view) -->
-                <div class="section-card">
-                    <h3 style="margin-bottom:15px;">📖 Haftalık Odak Çalışma Konusu</h3>
-                    <div id="active-study-plan-container">
-                        <!-- Dynamic active plans loaded here -->
-                        <div style="text-align:center; padding:20px; color:var(--text-muted)">Yükleniyor...</div>
-                    </div>
-                </div>
-
-                <!-- Homeworks Table -->
-                <div class="section-card">
-                    <h3>📚 Tanımlı Ödevlerim</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Ödev Başlığı</th>
-                                <th>Ders</th>
-                                <th>Son Tarih</th>
-                                <th>Durum</th>
-                                <th>Puan</th>
-                                <th>İşlem</th>
-                            </tr>
-                        </thead>
-                        <tbody id="assignments-table">
-                            <tr><td colspan="6" style="text-align:center; color:var(--text-muted)">Ödevler yükleniyor...</td></tr>
-                        </tbody>
-                    </table>
+        <!-- Sidebar Profile Card Widget -->
+        <div class="profile-sidebar-card">
+            <div class="profile-user">
+                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80" alt="Student Profile">
+                <div class="profile-user-info">
+                    <h3 id="sidebar-profile-name">Arda Yılmaz</h3>
+                    <span id="sidebar-profile-grade">8. Sınıf Öğrencisi</span>
                 </div>
             </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+                <div class="profile-points-badge" id="sidebar-profile-points">1250 Puan</div>
+                <span style="font-size: 0.72rem; font-weight: 800; color: rgba(255,255,255,0.95);" id="sidebar-profile-level">Seviye 5</span>
+            </div>
+            <div class="profile-level">
+                <span>Hedef: LGS 2026</span>
+                <a href="#" onclick="logout(); return false;">Çıkış Yap</a>
+            </div>
+        </div>
+    </aside>
 
-            <!-- Right Column: AI Chat & Stats -->
-            <div>
-                <!-- AI Advisor Tab Center (Chat Box) -->
-                <div class="section-card" style="padding: 1.25rem;">
-                    <h3 style="border:none; margin-bottom:10px;">💬 AI Rehber Öğretmen Sohbeti</h3>
-                    <div class="chat-container">
-                        <div class="chat-messages" id="chat-messages-box" style="max-height: 250px;">
-                            <div class="chat-bubble advisor">
-                                Merhaba! Benimle ders çalışma taktikleri, çözemediğin konular veya motivasyon hakkında sohbet edebilirsin! 👇
+    <!-- RIGHT MAIN CONTENT -->
+    <main class="main-content">
+        <!-- TOP HEADER ROW -->
+        <div class="top-header">
+            <div class="top-header-welcome">
+                <h2 id="top-welcome-title">Merhaba Arda! 👋</h2>
+                <p>Bugün harika bir gün, hedeflerine bir adım daha yaklaş!</p>
+            </div>
+            <div class="top-header-stats">
+                <div class="top-stat-item streak">🔥 <span id="top-streak-val">7</span> Günlük Seri</div>
+                <div class="top-stat-item target">🎯 <span id="top-target-pct">85%</span> Hedefe Ulaşma</div>
+                <!-- Theme Toggle Button -->
+                <button id="themeToggleBtn" class="notification-bell-btn" onclick="toggleTheme()" title="Temayı Değiştir" style="font-size: 1.1rem;">🌙</button>
+                <div class="notification-bell-btn" onclick="switchPanel('notes')">
+                    🔔 <span class="dot"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- PANEL 1: ANA SAYFA (HOME PAGE) -->
+        <div class="tab-panel active" id="panel-home">
+            <div class="dashboard-home-grid">
+                <!-- Left Main Column -->
+                <div>
+                    <!-- AI Advisor Speaking widget -->
+                    <div class="dashboard-card ai-coach-card-layout">
+                        <div class="ai-avatar-wrap">🤖</div>
+                        <div class="ai-speech-bubble-wrap">
+                            <h4 style="margin:0 0 8px 0; font-size: 0.8rem; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; font-weight: 800;">Akıllı Yapay Zeka Koçun</h4>
+                            <div class="ai-speech-bubble" id="ai-speech-bubble-text">
+                                Arda, matematikte çok iyi ilerliyorsun! 👏 Bugün fen bilimlerinde tekrar yaparsan hedeflerine daha hızlı ulaşacaksın.
                             </div>
-                            <div class="chat-typing" id="chat-typing-indicator" style="display: none;">
-                                <span></span><span></span><span></span>
+                            <div class="ai-coach-actions">
+                                <button class="btn-card-primary" onclick="switchPanel('study-plan')">Bugünkü Planın</button>
+                                <button class="btn-card-secondary" onclick="switchPanel('ai-coach')">Koçumla Sohbet Et</button>
                             </div>
                         </div>
-                        <div class="chat-input-bar">
-                            <input type="text" id="chat-input-field" placeholder="Rehberine bir mesaj yaz..." onkeydown="if(event.key === 'Enter') sendChatMessage()">
-                            <button onclick="sendChatMessage()">Gönder</button>
+                    </div>
+
+                    <!-- Bugünkü Çalışma Planım Checklist -->
+                    <div class="dashboard-card">
+                        <h3>Bugünkü Çalışma Planım <span class="action-link" onclick="switchPanel('study-plan')">Detaylar &rsaquo;</span></h3>
+                        <div class="today-plan-list">
+                            <!-- Matematik -->
+                            <div class="today-plan-item completed" id="plan-check-math" onclick="toggleTodayCheck('math')">
+                                <div class="plan-item-left">
+                                    <div class="plan-item-icon-box">📐</div>
+                                    <div class="plan-item-info">
+                                        <h4>Matematik</h4>
+                                        <p>Cebirsel İfadeler - Soru Çözümü</p>
+                                    </div>
+                                </div>
+                                <div class="plan-item-status"></div>
+                            </div>
+                            <!-- Fen Bilimleri -->
+                            <div class="today-plan-item in-progress" id="plan-check-science" onclick="toggleTodayCheck('science')">
+                                <div class="plan-item-left">
+                                    <div class="plan-item-icon-box">🧪</div>
+                                    <div class="plan-item-info">
+                                        <h4>Fen Bilimleri</h4>
+                                        <p>Basınç - Konu Tekrarı</p>
+                                    </div>
+                                </div>
+                                <div class="plan-item-status"></div>
+                            </div>
+                            <!-- Türkçe -->
+                            <div class="today-plan-item completed" id="plan-check-turkish" onclick="toggleTodayCheck('turkish')">
+                                <div class="plan-item-left">
+                                    <div class="plan-item-icon-box">📖</div>
+                                    <div class="plan-item-info">
+                                        <h4>Türkçe</h4>
+                                        <p>Paragraf - Soru Çözümü</p>
+                                    </div>
+                                </div>
+                                <div class="plan-item-status"></div>
+                            </div>
+                            <!-- İngilizce -->
+                            <div class="today-plan-item" id="plan-check-english" onclick="toggleTodayCheck('english')">
+                                <div class="plan-item-left">
+                                    <div class="plan-item-icon-box">🅰️</div>
+                                    <div class="plan-item-info">
+                                        <h4>İngilizce</h4>
+                                        <p>Unit 6 - Kelime Çalışması</p>
+                                    </div>
+                                </div>
+                                <div class="plan-item-status"></div>
+                            </div>
+                        </div>
+
+                        <!-- 15 Soruluk Karma Test banner -->
+                        <div class="daily-test-banner-card">
+                            <div class="daily-test-info">
+                                <h4>Günlük Test</h4>
+                                <p>15 soruluk karma pekiştirme testi</p>
+                            </div>
+                            <button class="btn-card-primary" onclick="openQuizFromNav()" style="padding: 8px 20px;">Başla</button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Devamsızlık Takibi -->
-                <div class="section-card">
-                    <h3>📅 Dershane Devamsızlık Takibi</h3>
-                    <div class="attendance-summary">
-                        <div class="attendance-box att-present">
-                            <span class="att-val" id="att-present">0</span>
-                            Katılım
+                <!-- Right Sidebar Column -->
+                <div>
+                    <!-- Günlük İlerleme Circular ring widget -->
+                    <div class="dashboard-card">
+                        <h3>Günlük İlerleme</h3>
+                        <div class="daily-progress-row">
+                            <div class="progress-circle-wrap">
+                                <canvas id="dailyProgressRingChart"></canvas>
+                                <div class="progress-circle-label">
+                                    <h4 id="daily-progress-percentage-label">75%</h4>
+                                    <span>Tamamlandı</span>
+                                </div>
+                            </div>
+                            <div class="progress-tasks-list">
+                                <div class="progress-task-item completed" id="progress-indicator-math">
+                                    <div class="progress-task-title">
+                                        <span class="dot-indicator"></span> Matematik
+                                    </div>
+                                    <span class="progress-task-time">40/50 dk</span>
+                                </div>
+                                <div class="progress-task-item in-progress" id="progress-indicator-science">
+                                    <div class="progress-task-title">
+                                        <span class="dot-indicator"></span> Fen Bilimleri
+                                    </div>
+                                    <span class="progress-task-time">20/40 dk</span>
+                                </div>
+                                <div class="progress-task-item completed" id="progress-indicator-turkish">
+                                    <div class="progress-task-title">
+                                        <span class="dot-indicator"></span> Türkçe
+                                    </div>
+                                    <span class="progress-task-time">30/40 dk</span>
+                                </div>
+                                <div class="progress-task-item" id="progress-indicator-english">
+                                    <div class="progress-task-title">
+                                        <span class="dot-indicator"></span> İngilizce
+                                    </div>
+                                    <span class="progress-task-time">0/30 dk</span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="attendance-box att-absent">
-                            <span class="att-val" id="att-absent">0</span>
-                            Devamsız
+                    </div>
+
+                    <!-- Performansım radar chart widget -->
+                    <div class="dashboard-card">
+                        <h3>Performansım <span class="action-link" onclick="switchPanel('reports')">Bu Hafta ▼</span></h3>
+                        <div class="radar-chart-container">
+                            <canvas id="performanceRadarChart"></canvas>
                         </div>
-                        <div class="attendance-box att-late">
-                            <span class="att-val" id="att-late">0</span>
-                            Geç Giriş
+                        <div style="background-color:rgba(99, 102, 241, 0.04); border-radius: var(--radius-sm); padding: 10px; font-size: 0.8rem; line-height: 1.4; display: flex; align-items: center; gap: 8px; margin-top: 10px;">
+                            <span>🏆</span>
+                            <span style="font-weight: 600; color: var(--text-main);">Harika! Türkçe'de sınıf ortalamasının üzerindesin. <a onclick="switchPanel('exams')" style="color:var(--primary); font-weight:750; cursor:pointer;">Devamını Gör &rsaquo;</a></span>
+                        </div>
+                    </div>
+
+                    <!-- Önerilen Çalışmalar widget list -->
+                    <div class="dashboard-card">
+                        <h3>Önerilen Çalışmalar <span class="action-link" onclick="switchPanel('lessons')">Tümü &rsaquo;</span></h3>
+                        <div class="recommendation-list">
+                            <!-- Video lesson summary -->
+                            <div class="recommendation-item">
+                                <div class="rec-left">
+                                    <div class="rec-icon" style="color: #6366f1;">📺</div>
+                                    <div class="rec-info">
+                                        <h4>Basınç - Konu Anlatımı</h4>
+                                        <p>5 dk video ders anlatımı</p>
+                                    </div>
+                                </div>
+                                <div class="rec-action-btn" onclick="playMockVideo('Basınç Konu Anlatımı')">▶</div>
+                            </div>
+                            <!-- Mini Quiz recommend -->
+                            <div class="recommendation-item">
+                                <div class="rec-left">
+                                    <div class="rec-icon" style="color: #10b981;">📝</div>
+                                    <div class="rec-info">
+                                        <h4>Basınç - 10 Soru</h4>
+                                        <p>Orta Seviye Pekiştirme Testi</p>
+                                    </div>
+                                </div>
+                                <div class="rec-action-btn" onclick="openQuizFromNav()">✏️</div>
+                            </div>
+                            <!-- PDF summary document -->
+                            <div class="recommendation-item">
+                                <div class="rec-left">
+                                    <div class="rec-icon" style="color: #ef4444;">📄</div>
+                                    <div class="rec-info">
+                                        <h4>Konu Özeti</h4>
+                                        <p>1 sayfa LGS özet PDF</p>
+                                    </div>
+                                </div>
+                                <div class="rec-action-btn" onclick="viewMockPDF('Basınç LGS Konu Özeti')">👁️</div>
+                            </div>
+                            <!-- Flashcards -->
+                            <div class="recommendation-item">
+                                <div class="rec-left">
+                                    <div class="rec-icon" style="color: #f59e0b;">🎴</div>
+                                    <div class="rec-info">
+                                        <h4>Flashcard Çalışması</h4>
+                                        <p>12 kartlık ezber pekiştirme</p>
+                                    </div>
+                                </div>
+                                <div class="rec-action-btn" onclick="playFlashcards()">🗂️</div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Tab Panel 2: Mock Exams & Analytics -->
-    <div class="tab-panel" id="panel-exams">
-        <!-- Chart Section -->
-        <div class="section-card">
-            <h3>📈 LGS Deneme Sınavları Gelişim Grafiği</h3>
-            <span style="font-size:0.8rem; color:var(--text-muted); font-weight:600; display:block; margin-bottom:15px;">Hedefe giden yoldaki deneme puanı gelişim eğriniz</span>
-            <div class="chart-container" style="height: 320px; position: relative;">
-                <canvas id="mockExamsChart"></canvas>
-            </div>
-        </div>
-
-        <div class="dashboard-grid">
-            <!-- Left Column: Exams & Written Grades -->
-            <div>
-                <!-- LGS Past Year PDFs Archive & Simulation -->
-                <div class="section-card">
-                    <h3>📂 LGS Çıkmış Sınavlar Arşivi & Zamanlı Simülasyon</h3>
-                    <div class="pdf-list" id="lgs-exams-list-container">
-                        <!-- Dynamic LGS booklets list -->
-                        <div style="text-align:center; padding:20px; color:var(--text-muted)">Yükleniyor...</div>
+            <!-- Bottom Row: Mock Exam Net breakdown -->
+            <div class="exams-row-card">
+                <h3>Son Deneme Sonuçları <span class="action-link" onclick="switchPanel('exams')">Tüm Sonuçlarım &rsaquo;</span></h3>
+                <div class="exams-row-grid">
+                    <div class="exam-subject-score-item">
+                        <h4>Matematik</h4>
+                        <span class="score-val">18/20</span>
+                        <span class="net-trend up">▲ 2 net artış</span>
+                    </div>
+                    <div class="exam-subject-score-item">
+                        <h4>Türkçe</h4>
+                        <span class="score-val">17/20</span>
+                        <span class="net-trend up">▲ 1 net artış</span>
+                    </div>
+                    <div class="exam-subject-score-item">
+                        <h4>Fen Bilimleri</h4>
+                        <span class="score-val">14/20</span>
+                        <span class="net-trend down">▼ 2 net azalış</span>
+                    </div>
+                    <div class="exam-subject-score-item">
+                        <h4>İngilizce</h4>
+                        <span class="score-val">15/20</span>
+                        <span class="net-trend up">▲ 3 net artış</span>
+                    </div>
+                    <div class="exam-subject-score-item">
+                        <h4>Sosyal Bilgiler</h4>
+                        <span class="score-val">16/20</span>
+                        <span class="net-trend stable">─ 0 net değişim</span>
+                    </div>
+                    <div class="exam-subject-score-item" style="background-color: rgba(99, 102, 241, 0.08); border-color: rgba(99, 102, 241, 0.2);">
+                        <h4 style="color: var(--primary);">Toplam Net</h4>
+                        <span class="score-val" style="color: var(--primary);">80/100</span>
+                        <span class="net-trend up">▲ 4 net artış</span>
                     </div>
                 </div>
+            </div>
+        </div>
 
-                <!-- LGS Exam Results Table -->
-                <div class="section-card">
-                    <h3>📝 LGS Deneme Sınavı Sonuçlarım</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Sınav Adı</th>
-                                <th>Puan / Başarı</th>
-                                <th>Durum</th>
-                            </tr>
-                        </thead>
-                        <tbody id="lgs-exam-results-table">
-                            <tr><td colspan="3" style="text-align:center; color:var(--text-muted)">Henüz çözülmüş sınav sonucu bulunmuyor.</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- School Grades -->
-                <div class="section-card">
-                    <h3>🏫 Okul Ders Yazılı Notları</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Ders</th>
-                                <th>Sınav Türü</th>
-                                <th>Puan</th>
-                                <th>Tarih</th>
-                            </tr>
-                        </thead>
-                        <tbody id="school-grades-table">
-                            <tr><td colspan="4" style="text-align:center; color:var(--text-muted)">Yükleniyor...</td></tr>
-                        </tbody>
-                    </table>
+        <!-- PANEL 2: ÇALIŞMA PLANIM (STUDY PLAN) -->
+        <div class="tab-panel" id="panel-study-plan">
+            <div class="section-card">
+                <h3>📖 Haftalık Odak Çalışma Konusu</h3>
+                <div id="active-study-plan-container">
+                    <div style="text-align:center; padding:20px; color:var(--text-muted)">Yükleniyor...</div>
                 </div>
             </div>
 
-            <!-- Right Column: Study distributions & Certificates -->
-            <div>
-                <!-- Study Reviews breakdown -->
-                <div class="section-card">
-                    <h3>🕒 Konu Tekrar & Çalışma Dağılımı</h3>
-                    <div style="position:relative; max-height:220px; height: 200px;">
-                        <canvas id="studyReviewsChart"></canvas>
+            <div class="section-card">
+                <h3>📚 Tanımlı Ödevlerim</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Ödev Başlığı</th>
+                            <th>Ders</th>
+                            <th>Son Tarih</th>
+                            <th>Durum</th>
+                            <th>Puan</th>
+                            <th>İşlem</th>
+                        </tr>
+                    </thead>
+                    <tbody id="assignments-table">
+                        <tr><td colspan="6" style="text-align:center; color:var(--text-muted)">Yükleniyor...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- PANEL 3: DERSLERİM (LESSONS) -->
+        <div class="tab-panel" id="panel-lessons">
+            <div class="section-card">
+                <h3>📅 Dershane Devamsızlık Takibi</h3>
+                <div class="attendance-summary">
+                    <div class="attendance-box att-present">
+                        <span class="att-val" id="att-present">0</span>
+                        Katılım
+                    </div>
+                    <div class="attendance-box att-absent">
+                        <span class="att-val" id="att-absent">0</span>
+                        Devamsız
+                    </div>
+                    <div class="attendance-box att-late">
+                        <span class="att-val" id="att-late">0</span>
+                        Geç Giriş
                     </div>
                 </div>
+            </div>
 
-                <!-- Certificates -->
-                <div class="section-card">
-                    <h3>🏅 Sertifikalar ve Ödüller</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Sertifika / Kurs</th>
-                                <th>Kurum</th>
-                            </tr>
-                        </thead>
-                        <tbody id="certs-table">
-                            <tr><td colspan="2" style="text-align:center; color:var(--text-muted)">Yükleniyor...</td></tr>
-                        </tbody>
-                    </table>
+            <div class="section-card">
+                <h3>🏫 Okul Ders Yazılı Notları</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Ders</th>
+                            <th>Sınav Türü</th>
+                            <th>Puan</th>
+                            <th>Tarih</th>
+                        </tr>
+                    </thead>
+                    <tbody id="school-grades-table">
+                        <tr><td colspan="4" style="text-align:center; color:var(--text-muted)">Yükleniyor...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- PANEL 4: DENEMELERİM (EXAMS) -->
+        <div class="tab-panel" id="panel-exams">
+            <div class="section-card">
+                <h3>📈 LGS Deneme Sınavları Gelişim Grafiği</h3>
+                <span style="font-size:0.8rem; color:var(--text-muted); font-weight:600; display:block; margin-bottom:15px;">Deneme sınavları toplam puan değişim eğrisi</span>
+                <div class="radar-chart-container" style="height: 300px;">
+                    <canvas id="mockExamsChart"></canvas>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <h3>📂 LGS Çıkmış Sınavlar Arşivi & Simülasyon</h3>
+                <div class="pdf-list" id="lgs-exams-list-container">
+                    <div style="text-align:center; padding:20px; color:var(--text-muted)">Yükleniyor...</div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <h3>📝 LGS Deneme Sınavı Sonuçlarım</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Sınav Adı</th>
+                            <th>Puan / Başarı</th>
+                            <th>Durum</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lgs-exam-results-table">
+                        <tr><td colspan="3" style="text-align:center; color:var(--text-muted)">Yükleniyor...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- PANEL 5: NOTLARIM (NOTES) -->
+        <div class="tab-panel" id="panel-notes">
+            <div class="section-card">
+                <h3>📝 Öğretmen & Danışman Notları</h3>
+                <div id="teacher-notes-list" style="display: flex; flex-direction: column; gap: 15px;">
+                    <!-- Dynamic teacher notes -->
+                    <div style="text-align:center; padding:20px; color:var(--text-muted)">Yükleniyor...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PANEL 6: AI KOÇUM (AI CHAT) -->
+        <div class="tab-panel" id="panel-ai-coach">
+            <div class="section-card" style="padding: 1.25rem;">
+                <h3 style="border:none; margin-bottom:15px; display:flex; justify-content:space-between; align-items:center;">
+                    <span>💬 AI Rehber Öğretmen Sohbeti</span>
+                    <button class="btn-solve" onclick="promptRename()" style="background:var(--accent-purple); font-size:0.75rem; padding:4px 10px;">İsmini Değiştir</button>
+                </h3>
+                <div class="chat-container">
+                    <div class="chat-messages" id="chat-messages-box">
+                        <div class="chat-bubble advisor">
+                            Merhaba! Benimle ders çalışma taktikleri, çözemediğin konular veya motivasyon hakkında sohbet edebilirsin! 👇
+                        </div>
+                        <div class="chat-typing" id="chat-typing-indicator" style="display: none;">
+                            <span></span><span></span><span></span>
+                        </div>
+                    </div>
+                    <div class="chat-input-bar">
+                        <input type="text" id="chat-input-field" placeholder="Rehberine bir mesaj yaz..." onkeydown="if(event.key === 'Enter') sendChatMessage()">
+                        <button onclick="sendChatMessage()">Gönder</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PANEL 7: RAPORLARIM (REPORTS) -->
+        <div class="tab-panel" id="panel-reports">
+            <div class="section-card">
+                <h3>🕒 Konu Tekrar & Çalışma Dağılımı</h3>
+                <div style="position:relative; max-height:260px; height: 240px; display: flex; justify-content: center;">
+                    <canvas id="studyReviewsChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- PANEL 8: HEDEFLERİM (GOALS) -->
+        <div class="tab-panel" id="panel-goals">
+            <div class="gauge-flex-wrap">
+                <h4 style="margin: 0 0 15px 0; font-weight: 800; font-size: 0.95rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">🎯 LGS Hedef Durumu</h4>
+                <div style="position: relative; width: 180px; height: 180px; display: flex; align-items: center; justify-content: center;">
+                    <canvas id="targetGaugeChart" style="width: 100%; height: 100%;"></canvas>
+                    <div style="position: absolute; text-align: center;">
+                        <span id="gaugeCurrentScore" style="font-size: 1.8rem; font-weight: 900; color: var(--text-main); display: block; line-height: 1;">...</span>
+                        <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Mevcut Puan</span>
+                    </div>
+                </div>
+                <div style="margin-top: 15px; text-align: center; width: 100%;">
+                    <span style="font-size: 1.1rem; font-weight: 850; color: var(--text-main); display: block;">Hedef: 450 Puan</span>
+                    <span id="gaugeRemainingDistance" style="font-size: 0.9rem; font-weight: 750; color: var(--primary); display: block; margin-top: 4px;">Hesaplanıyor...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- PANEL 9: BAŞARILARIM (ACHIEVEMENTS) -->
+        <div class="tab-panel" id="panel-achievements">
+            <div class="section-card">
+                <h3>🏅 Sertifikalar ve Ödüller</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Sertifika / Kurs</th>
+                            <th>Veren Kurum</th>
+                        </tr>
+                    </thead>
+                    <tbody id="certs-table">
+                        <tr><td colspan="2" style="text-align:center; color:var(--text-muted)">Yükleniyor...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Reusable Lesson Study Guide Modal -->
+<div class="modal-overlay" id="lessonModal">
+    <div class="modal-content-card">
+        <div class="modal-header">
+            <h3 id="lessonModalTitle">Çalışma Konusu</h3>
+            <button class="modal-close-btn" onclick="closeLessonModal()">&times;</button>
+        </div>
+        <div class="modal-body" id="lessonModalBody" style="white-space: pre-line; color: var(--text-main); font-weight: 500;">
+            <!-- Injected guide text -->
+        </div>
+        <div class="modal-footer">
+            <button class="btn-solve" onclick="closeLessonModal()" style="width: auto; padding: 10px 20px;">Anladım, Kapat</button>
+        </div>
+    </div>
+</div>
+
+<!-- Reusable AI Reinforcement Quiz Modal -->
+<div class="modal-overlay" id="quizModal">
+    <div class="modal-content-card" style="max-width: 650px;">
+        <div class="modal-header">
+            <h3 id="quizModalTitle">Pekiştirme Testi</h3>
+            <button class="modal-close-btn" onclick="closeQuizModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div id="quizModalPlanTopic" style="font-weight: 800; color: var(--primary); margin-bottom: 15px; font-size: 1.05rem;">Konu</div>
+            <div id="quizModalQuestionsContainer"></div>
+            <div id="quizModalResultContainer" style="display: none; text-align: center; padding: 1.5rem; border-radius: 8px; margin-top: 15px;">
+                <span id="quizModalResultIcon" style="font-size: 3rem; display: block; margin-bottom: 10px;">🎉</span>
+                <h4 id="quizModalResultTitle" style="margin: 0 0 10px 0; font-size: 1.2rem; font-weight: 800;">Tebrikler!</h4>
+                <p id="quizModalResultFeedback" style="font-size: 0.95rem; line-height: 1.5; font-weight: 500; margin: 0;"></p>
+            </div>
+        </div>
+        <div class="modal-footer" id="quizModalFooter">
+            <button class="btn-solve" onclick="submitInlineQuiz()" style="width: auto; padding: 10px 20px;">Cevapları Gönder</button>
+        </div>
+    </div>
+</div>
+
+<!-- Mock Video Play Player Modal -->
+<div class="modal-overlay" id="videoModal">
+    <div class="modal-content-card" style="max-width: 600px;">
+        <div class="modal-header">
+            <h3 id="videoModalTitle">Video Dersi</h3>
+            <button class="modal-close-btn" onclick="closeVideoModal()">&times;</button>
+        </div>
+        <div class="modal-body" style="padding:0; background:black; aspect-ratio: 16/9; display:flex; align-items:center; justify-content:center; position:relative;">
+            <div style="color:white; text-align:center; font-family:'Outfit';">
+                <span style="font-size:3.5rem; display:block; margin-bottom:10px;">🎬</span>
+                <strong id="videoModalText" style="font-size:1.2rem;">Konu Anlatımı Oynatılıyor...</strong>
+                <p style="font-size:0.8rem; color:#ccc; margin-top:10px;">Süre: 05:00 / AI Tavsiyeli Öğrenim</p>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-solve" onclick="closeVideoModal()" style="width: auto; padding: 10px 20px;">Kapat</button>
+        </div>
+    </div>
+</div>
+
+<!-- Mock Interactive Flashcards Modal -->
+<div class="modal-overlay" id="flashcardsModal">
+    <div class="modal-content-card" style="max-width: 500px;">
+        <div class="modal-header">
+            <h3>Flashcard Çalışması</h3>
+            <button class="modal-close-btn" onclick="closeFlashcardsModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="flashcard-game-container">
+                <div class="flashcard-perspective" id="flashcard-box" onclick="flipFlashcard()">
+                    <div class="flashcard-inner">
+                        <div class="flashcard-front">
+                            <span style="font-size:1.8rem; margin-bottom:10px;">❓</span>
+                            <strong id="flashcard-front-text" style="font-size: 1.05rem; line-height: 1.5;">Katıların basıncı yüzey alanı ile ters orantılı mıdır?</strong>
+                            <span class="flashcard-tip-text">Cevabı görmek için karta tıklayın</span>
+                        </div>
+                        <div class="flashcard-back">
+                            <span style="font-size:1.8rem; margin-bottom:10px;">💡</span>
+                            <strong id="flashcard-back-text" style="font-size: 1.05rem; line-height: 1.5;">Evet! Yüzey alanı küçüldükçe, katının uyguladığı basınç artar (Örn: Çivinin ucu).</strong>
+                            <span class="flashcard-tip-text">Tıklayarak geri çevirin</span>
+                        </div>
+                    </div>
+                </div>
+                <div style="display:flex; gap:10px; width:100%; justify-content:center; margin-top:10px;">
+                    <button class="btn-card-secondary" onclick="prevFlashcard()" style="padding:8px 16px;">◀ Geri</button>
+                    <button class="btn-card-primary" onclick="nextFlashcard()" style="padding:8px 16px;">İleri ▶</button>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Tab Panel 3: Learning Archive -->
-    <div class="tab-panel" id="panel-archive">
-        <div class="section-card">
-            <h3>📂 Tamamlanan Konu & Pekiştirme Testleri Arşivi</h3>
-            <span style="font-size:0.8rem; color:var(--text-muted); font-weight:600; display:block; margin-bottom:15px;">Daha önce tamamladığınız ve onaylanan tüm AI çalışma konularına buradan dönüp bakabilirsiniz.</span>
-            
-            <div id="learning-archive-list" style="display: grid; grid-template-columns: 1fr; gap: 15px;">
-                <!-- Completed study plans loaded here -->
-                <div style="text-align:center; padding:30px; color:var(--text-muted)">Arşiv yükleniyor...</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Inline Modal: Lesson Study Guide -->
-    <div class="modal-overlay" id="lessonModal">
-        <div class="modal-content-card">
-            <div class="modal-header">
-                <h3 id="lessonModalTitle">Çalışma Konusu</h3>
-                <button class="modal-close-btn" onclick="closeLessonModal()">&times;</button>
-            </div>
-            <div class="modal-body" id="lessonModalBody" style="white-space: pre-line; color: var(--primary-light);">
-                <!-- Study guide text injected here -->
-            </div>
-            <div class="modal-footer">
-                <button class="btn-solve" onclick="closeLessonModal()" style="width: auto; padding: 10px 20px;">Anladım, Kapat</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Inline Modal: AI Reinforcement Quiz -->
-    <div class="modal-overlay" id="quizModal">
-        <div class="modal-content-card" style="max-width: 650px;">
-            <div class="modal-header">
-                <h3 id="quizModalTitle">Pekiştirme Testi</h3>
-                <button class="modal-close-btn" onclick="closeQuizModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div id="quizModalPlanTopic" style="font-weight: 800; color: var(--accent-purple); margin-bottom: 15px; font-size: 1rem;">Konu</div>
-                <div id="quizModalQuestionsContainer">
-                    <!-- Quiz questions injected here -->
-                </div>
-                <!-- Quiz result section -->
-                <div id="quizModalResultContainer" style="display: none; text-align: center; padding: 1.5rem; border-radius: 8px; margin-top: 15px;">
-                    <span id="quizModalResultIcon" style="font-size: 3rem; display: block; margin-bottom: 10px;">🎉</span>
-                    <h4 id="quizModalResultTitle" style="margin: 0 0 10px 0; font-size: 1.2rem; font-weight: 800;">Tebrikler!</h4>
-                    <p id="quizModalResultFeedback" style="font-size: 0.95rem; line-height: 1.5; font-weight: 500; margin: 0;"></p>
-                </div>
-            </div>
-            <div class="modal-footer" id="quizModalFooter">
-                <button class="btn-solve" onclick="submitInlineQuiz()" style="width: auto; padding: 10px 20px;">Cevapları Gönder</button>
-            </div>
-        </div>
-    </div>
-
+<!-- JAVASCRIPT CONTROLLER CODE -->
 <script>
 const token = localStorage.getItem("token");
 let studentId = null;
 let advisorName = "Yapay Zeka Rehberi";
 let solvedExamsMap = {};
 let targetGaugeChartInstance = null;
+let dailyProgressRingChartInstance = null;
 let currentQuizPlanId = null;
 let currentQuizQuestions = [];
+let performanceRadarChartInstance = null;
+
+// Mock Flashcard deck data
+const flashcardsDeck = [
+    { q: "Katıların basıncı yüzey alanı ile ters orantılı mıdır?", a: "Evet! Yüzey alanı küçüldükçe, katının uyguladığı basınç artar (Örn: Çivinin ucu)." },
+    { q: "Sıvıların basıncı nelere bağlıdır?", a: "Sıvının derinliğine (h) ve yoğunluğuna (d) bağlıdır. Derinlik arttıkça sıvı basıncı artar." },
+    { q: "Pascal Prensibi nedir?", a: "Kapalı kaplardaki sıvıların, üzerlerine uygulanan basıncı her yöne aynen iletmesi prensibidir (Örn: Hidrolik frenler)." },
+    { q: "Açık hava basıncı hangi deney ile ispatlanmıştır?", a: "Toriçelli Deneyi ile. Cıva dolu boru kullanılarak açık hava basıncı 76 cmHg olarak ölçülmüştür." }
+];
+let currentFlashcardIndex = 0;
 
 if (!token) {
     alert("Giriş yetkiniz bulunmuyor.");
     location.href = "/";
+}
+
+// Persist and load Dark Mode
+document.addEventListener("DOMContentLoaded", () => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+        document.body.classList.add("dark-mode");
+        const btn = document.getElementById("themeToggleBtn");
+        if (btn) btn.innerHTML = "☀️";
+    }
+});
+
+function toggleTheme() {
+    const isDark = document.body.classList.toggle("dark-mode");
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+    const btn = document.getElementById("themeToggleBtn");
+    if (btn) btn.innerHTML = isDark ? "☀️" : "🌙";
 }
 
 function logout() {
@@ -991,30 +1560,29 @@ function logout() {
     location.href = "/";
 }
 
-// Switch between Main Dashboard Tabs
-function switchMainTab(tabName) {
-    document.getElementById("btn-tab-study").classList.remove("active");
-    document.getElementById("btn-tab-exams").classList.remove("active");
-    document.getElementById("btn-tab-archive").classList.remove("active");
+// Dynamic Tab/Panel Switcher
+function switchPanel(panelId) {
+    // Hide all tab panels
+    const panels = document.querySelectorAll(".tab-panel");
+    panels.forEach(p => p.classList.remove("active"));
     
-    document.getElementById("panel-study").classList.remove("active");
-    document.getElementById("panel-exams").classList.remove("active");
-    document.getElementById("panel-archive").classList.remove("active");
+    // Deactivate all sidebar nav items
+    const navItems = document.querySelectorAll(".nav-item");
+    navItems.forEach(item => item.classList.remove("active"));
     
-    document.getElementById(`btn-tab-${tabName}`).classList.add("active");
-    document.getElementById(`panel-${tabName}`).classList.add("active");
+    // Show selected panel
+    const targetPanel = document.getElementById(`panel-${panelId}`);
+    if (targetPanel) targetPanel.classList.add("active");
+    
+    // Activate nav item
+    const targetNavItem = document.getElementById(`nav-${panelId}`);
+    if (targetNavItem) targetNavItem.classList.add("active");
 }
 
-// Update Advisor Name Labels
 function updateAdvisorNameLabels(name) {
     advisorName = name;
-    const badge = document.getElementById("ai-name-badge");
-    if (badge) badge.innerText = name;
-    const chatBadge = document.getElementById("ai-chat-badge");
-    if (chatBadge) chatBadge.innerText = name;
 }
 
-// Prompt to rename advisor
 function promptRename() {
     const newName = prompt("Yapay zeka rehberinize yeni bir isim verin:", advisorName);
     if (!newName || !newName.trim()) return;
@@ -1031,11 +1599,12 @@ function promptRename() {
     .then(data => {
         if (data.status === "ok") {
             updateAdvisorNameLabels(data.name);
+            alert(`AI Mentörünüzün adı '${data.name}' olarak güncellendi!`);
         }
     });
 }
 
-// Send interactive message to AI Advisor chat
+// Chat functions
 function sendChatMessage() {
     const input = document.getElementById("chat-input-field");
     const message = input.value ? input.value.trim() : "";
@@ -1050,11 +1619,10 @@ function sendChatMessage() {
     input.value = "";
     messagesBox.scrollTop = messagesBox.scrollHeight;
     
-    // Show typing indicator
     const typing = document.getElementById("chat-typing-indicator");
     if (typing) {
         typing.style.display = "flex";
-        messagesBox.appendChild(typing); // ensure it stays at bottom
+        messagesBox.appendChild(typing);
     }
     messagesBox.scrollTop = messagesBox.scrollHeight;
     
@@ -1086,7 +1654,67 @@ function sendChatMessage() {
     });
 }
 
-// Update Target progress gauge doughnut chart (450 target)
+// circular daily progress ring
+function updateDailyProgressRing() {
+    const completedCount = document.querySelectorAll(".today-plan-item.completed").length;
+    const totalCount = document.querySelectorAll(".today-plan-item").length;
+    const percent = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+    
+    document.getElementById("daily-progress-percentage-label").innerText = `${percent}%`;
+    
+    const ctx = document.getElementById("dailyProgressRingChart").getContext("2d");
+    if (dailyProgressRingChartInstance) {
+        dailyProgressRingChartInstance.destroy();
+    }
+    
+    dailyProgressRingChartInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [percent, 100 - percent],
+                backgroundColor: ['#6366f1', 'rgba(99, 102, 241, 0.1)'],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '80%',
+            plugins: {
+                legend: { display: false },
+                tooltip: { enabled: false }
+            }
+        }
+    });
+}
+
+// Toggle study checkpoints manually in UI
+function toggleTodayCheck(subjectId) {
+    const planItem = document.getElementById(`plan-check-${subjectId}`);
+    const indicator = document.getElementById(`progress-indicator-${subjectId}`);
+    
+    if (planItem.classList.contains("completed")) {
+        planItem.classList.remove("completed");
+        planItem.classList.add("in-progress");
+        if (indicator) {
+            indicator.classList.remove("completed");
+            indicator.classList.add("in-progress");
+        }
+    } else if (planItem.classList.contains("in-progress")) {
+        planItem.classList.remove("in-progress");
+        if (indicator) {
+            indicator.classList.remove("in-progress");
+        }
+    } else {
+        planItem.classList.add("completed");
+        if (indicator) {
+            indicator.classList.add("completed");
+        }
+    }
+    updateDailyProgressRing();
+}
+
+// Gauge target LGS status
 function updateTargetGauge(currentScore) {
     const target = 450;
     const remaining = Math.max(0, target - currentScore);
@@ -1094,12 +1722,16 @@ function updateTargetGauge(currentScore) {
     
     document.getElementById("gaugeCurrentScore").innerText = currentScore;
     const distanceEl = document.getElementById("gaugeRemainingDistance");
+    
+    const reachPercent = target > 0 ? Math.round((currentScore / target) * 100) : 0;
+    document.getElementById("top-target-pct").innerText = `${reachPercent}%`;
+
     if (currentScore >= target) {
         distanceEl.innerText = `Hedef Aşıldı! (+${currentScore - target} Puan)`;
         distanceEl.style.color = "var(--success)";
     } else {
         distanceEl.innerText = `Hedefe Kalan: ${remaining} Puan`;
-        distanceEl.style.color = "var(--accent)";
+        distanceEl.style.color = "var(--primary)";
     }
     
     const ctx = document.getElementById("targetGaugeChart").getContext("2d");
@@ -1112,7 +1744,7 @@ function updateTargetGauge(currentScore) {
         data: {
             datasets: [{
                 data: [completed, remaining],
-                backgroundColor: ['#3b82f6', '#e2e8f0'],
+                backgroundColor: ['#6366f1', '#e2e8f0'],
                 borderWidth: 0
             }]
         },
@@ -1128,7 +1760,71 @@ function updateTargetGauge(currentScore) {
     });
 }
 
-// Fetch dashboard core data
+// Performansım Radar Chart builder
+function renderRadarChart(performanceData) {
+    let scores = [85, 70, 60, 75, 90]; // Defaults from screenshot mock
+    
+    if (performanceData && performanceData.school_grades && performanceData.school_grades.length > 0) {
+        const subjectScores = {};
+        const subjectCounts = {};
+        performanceData.school_grades.forEach(g => {
+            const sub = g.subject.toLowerCase();
+            subjectScores[sub] = (subjectScores[sub] || 0) + g.score;
+            subjectCounts[sub] = (subjectCounts[sub] || 0) + 1;
+        });
+        
+        const subjectsList = ['matematik', 'fen', 'ingilizce', 'sosyal', 'türkçe'];
+        subjectsList.forEach((subKey, idx) => {
+            // Find key match
+            const keyMatch = Object.keys(subjectScores).find(k => k.includes(subKey));
+            if (keyMatch) {
+                scores[idx] = Math.round(subjectScores[keyMatch] / subjectCounts[keyMatch]);
+            }
+        });
+    }
+
+    const ctx = document.getElementById("performanceRadarChart").getContext("2d");
+    if (performanceRadarChartInstance) {
+        performanceRadarChartInstance.destroy();
+    }
+    
+    performanceRadarChartInstance = new Chart(ctx, {
+        type: 'radar',
+        data: {
+            labels: ['Matematik', 'Fen Bilimleri', 'İngilizce', 'Sosyal Bilgiler', 'Türkçe'],
+            datasets: [{
+                label: 'Ders Başarı Seviyesi',
+                data: scores,
+                backgroundColor: 'rgba(99, 102, 241, 0.2)',
+                borderColor: '#6366f1',
+                borderWidth: 2,
+                pointBackgroundColor: '#4f46e5',
+                pointBorderColor: '#fff',
+                pointRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                r: {
+                    angleLines: { color: 'rgba(99, 102, 241, 0.1)' },
+                    grid: { color: 'rgba(99, 102, 241, 0.1)' },
+                    pointLabels: {
+                        font: { family: 'Outfit', weight: '700', size: 10 }
+                    },
+                    suggestedMin: 40,
+                    suggestedMax: 100
+                }
+            }
+        }
+    });
+}
+
+// Load dynamic data from endpoints
 fetch(window.API_BASE + "/api/student/dashboard", {
     headers: { "Authorization": "Bearer " + token }
 })
@@ -1139,20 +1835,22 @@ fetch(window.API_BASE + "/api/student/dashboard", {
 .then(data => {
     studentId = data.student.id;
     
-    // Welcome Banner and Profile Bindings
-    document.getElementById("student-name").innerText = data.student.name;
-    document.getElementById("student-school").innerText = `${data.student.school} | ${data.student.grade}. Sınıf`;
-    document.getElementById("welcome-student-name").innerText = data.student.name;
+    // Bind greeting and profile widget
+    document.getElementById("top-welcome-title").innerText = `Merhaba ${data.student.name.split(' ')[0]}! 👋`;
+    document.getElementById("sidebar-profile-name").innerText = data.student.name;
+    document.getElementById("sidebar-profile-grade").innerText = `${data.student.grade}. Sınıf Öğrencisi`;
     
-    const noEl = document.getElementById("student-no");
-    if (noEl) noEl.innerText = data.student.student_no;
-    
-    const targetExamEl = document.getElementById("target-exam");
-    if (targetExamEl) targetExamEl.innerText = data.target_exam || "BELİRTİLMEDİ";
+    // Dynamic Level/Points calculation based on completed tasks
+    let completedPoints = 800; // base score
+    if (data.assignments) {
+        completedPoints += data.assignments.filter(a => a.status === "completed").length * 100;
+    }
+    document.getElementById("sidebar-profile-points").innerText = `${completedPoints} Puan`;
+    const levelVal = Math.floor(completedPoints / 250) + 1;
+    document.getElementById("sidebar-profile-level").innerText = `Seviye ${levelVal}`;
     
     updateAdvisorNameLabels(data.student.ai_advisor_name || "Yapay Zeka Rehberi");
 
-    // Populate solved exams map
     solvedExamsMap = {};
     if (data.recent_exams) {
         data.recent_exams.forEach(e => {
@@ -1160,11 +1858,11 @@ fetch(window.API_BASE + "/api/student/dashboard", {
         });
     }
 
-    // Render Target Progress Gauge
+    // Populate Target progression
     const latestScore = data.recent_exams && data.recent_exams.length > 0 ? data.recent_exams[0].score : 440;
     updateTargetGauge(latestScore);
 
-    // Render LGS Exam Results Table
+    // Populate LGS Mock results table
     const etable = document.getElementById("lgs-exam-results-table");
     if (etable) {
         if (data.recent_exams && data.recent_exams.length > 0) {
@@ -1172,8 +1870,8 @@ fetch(window.API_BASE + "/api/student/dashboard", {
                 return `
                     <tr>
                         <td><strong>${e.exam_name}</strong></td>
-                        <td><span class="score-badge" style="background:rgba(59, 130, 246, 0.1); color:#2563eb; font-weight:700; padding:4px 8px; border-radius:4px;">${e.score} Puan</span></td>
-                        <td><span style="color:var(--success); font-weight:600;">✓ Tamamlandı</span></td>
+                        <td><span class="score-badge">${e.score} Puan</span></td>
+                        <td><span style="color:var(--success); font-weight:700;">✓ Çözüldü</span></td>
                     </tr>
                 `;
             }).join('');
@@ -1182,7 +1880,7 @@ fetch(window.API_BASE + "/api/student/dashboard", {
         }
     }
 
-    // Render Assignments Table
+    // Populate Assignments Table
     const atable = document.getElementById("assignments-table");
     if (data.assignments && data.assignments.length > 0) {
         atable.innerHTML = data.assignments.map(a => {
@@ -1205,7 +1903,7 @@ fetch(window.API_BASE + "/api/student/dashboard", {
             `;
         }).join('');
     } else {
-        atable.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted)">Sistemde tanımlı ödev bulunmuyor.</td></tr>`;
+        atable.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted)">Ödev bulunmuyor.</td></tr>`;
     }
 
     loadSupplementaryData(studentId);
@@ -1215,23 +1913,18 @@ fetch(window.API_BASE + "/api/student/dashboard", {
 });
 
 function loadSupplementaryData(sId) {
-    // 1. AI Analysis Critique Text
+    // 1. AI speech critique text
     fetch(`${window.API_BASE}/api/student/${sId}/ai_analysis`, {
         headers: { "Authorization": "Bearer " + token }
     })
     .then(res => res.json())
     .then(data => {
-        const welcomeText = document.getElementById("ai-analysis-welcome-text");
-        if (welcomeText) {
-            welcomeText.innerText = data.analysis;
-        } else {
-            const legacyText = document.getElementById("ai-analysis-text");
-            if (legacyText) legacyText.innerText = data.analysis;
-        }
+        const speechBubble = document.getElementById("ai-speech-bubble-text");
+        if (speechBubble) speechBubble.innerText = data.analysis;
     })
-    .catch(err => console.error("Error fetching AI critique:", err));
+    .catch(err => console.error("Error fetching AI analysis critique:", err));
 
-    // 2. Fetch chart progress data
+    // 2. Fetch chart datasets
     fetch(`${window.API_BASE}/api/student/${sId}/ai_chart_data`, {
         headers: { "Authorization": "Bearer " + token }
     })
@@ -1251,13 +1944,12 @@ function loadSupplementaryData(sId) {
                     {
                         label: 'Deneme Puanı',
                         data: examScores,
-                        borderColor: '#3b82f6',
-                        backgroundColor: 'rgba(59, 130, 246, 0.08)',
+                        borderColor: '#6366f1',
+                        backgroundColor: 'rgba(99, 102, 241, 0.05)',
                         borderWidth: 3,
-                        pointBackgroundColor: '#2563eb',
+                        pointBackgroundColor: '#4f46e5',
                         pointBorderColor: '#fff',
-                        pointRadius: 6,
-                        pointHoverRadius: 8,
+                        pointRadius: 5,
                         fill: true,
                         tension: 0.35
                     },
@@ -1275,26 +1967,13 @@ function loadSupplementaryData(sId) {
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        labels: { font: { family: 'Outfit', weight: '600' } }
-                    }
-                },
                 scales: {
-                    x: {
-                        grid: { display: false },
-                        ticks: { font: { family: 'Outfit', weight: '500' } }
-                    },
-                    y: {
-                        min: 200,
-                        max: 500,
-                        ticks: { font: { family: 'Outfit', weight: '500' } }
-                    }
+                    y: { min: 200, max: 500 }
                 }
             }
         });
 
-        // Study Reviews breakdown doughnut chart
+        // Study reviews breakdown chart
         const reviewLabels = chartData.reviews.map(r => r.subject);
         const reviewDurations = chartData.reviews.map(r => r.duration);
 
@@ -1305,7 +1984,7 @@ function loadSupplementaryData(sId) {
                 labels: reviewLabels,
                 datasets: [{
                     data: reviewDurations,
-                    backgroundColor: ['#3b82f6', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444'],
+                    backgroundColor: ['#6366f1', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444'],
                     borderWidth: 2,
                     borderColor: '#ffffff'
                 }]
@@ -1313,32 +1992,24 @@ function loadSupplementaryData(sId) {
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'right',
-                        labels: { font: { family: 'Outfit', weight: '600' } }
-                    }
-                },
                 cutout: '60%'
             }
         });
     });
 
-    // 3. Fetch academic detail page datasets
+    // 3. Fetch academic statistics
     fetch(`${window.API_BASE}/api/teacher/student/${sId}`, {
         headers: { "Authorization": "Bearer " + token }
     })
     .then(res => res.json())
     .then(data => {
-        const tpEl = document.getElementById("target-percentile");
-        if (tpEl) {
-            tpEl.innerText = `%${data.target_exam ? (data.target_exam === 'LGS' ? '1.2' : data.target_exam) : '3.5'}`;
-        }
-        
         // Attendance
         document.getElementById("att-present").innerText = data.attendance.present;
         document.getElementById("att-absent").innerText = data.attendance.absent;
         document.getElementById("att-late").innerText = data.attendance.late;
+
+        // Render Radar Chart using student's actual grades
+        renderRadarChart(data);
 
         // School Grades
         const sTable = document.getElementById("school-grades-table");
@@ -1367,9 +2038,23 @@ function loadSupplementaryData(sId) {
         } else {
             cTable.innerHTML = `<tr><td colspan="2" style="text-align:center; color:var(--text-muted)">Kayıtlı sertifika bulunmuyor.</td></tr>`;
         }
+        
+        // Advisor/Teacher Notes
+        const notesList = document.getElementById("teacher-notes-list");
+        if (data.notes && data.notes.length > 0) {
+            notesList.innerHTML = data.notes.map(n => `
+                <div style="background-color: var(--bg-body); border-left:4px solid var(--primary); padding:15px; border-radius:6px; box-shadow:0 2px 5px rgba(0,0,0,0.02);">
+                    <div style="font-weight:750; font-size:0.95rem; margin-bottom:5px;">Öğretmen: ${n.teacher_name}</div>
+                    <p style="margin:0 0 10px 0; font-size:0.9rem; line-height:1.5; color:var(--text-main);">${n.note_text}</p>
+                    <span style="font-size:0.75rem; color:var(--text-muted);">${n.created_at}</span>
+                </div>
+            `).join('');
+        } else {
+            notesList.innerHTML = `<div style="text-align:center; padding:20px; color:var(--text-muted)">Sisteme kaydedilmiş öğretmen notu bulunmuyor.</div>`;
+        }
     });
 
-    // Fetch dynamic LGS exams
+    // Fetch booklet PDFs
     fetch(window.API_BASE + "/api/lgs_exams", {
         headers: { "Authorization": "Bearer " + token }
     })
@@ -1381,7 +2066,6 @@ function loadSupplementaryData(sId) {
                 const isSozel = exam.session === "sozel";
                 const icon = isSozel ? "📕" : "📘";
                 const pdfName = `${exam.year}_${exam.session}.pdf`;
-                
                 const score = solvedExamsMap[exam.exam_name];
                 const isSolved = score !== undefined;
                 
@@ -1395,7 +2079,7 @@ function loadSupplementaryData(sId) {
                             <span class="pdf-icon">${icon}</span>
                             <div>
                                 <div class="pdf-title">${exam.exam_name} (${exam.question_count} Soru)</div>
-                                <span style="font-size:0.75rem; color:var(--text-muted)">Zamanlı Simülasyon (${exam.duration_minutes} Dk) / Soru Kitapçığı</span>
+                                <span style="font-size:0.75rem; color:var(--text-muted)">Simülasyon (${exam.duration_minutes} Dk) / Soru Kitapçığı</span>
                             </div>
                         </div>
                         <div style="display:flex; gap:8px; align-items:center;">
@@ -1407,13 +2091,12 @@ function loadSupplementaryData(sId) {
             }).join('');
         }
     })
-    .catch(err => console.error("Error fetching LGS exams list:", err));
+    .catch(err => console.error("Error fetching LGS exams:", err));
 
-    // Fetch dynamic study plans
+    // Fetch dynamic AI Study Plans
     loadAiPlans(sId);
 }
 
-// Fetch & Render Study Plans list
 function loadAiPlans(sId) {
     fetch(`${window.API_BASE}/api/student/${sId}/ai_study_plans`, {
         headers: { "Authorization": "Bearer " + token }
@@ -1431,25 +2114,28 @@ function loadAiPlans(sId) {
                 <div class="study-plan-card">
                     <div class="study-grid-row">
                         <div class="study-left">
-                            <h4 style="margin:0 0 10px 0; font-size:1.15rem; color:var(--primary); font-weight:800;">${activePlan.topic}</h4>
+                            <h4 style="margin:0 0 10px 0; font-size:1.15rem; color:var(--text-main); font-weight:800;">${activePlan.topic}</h4>
                             <p style="font-size:0.9rem; color:var(--text-muted); line-height:1.6; margin-bottom:15px;">
-                                Yapay Zeka Rehberiniz tarafından size özel hazırlanan konu çalışma rehberini okuyarak hazırlanın.
+                                Yapay Zeka Rehberiniz tarafından hazırlanan konu çalışma rehberini okuyarak hazırlanın.
                             </p>
-                            <button class="btn-solve" onclick="openLessonModal(\`${activePlan.study_guide.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`, \`${activePlan.topic.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`)" style="background:var(--accent);">Rehberi Oku</button>
+                            <button class="btn-solve" onclick="openLessonModal(\`${activePlan.study_guide.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`, \`${activePlan.topic.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`)" style="background:var(--primary);">Rehberi Oku</button>
                         </div>
                         <div class="study-right">
-                            <h4 style="margin:0 0 8px 0; font-size:1rem; color:var(--primary); font-weight:800;">Konu Pekiştirme Testi</h4>
+                            <h4 style="margin:0 0 8px 0; font-size:1rem; color:var(--text-main); font-weight:800;">Konu Pekiştirme Testi</h4>
                             <p style="font-size:0.85rem; color:var(--text-muted); margin:0 0 12px 0;">
-                                Konuyu pekiştirmek için 3 soruluk kısa testi çözün. (%66 başarı gerekir)
+                                Konuyu pekiştirmek için 3 soruluk testi çözün. (%66 başarı gerekir)
                             </p>
                             <button class="btn-solve" onclick="openQuizModal(${activePlan.id}, \`${activePlan.topic.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`, ${JSON.stringify(activePlan.quiz_questions).replace(/"/g, '&quot;')})">Testi Çöz</button>
                         </div>
                     </div>
                 </div>
             `;
+            // Cache active plan details in state
+            currentQuizPlanId = activePlan.id;
+            currentQuizQuestions = activePlan.quiz_questions;
         } else {
             activeContainer.innerHTML = `
-                <div style="text-align: center; padding: 25px; background: #fafafa; border: 1.5px dashed #e2e8f0; border-radius: var(--radius-md);">
+                <div style="text-align: center; padding: 25px; background: var(--bg-body); border: 1.5px dashed var(--border-light); border-radius: var(--radius-md);">
                     <p style="margin-bottom: 15px; font-weight: 600; color: var(--text-muted); font-size:0.95rem;">Şu an aktif bir odak çalışma konunuz bulunmuyor.</p>
                     <button class="btn-solve" onclick="generateNewPlan()" style="padding: 10px 20px;">Yeni Çalışma Konusu Yükle</button>
                 </div>
@@ -1459,11 +2145,10 @@ function loadAiPlans(sId) {
         renderArchive(plans);
     })
     .catch(err => {
-        console.error("Error loading study plans:", err);
+        console.error("Error loading plans:", err);
     });
 }
 
-// Generate new study plan
 function generateNewPlan() {
     const container = document.getElementById("active-study-plan-container");
     container.innerHTML = `<div style="text-align:center; padding:20px; color:var(--text-muted)">Yeni çalışma konusu üretiliyor (Bu işlem 5-10 saniye sürebilir)...</div>`;
@@ -1487,7 +2172,6 @@ function generateNewPlan() {
     });
 }
 
-// Render finished study guides and quiz scores in archive panel
 function renderArchive(plans) {
     const container = document.getElementById("learning-archive-list");
     const completedPlans = plans.filter(p => p.status === 'completed');
@@ -1504,20 +2188,20 @@ function renderArchive(plans) {
                 <div class="study-grid-row">
                     <div class="study-left">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <h4 style="margin:0 0 5px 0; font-size:1.05rem; color:var(--primary); font-weight:700;">${plan.topic}</h4>
+                            <h4 style="margin:0 0 5px 0; font-size:1.05rem; color:var(--text-main); font-weight:700;">${plan.topic}</h4>
                             <span style="font-size:0.75rem; color:var(--text-muted);">${dateStr}</span>
                         </div>
                         <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:10px;">
                             Tamamlanan Yapay Zeka Çalışma Rehberi
                         </p>
-                        <button class="btn-solve" onclick="openLessonModal(\`${plan.study_guide.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`, \`${plan.topic.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`)" style="background:var(--accent-purple); padding:4px 10px; font-size:0.78rem;">Rehberi Oku</button>
+                        <button class="btn-solve" onclick="openLessonModal(\`${plan.study_guide.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`, \`${plan.topic.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`)" style="background:var(--primary); padding:4px 10px; font-size:0.78rem;">Rehberi Oku</button>
                     </div>
                     <div class="study-right">
                         <div style="background:#dcfce7; border:1px solid #bbf7d0; padding:10px; border-radius:6px; display:flex; align-items:center; gap:8px;">
                             <span style="font-size:1rem; color:var(--success);">✓</span>
                             <div>
                                 <strong style="color:var(--success); font-size:0.85rem;">Test Geçildi (%${plan.quiz_score})</strong>
-                                <a href="#" onclick="reviewQuizQuestions(${JSON.stringify(plan.quiz_questions).replace(/"/g, '&quot;')}, \`${plan.topic.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`, ${plan.quiz_score}); return false;" style="font-size:0.75rem; color:var(--accent); display:block; margin-top:2px; text-decoration:none; font-weight:700;">Soruları İncele</a>
+                                <a href="#" onclick="reviewQuizQuestions(${JSON.stringify(plan.quiz_questions).replace(/"/g, '&quot;')}, \`${plan.topic.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`, ${plan.quiz_score}); return false;" style="font-size:0.75rem; color:var(--primary); display:block; margin-top:2px; text-decoration:none; font-weight:700;">Soruları İncele</a>
                             </div>
                         </div>
                     </div>
@@ -1527,7 +2211,6 @@ function renderArchive(plans) {
     }).join('');
 }
 
-// Study Guide Modal Control
 function openLessonModal(guideText, topicName) {
     document.getElementById("lessonModalTitle").innerText = topicName;
     document.getElementById("lessonModalBody").innerText = guideText;
@@ -1538,7 +2221,6 @@ function closeLessonModal() {
     document.getElementById("lessonModal").style.display = "none";
 }
 
-// Quiz Modal Control & Solving
 function openQuizModal(planId, topic, questions) {
     currentQuizPlanId = planId;
     currentQuizQuestions = questions;
@@ -1548,12 +2230,12 @@ function openQuizModal(planId, topic, questions) {
     
     container.innerHTML = questions.map((q, idx) => {
         return `
-            <div style="margin-bottom: 20px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 15px;">
+            <div style="margin-bottom: 20px; border-bottom: 1px dashed var(--border-light); padding-bottom: 15px;">
                 <div style="font-weight: 700; margin-bottom: 10px; font-size: 0.95rem;">Soru ${idx + 1}: ${q.question}</div>
                 <div style="display: flex; flex-direction: column; gap: 8px;">
-                    ${q.options.map((opt, optIdx) => {
+                    ${q.options.map((opt) => {
                         return `
-                            <label style="display: flex; align-items: center; gap: 10px; font-size: 0.9rem; cursor: pointer; padding: 6px 10px; border-radius: 6px; background: #f8fafc; border: 1px solid #e2e8f0; transition: background 0.2s;">
+                            <label style="display: flex; align-items: center; gap: 10px; font-size: 0.9rem; cursor: pointer; padding: 6px 10px; border-radius: 6px; background: var(--bg-body); border: 1px solid var(--border-light); transition: background 0.2s;">
                                 <input type="radio" name="q-${idx}" value="${opt}" style="margin: 0;">
                                 <span>${opt}</span>
                             </label>
@@ -1566,7 +2248,6 @@ function openQuizModal(planId, topic, questions) {
     
     document.getElementById("quizModalQuestionsContainer").style.display = "block";
     document.getElementById("quizModalResultContainer").style.display = "none";
-    
     document.getElementById("quizModalFooter").innerHTML = `
         <button class="btn-solve" onclick="submitInlineQuiz()" style="width: auto; padding: 10px 20px;">Cevapları Gönder</button>
     `;
@@ -1625,7 +2306,6 @@ function submitInlineQuiz() {
         }
         
         document.getElementById("quizModalQuestionsContainer").style.display = "none";
-        
         const rBox = document.getElementById("quizModalResultContainer");
         const rIcon = document.getElementById("quizModalResultIcon");
         const rTitle = document.getElementById("quizModalResultTitle");
@@ -1682,33 +2362,21 @@ function retryInlineQuiz() {
 function closeQuizModalAndRefresh() {
     closeQuizModal();
     loadAiPlans(studentId);
-    
-    // Refresh student core info
-    fetch(window.API_BASE + "/api/student/dashboard", {
-        headers: { "Authorization": "Bearer " + token }
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.student && data.student.last_ai_analysis) {
-            document.getElementById("ai-analysis-welcome-text").innerText = data.student.last_ai_analysis;
-        }
-    });
 }
 
-// Review quiz questions in read-only mode under Archive
 function reviewQuizQuestions(questions, topic, score) {
     document.getElementById("quizModalPlanTopic").innerText = `${topic} (Puan: %${score})`;
     const container = document.getElementById("quizModalQuestionsContainer");
     
     container.innerHTML = questions.map((q, idx) => {
         return `
-            <div style="margin-bottom: 20px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 15px;">
+            <div style="margin-bottom: 20px; border-bottom: 1px dashed var(--border-light); padding-bottom: 15px;">
                 <div style="font-weight: 700; margin-bottom: 10px; font-size: 0.95rem;">Soru ${idx + 1}: ${q.question}</div>
                 <div style="display: flex; flex-direction: column; gap: 8px;">
                     ${q.options.map((opt) => {
                         const isCorrect = opt.trim().toLowerCase() === q.answer.trim().toLowerCase();
-                        let bg = "#f8fafc";
-                        let border = "1px solid #e2e8f0";
+                        let bg = "var(--bg-body)";
+                        let border = "1px solid var(--border-light)";
                         let color = "var(--text-main)";
                         let prefix = "";
                         if (isCorrect) {
@@ -1730,13 +2398,65 @@ function reviewQuizQuestions(questions, topic, score) {
     
     document.getElementById("quizModalQuestionsContainer").style.display = "block";
     document.getElementById("quizModalResultContainer").style.display = "none";
-    
     document.getElementById("quizModalFooter").innerHTML = `
-        <button class="btn-solve" onclick="closeQuizModal()" style="width: auto; padding: 10px 20px; background:var(--accent);">Kapat</button>
+        <button class="btn-solve" onclick="closeQuizModal()" style="width: auto; padding: 10px 20px; background:var(--primary);">Kapat</button>
     `;
-    
     document.getElementById("quizModal").style.display = "flex";
 }
+
+// Sidebar Soru Çöz button triggers
+function openQuizFromNav() {
+    if (currentQuizPlanId && currentQuizQuestions && currentQuizQuestions.length > 0) {
+        openQuizModal(currentQuizPlanId, document.getElementById("quizModalPlanTopic").innerText, currentQuizQuestions);
+    } else {
+        alert("Şu an çözebileceğiniz aktif bir pekiştirme testi bulunmuyor. Çalışma Planım sekmesinden yeni bir odak konusu üretebilirsiniz.");
+    }
+}
+
+// Recommended Studies Action Triggers
+function playMockVideo(videoTitle) {
+    document.getElementById("videoModalTitle").innerText = videoTitle;
+    document.getElementById("videoModalText").innerText = `"${videoTitle}" Dersi Oynatılıyor...`;
+    document.getElementById("videoModal").style.display = "flex";
+}
+function closeVideoModal() {
+    document.getElementById("videoModal").style.display = "none";
+}
+
+function viewMockPDF(pdfTitle) {
+    alert(`"${pdfTitle}" dökümanı görüntülendi! \n\nYapay Zeka tavsiyeli LGS çalışma özetlerini PDF formatında okudunuz.`);
+}
+
+// Flashcards Game Mechanics
+function playFlashcards() {
+    currentFlashcardIndex = 0;
+    loadFlashcard();
+    document.getElementById("flashcardsModal").style.display = "flex";
+}
+function closeFlashcardsModal() {
+    document.getElementById("flashcardsModal").style.display = "none";
+}
+function loadFlashcard() {
+    // Reset flip state
+    document.getElementById("flashcard-box").classList.remove("flipped");
+    const card = flashcardsDeck[currentFlashcardIndex];
+    document.getElementById("flashcard-front-text").innerText = card.q;
+    document.getElementById("flashcard-back-text").innerText = card.a;
+}
+function flipFlashcard() {
+    document.getElementById("flashcard-box").classList.toggle("flipped");
+}
+function nextFlashcard() {
+    currentFlashcardIndex = (currentFlashcardIndex + 1) % flashcardsDeck.length;
+    loadFlashcard();
+}
+function prevFlashcard() {
+    currentFlashcardIndex = (currentFlashcardIndex - 1 + flashcardsDeck.length) % flashcardsDeck.length;
+    loadFlashcard();
+}
+
+// Initialize circle daily progress progress
+updateDailyProgressRing();
 </script>
 </body>
 </html>

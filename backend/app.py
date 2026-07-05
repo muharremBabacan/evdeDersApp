@@ -18,9 +18,16 @@ from db import get_db
 SECRET_KEY = "CHANGE_ME_SECRET"
 TOKEN_EXPIRE_HOURS = 2
 
+# ======================
+# API KEYS & CONFIG
+# ======================
+DEFAULT_CLAUDE_KEY = os.environ.get("CLAUDE_DEFAULT_FALLBACK_KEY", "")
+
+def get_claude_key():
+    return os.environ.get("CLAUDE_API_KEY", "") or os.environ.get("ANTHROPIC_API_KEY", "") or DEFAULT_CLAUDE_KEY
 
 def call_claude(system_prompt, user_prompt, max_tokens=1500, response_json=False):
-    api_key = os.environ.get("CLAUDE_API_KEY", "") or os.environ.get("ANTHROPIC_API_KEY", "")
+    api_key = get_claude_key()
     if not api_key:
         print(">>> Warning: CLAUDE_API_KEY not found in env!")
         return None
@@ -790,7 +797,7 @@ Senden şu formatta bir JSON döndürmeni rica ediyorum. Başka hiçbir açıkla
 }}
 """
     # Use Claude API if key is present, otherwise fall back to local engine
-    api_key = os.environ.get("CLAUDE_API_KEY", "") or os.environ.get("ANTHROPIC_API_KEY", "")
+    api_key = get_claude_key()
     if api_key:
         system_prompt = f"Sen bir LGS eğitim danışmanısın. İsmin: '{advisor_name}'."
         result = call_claude(system_prompt, prompt, max_tokens=1500, response_json=True)
@@ -1029,7 +1036,7 @@ def student_ai_analysis(student_id):
     assignments = perf_data["assignments"]
     advisor_name = student["ai_advisor_name"] or "Yapay Zeka Rehberi_S"
     
-    claude_key = os.environ.get("CLAUDE_API_KEY", "") or os.environ.get("ANTHROPIC_API_KEY", "")
+    claude_key = get_claude_key()
     if claude_key:
         prompt = f"""
         Öğrenci: {student['first_name']} {student['last_name']} ({student['grade_level']}. Sınıf).
@@ -1125,7 +1132,7 @@ def student_ai_chat(student_id):
     last_exam_score = exams[-1]["score"] if exams else "Bilinmiyor"
     target_pct = perf_data["target"]["target_percentile"] if perf_data["target"] else "Belirtilmemiş"
     
-    claude_key = os.environ.get("CLAUDE_API_KEY", "") or os.environ.get("ANTHROPIC_API_KEY", "")
+    claude_key = get_claude_key()
     if claude_key:
         system_prompt = f"""
         Sen bir eğitim koçusun. İsmin: '{advisor_name}'.
@@ -2023,7 +2030,7 @@ def ai_assisted_register():
     """
     
     parsed_data = None
-    api_key = os.environ.get("CLAUDE_API_KEY", "") or os.environ.get("ANTHROPIC_API_KEY", "")
+    api_key = get_claude_key()
     if api_key:
         try:
             res = call_claude(system_prompt, text_input, response_json=True)
@@ -2184,9 +2191,60 @@ def ai_assisted_register():
     
     try:
         if action == "register":
-            s_data = parsed_data["student"]
-            p_data = parsed_data["parent"]
-            pay_data = parsed_data["payment_plan"]
+            # Normalize student data
+            s_raw = parsed_data.get("student", {})
+            s_data = {
+                "first_name": s_raw.get("first_name", ""),
+                "last_name": s_raw.get("last_name", ""),
+                "birth_date": s_raw.get("birth_date", "2012-01-01"),
+                "phone": s_raw.get("phone", ""),
+                "email": s_raw.get("email", ""),
+                "address": s_raw.get("address", "İstanbul"),
+                "school_name": s_raw.get("school_name", s_raw.get("school", "Atatürk Ortaokulu")),
+                "grade_level": s_raw.get("grade_level", s_raw.get("grade", 8))
+            }
+            if not s_data["first_name"] and "name" in s_raw:
+                parts = s_raw["name"].split(None, 1)
+                s_data["first_name"] = parts[0]
+                if len(parts) > 1: s_data["last_name"] = parts[1]
+            if not s_data["first_name"]: s_data["first_name"] = "Bilinmeyen"
+            if not s_data["last_name"]: s_data["last_name"] = "Öğrenci"
+            
+            # Normalize parent/guardian data
+            p_raw = parsed_data.get("parent", parsed_data.get("guardian", {}))
+            p_data = {
+                "first_name": p_raw.get("first_name", ""),
+                "last_name": p_raw.get("last_name", ""),
+                "phone": p_raw.get("phone", "0555-000-0000"),
+                "email": p_raw.get("email", ""),
+                "relation": p_raw.get("relation", "veli")
+            }
+            if not p_data["first_name"] and "name" in p_raw:
+                parts = p_raw["name"].split(None, 1)
+                p_data["first_name"] = parts[0]
+                if len(parts) > 1: p_data["last_name"] = parts[1]
+            if not p_data["first_name"]: p_data["first_name"] = "Bilinmeyen"
+            if not p_data["last_name"]: p_data["last_name"] = "Veli"
+            
+            # Normalize payment plan / payment data
+            pay_raw = parsed_data.get("payment_plan", parsed_data.get("payment", {}))
+            
+            t_price = pay_raw.get("total_price", pay_raw.get("total_amount", pay_raw.get("price", 45000.0)))
+            
+            inst_cnt = pay_raw.get("installment_count", 3)
+            if "installments" in pay_raw:
+                inst_val = pay_raw["installments"]
+                if isinstance(inst_val, dict):
+                    inst_cnt = inst_val.get("count", inst_cnt)
+                elif isinstance(inst_val, (int, float)):
+                    inst_cnt = int(inst_val)
+                    
+            pay_data = {
+                "total_price": float(t_price) if t_price else 45000.0,
+                "discount_rate": float(pay_raw.get("discount_rate", pay_raw.get("discount", 0.0))),
+                "installment_count": int(inst_cnt) if inst_cnt else 3,
+                "start_date": pay_raw.get("start_date", datetime.now().strftime("%Y-%m-%d"))
+            }
             
             cur_p = db.execute(
                 "INSERT INTO parents (first_name, last_name, phone, email) VALUES (?, ?, ?, ?)",

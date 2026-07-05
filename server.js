@@ -11,6 +11,23 @@ app.use(createProxyMiddleware({
   pathFilter: '/api'
 }));
 
+// Clean URLs routing for public subpages
+app.get('/moduller', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend', 'moduller.html'));
+});
+app.get('/fiyatlar', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend', 'fiyatlar.html'));
+});
+app.get('/videolar', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend', 'videolar.html'));
+});
+app.get('/ozellikler', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend', 'ozellikler.html'));
+});
+app.get('/blog', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend', 'blog.html'));
+});
+
 // Serve static files from the frontend directory
 app.use(express.static(path.join(__dirname, 'frontend')));
 
@@ -22,3 +39,4 @@ app.get('*', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
