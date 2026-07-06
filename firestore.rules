@@ -1,0 +1,51 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Müfredat verisi: herkes okuyabilir (giriş yapmış kullanıcı),
+    // sadece backend (Admin SDK / Functions) yazabilir.
+    match /subjects/{subjectId} {
+      allow read: if request.auth != null;
+      allow write: if false; // sadece seed script / admin SDK
+    }
+
+    match /units/{unitId} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    match /topics/{topicId} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    match /learningOutcomes/{outcomeId} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    match /questions/{questionId} {
+      // Sorular öğrenciye direkt okunabilir ama doğru cevap client'a
+      // gönderilmeden önce backend'de filtrelenmeli (v2 iyileştirmesi).
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    // Öğrenciye özel veri: sadece kendisi ve öğretmeni/velisi okuyabilir.
+    match /students/{studentId} {
+      allow read: if request.auth != null && request.auth.uid == studentId;
+      allow write: if false;
+
+      match /mastery/{outcomeId} {
+        allow read: if request.auth != null && request.auth.uid == studentId;
+        allow write: if false; // sadece Cloud Function (Admin SDK) yazar
+      }
+
+      match /testAttempts/{attemptId} {
+        allow read: if request.auth != null && request.auth.uid == studentId;
+        allow create: if request.auth != null && request.auth.uid == studentId;
+        allow update, delete: if false; // test kaydı değiştirilemez
+      }
+    }
+  }
+}
