@@ -1,5 +1,5 @@
 import { demoOutcomes, demoTopics } from "../data/demoCurriculum";
-import type { MasteryRecord } from "@dershane/shared-types";
+import type { MasteryRecord } from "../types/curriculum";
 
 interface DashboardProps {
   masteryRecords: Record<string, MasteryRecord>;

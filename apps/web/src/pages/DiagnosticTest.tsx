@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { demoOutcomes, demoQuestions } from "../data/demoCurriculum";
 import { evaluateAnswers, scorePercentage } from "../lib/mastery";
-import type { TestAnswer } from "@dershane/shared-types";
+import type { TestAnswer } from "../types/curriculum";
 
 interface DiagnosticTestProps {
   studentId: string;

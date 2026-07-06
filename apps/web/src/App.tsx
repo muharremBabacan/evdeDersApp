@@ -3,7 +3,7 @@ import { DiagnosticTest } from "./pages/DiagnosticTest";
 import { Dashboard } from "./pages/Dashboard";
 import { demoQuestions } from "./data/demoCurriculum";
 import { updateMasteryFromAnswers } from "./lib/mastery";
-import type { MasteryRecord, TestAnswer } from "@dershane/shared-types";
+import type { MasteryRecord, TestAnswer } from "./types/curriculum";
 import "./styles.css";
 
 const DEMO_STUDENT_ID = "student_demo_1";

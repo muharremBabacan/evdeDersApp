@@ -1,4 +1,4 @@
-import type { Subject, Unit, Topic, LearningOutcome, Question } from "@dershane/shared-types";
+import type { Subject, Unit, Topic, LearningOutcome, Question } from "../types/curriculum";
 
 // NOT: Bu demo veridir. Gerçek MEB müfredatı /scripts/seedFirestore.ts
 // içindeki yapı ile Firestore'a yüklenecek — veri kaynağı değişse de
