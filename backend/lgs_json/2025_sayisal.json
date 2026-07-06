@@ -1,0 +1,489 @@
+{
+  "exam_name": "2025 LGS Sayısal Sınavı",
+  "year": 2025,
+  "session": "sayisal",
+  "duration_minutes": 80,
+  "total_questions": 40,
+  "questions": [
+    {
+      "question_number": 1,
+      "subject": "Matematik",
+      "question_text": "PDF Kitapçığındaki Matematik Dersi 1. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "D"
+    },
+    {
+      "question_number": 2,
+      "subject": "Matematik",
+      "question_text": "PDF Kitapçığındaki Matematik Dersi 2. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "C"
+    },
+    {
+      "question_number": 3,
+      "subject": "Matematik",
+      "question_text": "PDF Kitapçığındaki Matematik Dersi 3. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "C"
+    },
+    {
+      "question_number": 4,
+      "subject": "Matematik",
+      "question_text": "PDF Kitapçığındaki Matematik Dersi 4. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "B"
+    },
+    {
+      "question_number": 5,
+      "subject": "Matematik",
+      "question_text": "PDF Kitapçığındaki Matematik Dersi 5. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "A"
+    },
+    {
+      "question_number": 6,
+      "subject": "Matematik",
+      "question_text": "PDF Kitapçığındaki Matematik Dersi 6. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "D"
+    },
+    {
+      "question_number": 7,
+      "subject": "Matematik",
+      "question_text": "PDF Kitapçığındaki Matematik Dersi 7. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "A"
+    },
+    {
+      "question_number": 8,
+      "subject": "Matematik",
+      "question_text": "PDF Kitapçığındaki Matematik Dersi 8. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "B"
+    },
+    {
+      "question_number": 9,
+      "subject": "Matematik",
+      "question_text": "PDF Kitapçığındaki Matematik Dersi 9. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "D"
+    },
+    {
+      "question_number": 10,
+      "subject": "Matematik",
+      "question_text": "PDF Kitapçığındaki Matematik Dersi 10. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "D"
+    },
+    {
+      "question_number": 11,
+      "subject": "Matematik",
+      "question_text": "PDF Kitapçığındaki Matematik Dersi 11. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "B"
+    },
+    {
+      "question_number": 12,
+      "subject": "Matematik",
+      "question_text": "PDF Kitapçığındaki Matematik Dersi 12. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "C"
+    },
+    {
+      "question_number": 13,
+      "subject": "Matematik",
+      "question_text": "PDF Kitapçığındaki Matematik Dersi 13. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "C"
+    },
+    {
+      "question_number": 14,
+      "subject": "Matematik",
+      "question_text": "PDF Kitapçığındaki Matematik Dersi 14. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "B"
+    },
+    {
+      "question_number": 15,
+      "subject": "Matematik",
+      "question_text": "PDF Kitapçığındaki Matematik Dersi 15. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "B"
+    },
+    {
+      "question_number": 16,
+      "subject": "Matematik",
+      "question_text": "PDF Kitapçığındaki Matematik Dersi 16. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "D"
+    },
+    {
+      "question_number": 17,
+      "subject": "Matematik",
+      "question_text": "PDF Kitapçığındaki Matematik Dersi 17. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "A"
+    },
+    {
+      "question_number": 18,
+      "subject": "Matematik",
+      "question_text": "PDF Kitapçığındaki Matematik Dersi 18. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "C"
+    },
+    {
+      "question_number": 19,
+      "subject": "Matematik",
+      "question_text": "PDF Kitapçığındaki Matematik Dersi 19. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "B"
+    },
+    {
+      "question_number": 20,
+      "subject": "Matematik",
+      "question_text": "PDF Kitapçığındaki Matematik Dersi 20. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "A"
+    },
+    {
+      "question_number": 21,
+      "subject": "Fen Bilimleri",
+      "question_text": "PDF Kitapçığındaki Fen Bilimleri Dersi 1. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "A"
+    },
+    {
+      "question_number": 22,
+      "subject": "Fen Bilimleri",
+      "question_text": "PDF Kitapçığındaki Fen Bilimleri Dersi 2. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "C"
+    },
+    {
+      "question_number": 23,
+      "subject": "Fen Bilimleri",
+      "question_text": "PDF Kitapçığındaki Fen Bilimleri Dersi 3. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "D"
+    },
+    {
+      "question_number": 24,
+      "subject": "Fen Bilimleri",
+      "question_text": "PDF Kitapçığındaki Fen Bilimleri Dersi 4. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "C"
+    },
+    {
+      "question_number": 25,
+      "subject": "Fen Bilimleri",
+      "question_text": "PDF Kitapçığındaki Fen Bilimleri Dersi 5. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "B"
+    },
+    {
+      "question_number": 26,
+      "subject": "Fen Bilimleri",
+      "question_text": "PDF Kitapçığındaki Fen Bilimleri Dersi 6. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "D"
+    },
+    {
+      "question_number": 27,
+      "subject": "Fen Bilimleri",
+      "question_text": "PDF Kitapçığındaki Fen Bilimleri Dersi 7. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "A"
+    },
+    {
+      "question_number": 28,
+      "subject": "Fen Bilimleri",
+      "question_text": "PDF Kitapçığındaki Fen Bilimleri Dersi 8. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "D"
+    },
+    {
+      "question_number": 29,
+      "subject": "Fen Bilimleri",
+      "question_text": "PDF Kitapçığındaki Fen Bilimleri Dersi 9. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "B"
+    },
+    {
+      "question_number": 30,
+      "subject": "Fen Bilimleri",
+      "question_text": "PDF Kitapçığındaki Fen Bilimleri Dersi 10. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "C"
+    },
+    {
+      "question_number": 31,
+      "subject": "Fen Bilimleri",
+      "question_text": "PDF Kitapçığındaki Fen Bilimleri Dersi 11. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "C"
+    },
+    {
+      "question_number": 32,
+      "subject": "Fen Bilimleri",
+      "question_text": "PDF Kitapçığındaki Fen Bilimleri Dersi 12. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "B"
+    },
+    {
+      "question_number": 33,
+      "subject": "Fen Bilimleri",
+      "question_text": "PDF Kitapçığındaki Fen Bilimleri Dersi 13. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "A"
+    },
+    {
+      "question_number": 34,
+      "subject": "Fen Bilimleri",
+      "question_text": "PDF Kitapçığındaki Fen Bilimleri Dersi 14. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "D"
+    },
+    {
+      "question_number": 35,
+      "subject": "Fen Bilimleri",
+      "question_text": "PDF Kitapçığındaki Fen Bilimleri Dersi 15. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "A"
+    },
+    {
+      "question_number": 36,
+      "subject": "Fen Bilimleri",
+      "question_text": "PDF Kitapçığındaki Fen Bilimleri Dersi 16. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "C"
+    },
+    {
+      "question_number": 37,
+      "subject": "Fen Bilimleri",
+      "question_text": "PDF Kitapçığındaki Fen Bilimleri Dersi 17. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "B"
+    },
+    {
+      "question_number": 38,
+      "subject": "Fen Bilimleri",
+      "question_text": "PDF Kitapçığındaki Fen Bilimleri Dersi 18. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "C"
+    },
+    {
+      "question_number": 39,
+      "subject": "Fen Bilimleri",
+      "question_text": "PDF Kitapçığındaki Fen Bilimleri Dersi 19. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "A"
+    },
+    {
+      "question_number": 40,
+      "subject": "Fen Bilimleri",
+      "question_text": "PDF Kitapçığındaki Fen Bilimleri Dersi 20. soruyu sol taraftan inceleyerek cevabınızı sağdaki optik forma işaretleyiniz.",
+      "options": {
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D"
+      },
+      "correct_answer": "D"
+    }
+  ]
+}
