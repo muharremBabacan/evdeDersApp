@@ -1,0 +1,28 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // Soru görselleri (grafik, şekil içeren LGS/MEB soruları):
+    // Herkes (giriş yapmış) okuyabilir, sadece backend (Admin SDK) yazar.
+    match /questionImages/{outcomeId}/{imageId} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    // Öğrenci profil fotoğrafı: sadece kendisi okur/yazar, 5MB üst sınır,
+    // sadece resim dosyası tipi kabul edilir.
+    match /students/{studentId}/profile/{fileName} {
+      allow read, write: if request.auth != null
+                          && request.auth.uid == studentId
+                          && request.resource.size < 5 * 1024 * 1024
+                          && request.resource.contentType.matches('image/.*');
+    }
+
+    // Öğrenci sertifika/belge taramaları: sadece kendisi okur/yazar.
+    match /students/{studentId}/certificates/{fileName} {
+      allow read, write: if request.auth != null
+                          && request.auth.uid == studentId
+                          && request.resource.size < 10 * 1024 * 1024;
+    }
+  }
+}
