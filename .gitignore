@@ -1,8 +1,10 @@
-backend/venv/
-backend/.env
+node_modules/
+dist/
+lib/
+.env
+.env.local
+scripts/serviceAccountKey.json
 firebase-debug.log
-.gemini/
-.idea/
-.vscode/
-__pycache__/
-*.pyc
+firebase-debug.*.log
+.firebase/
+*.tsbuildinfo

@@ -1,14 +1,18 @@
 {
-  "name": "dershane-app-frontend",
-  "version": "1.0.0",
-  "description": "Frontend for Dershane App served on App Hosting with API Proxy",
-  "main": "server.js",
+  "name": "dershane-v1",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "functions"
+  ],
   "scripts": {
-    "start": "node server.js",
-    "build": "echo 'No build step required'"
+    "dev": "npm run dev --workspace=apps/web",
+    "build": "npm run build --workspace=apps/web",
+    "seed": "tsx scripts/seedFirestore.ts"
   },
-  "dependencies": {
-    "express": "^4.19.2",
-    "http-proxy-middleware": "^3.0.0"
+  "devDependencies": {
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
   }
 }

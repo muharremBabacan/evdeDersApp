@@ -1,6 +1,5 @@
 {
   "projects": {
-    "default": "evdedersapp"
+    "default": "BURAYA_FIREBASE_PROJECT_ID_YAZILACAK"
   }
 }
-
