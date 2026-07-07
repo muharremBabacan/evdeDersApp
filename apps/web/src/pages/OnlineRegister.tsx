@@ -24,22 +24,28 @@ export function OnlineRegister({ onRegisterComplete, onBackToLogin }: OnlineRegi
   const [cardExpiry, setCardExpiry] = useState("12/29");
   const [cardCvv, setCardCvv] = useState("321");
 
-  const packagesInfo: Record<string, { title: string; price: string; desc: string; icon: string }> = {
+  const packagesInfo: Record<string, { title: string; normalPrice: string; promoPrice: string; installment: string; desc: string; icon: string }> = {
     dijital: {
       title: "AI Dijital Paket",
-      price: "450 TL / Ay",
+      normalPrice: "12,000 TL",
+      promoPrice: "4,990 TL / Yıl",
+      installment: "12 Taksit ile Ayda 415 TL",
       desc: "Yapay zeka koçluk motoru, kişiye özel günlük çalışma rutini planlayıcı ve tüm ortaokul dijital kazanım testleri.",
       icon: "🤖"
     },
     plus: {
       title: "AI Plus+ Paket",
-      price: "750 TL / Ay",
+      normalPrice: "24,000 TL",
+      promoPrice: "9,990 TL / Yıl",
+      installment: "12 Taksit ile Ayda 832 TL",
       desc: "Dijital pakete ek olarak, seviyenize uygun basılı LGS/yazılı soru bankaları setleri adresinize kargolanır.",
       icon: "📚"
     },
     premium: {
       title: "AI Premium Paket",
-      price: "1,250 TL / Ay",
+      normalPrice: "38,000 TL",
+      promoPrice: "17,990 TL / Yıl",
+      installment: "12 Taksit ile Ayda 1,499 TL",
       desc: "AI koçluğa ek olarak, haftalık 15 dk birebir rehber öğretmen canlı değerlendirme ve takip görüşmesi.",
       icon: "✨"
     }
@@ -152,11 +158,17 @@ export function OnlineRegister({ onRegisterComplete, onBackToLogin }: OnlineRegi
                   >
                     <span style={{ fontSize: "2rem", alignSelf: "center" }}>{p.icon}</span>
                     <div style={{ flex: 1 }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
                         <strong style={{ fontSize: "0.95rem" }}>{p.title}</strong>
-                        <strong style={{ color: "var(--primary)" }}>{p.price}</strong>
+                        <div style={{ textAlign: "right" }}>
+                          <span style={{ textDecoration: "line-through", color: "var(--text-muted)", fontSize: "0.75rem", marginRight: 6 }}>{p.normalPrice}</span>
+                          <strong style={{ color: "var(--primary)", fontSize: "1rem" }}>{p.promoPrice}</strong>
+                        </div>
                       </div>
-                      <p style={{ margin: "4px 0 0 0", fontSize: "0.78rem", color: "var(--text-muted)", lineHeight: 1.4 }}>{p.desc}</p>
+                      <p style={{ margin: "4px 0 6px 0", fontSize: "0.78rem", color: "var(--text-muted)", lineHeight: 1.4 }}>{p.desc}</p>
+                      <div style={{ display: "inline-block", background: "rgba(16, 185, 129, 0.08)", color: "var(--success)", fontSize: "0.72rem", padding: "2px 8px", borderRadius: 4, fontWeight: 800 }}>
+                        💳 {p.installment}
+                      </div>
                     </div>
                   </div>
                 );
@@ -196,7 +208,7 @@ export function OnlineRegister({ onRegisterComplete, onBackToLogin }: OnlineRegi
             </div>
 
             <div className="form-group">
-              <label>Kredi Kartı Numarası (Peşin Fiyatına 6 Taksit İmkanı)</label>
+              <label>Kredi Kartı Numarası (Peşin Fiyatına 12 Taksit İmkanı)</label>
               <input type="text" value={cardNumber} onChange={(e) => setCardNumber(e.target.value)} placeholder="4355 8800 1122 3344" />
             </div>
             <div style={{ display: "flex", gap: 10, marginBottom: 15 }}>
@@ -211,8 +223,8 @@ export function OnlineRegister({ onRegisterComplete, onBackToLogin }: OnlineRegi
             </div>
 
             <div className="demo-info-box" style={{ background: "rgba(16,185,129,0.05)", borderColor: "var(--success)" }}>
-              <strong style={{ color: "var(--success)" }}>💳 Seçilen Program: {packagesInfo[selectedPackage].title} ({packagesInfo[selectedPackage].price})</strong>
-              <p>Çocuğunuz {selectedGrade}. Sınıf programına dahil edilecektir. Tüm banka kartlarına peşin fiyatına 6 taksit otomatik uygulanır.</p>
+              <strong style={{ color: "var(--success)" }}>💳 Seçilen Program: {packagesInfo[selectedPackage].title} ({packagesInfo[selectedPackage].promoPrice})</strong>
+              <p>Çocuğunuz {selectedGrade}. Sınıf programına dahil edilecektir. Tüm banka kartlarına vade farksız 12 taksit otomatik uygulanır.</p>
             </div>
 
             <div style={{ display: "flex", gap: 10 }}>
