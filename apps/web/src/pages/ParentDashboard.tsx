@@ -27,6 +27,99 @@ export function ParentDashboard({ username, onLogout }: ParentDashboardProps) {
   const monthlyCost = "500 TL / Ay";
   const nextBillingDate = "15.08.2026";
 
+  const [selectedSubjectId, setSelectedSubjectId] = useState<string | null>(null);
+
+  const parentSubjectCards = [
+    {
+      id: "mat",
+      name: "Matematik",
+      progress: 88,
+      improvement: "+8%",
+      status: "good",
+      color: "var(--primary)",
+      icon: "📐",
+      outcomes: [
+        { code: "M.6.1.4.1", title: "Kesirlerle toplama ve çıkarma", score: 88, desc: "Kesirlerle toplama ve çıkarma işlemlerini yapar." },
+        { code: "M.6.1.4.2", title: "Kesirlerle çarpma ve bölme", score: 55, desc: "Kesirlerle çarpma ve bölme işlemlerini yapar." },
+        { code: "M.6.1.5.1", title: "Ondalık Gösterim", score: 88, desc: "Ondalık gösterimleri kesir olarak, kesirleri ondalık gösterim olarak yazar." },
+        { code: "M.6.4.1.1", title: "Sütun Grafiği", score: 92, desc: "Verileri sütun grafiği ile gösterir ve yorumlar." }
+      ],
+      aiTip: "Matematik üslü sayılar ve grafik yorumlama başarısı çok yüksek. Kesirlerle çarpma/bölme işlem pratiklerine 15 dakika ağırlık verilmesini öneririm."
+    },
+    {
+      id: "fen",
+      name: "Fen Bilimleri",
+      progress: 74,
+      improvement: "+14%",
+      status: "warning",
+      color: "#f59e0b",
+      icon: "🧪",
+      outcomes: [
+        { code: "F.8.3.1.1", title: "Katı Basıncı", score: 82, desc: "Katı basıncını etkileyen değişkenleri deneyerek keşfeder." },
+        { code: "F.8.3.1.2", title: "Sıvı Basıncı", score: 45, desc: "Sıvı basıncını etkileyen değişkenleri tahmin eder ve test eder." },
+        { code: "F.8.3.1.3", title: "Gaz Basıncı", score: 72, desc: "Gaz basıncının etkilerini günlük yaşam örnekleriyle açıklar." }
+      ],
+      aiTip: "Sıvı basıncı konusunda formüllerin mantığını kavramakta zorlanıyor. Görsel deney animasyonlarını izlemesi bu hafta için yeterli olacaktır."
+    },
+    {
+      id: "tur",
+      name: "Türkçe",
+      progress: 95,
+      improvement: "+5%",
+      status: "excellent",
+      color: "#10b981",
+      icon: "📖",
+      outcomes: [
+        { code: "T.8.3.14.1", title: "Paragrafta Anlam", score: 96, desc: "Görsellerle okuduğu metnin içeriğini ilişkilendirir." },
+        { code: "T.8.3.16.1", title: "Sözcükte Anlam", score: 94, desc: "Deyim ve atasözlerinin metnin anlamına katkısını belirler." },
+        { code: "T.8.4.18.1", title: "Yazım Kuralları", score: 89, desc: "Büyük harflerin ve noktalama işaretlerinin kullanımı." }
+      ],
+      aiTip: "Okuduğunu anlama ve yorumlama becerisi harika durumda. Paragraf testlerindeki odaklanması çok iyi. Bu şekilde devam edebilir."
+    },
+    {
+      id: "ink",
+      name: "T.C. İnkılap Tarihi",
+      progress: 82,
+      improvement: "+10%",
+      status: "good",
+      color: "var(--primary)",
+      icon: "🕌",
+      outcomes: [
+        { code: "İ.8.1.1.1", title: "Uyanan Avrupa", score: 85, desc: "Avrupa'daki gelişmelerin Osmanlı Devleti'ne etkilerini analiz eder." },
+        { code: "İ.8.1.2.1", title: "Mustafa Kemal'in Çocukluğu", score: 79, desc: "Mustafa Kemal'in askerlik hayatını etkileyen çevreleri açıklar." }
+      ],
+      aiTip: "Tarihsel kronolojiyi iyi kavrıyor. Mustafa Kemal'in hayatındaki dönüm noktalarıyla ilgili ufak bir test tekrarı faydalı olur."
+    },
+    {
+      id: "din",
+      name: "Din Kültürü",
+      progress: 90,
+      improvement: "+4%",
+      status: "excellent",
+      color: "#10b981",
+      icon: "🌙",
+      outcomes: [
+        { code: "D.8.1.1.1", title: "Kader ve Kaza", score: 92, desc: "Kader ve kaza kavramlarını ayet ve hadislerle açıklar." },
+        { code: "D.8.1.2.1", title: "İnsanın İradesi", score: 88, desc: "İnsanın iradesi ve kader ilişkisini kurar." }
+      ],
+      aiTip: "Kavramsal eşleştirmeleri başarıyla yapıyor. Ekstra çalışmaya ihtiyaç duymadan günlük tekrarlarını yapması yeterlidir."
+    },
+    {
+      id: "ing",
+      name: "İngilizce",
+      progress: 60,
+      improvement: "-2%",
+      status: "danger",
+      color: "#ef4444",
+      icon: "🇬🇧",
+      outcomes: [
+        { code: "E.8.1.1.1", title: "Friendship", score: 62, desc: "Making simple inquiries and talking about personal relationships." },
+        { code: "E.8.2.1.1", title: "Teen Life", score: 58, desc: "Expressing preferences and describing regular activities." }
+      ],
+      aiTip: "Kelime (vocabulary) ezberinde küçük bir motivasyon kaybı yaşıyor. Günlük 5 kelime öğrenme oyunuyla eğlenceli hale getirmeyi deneyin."
+    }
+  ];
+
   function handleSendMessage(text: string) {
     if (!text.trim()) return;
     
@@ -285,30 +378,139 @@ export function ParentDashboard({ username, onLogout }: ParentDashboardProps) {
         )}
 
         {activeTab === "academic" && (
-          <div className="card">
-            <h3>5 - 8. Sınıf Müfredat Kazanım Karnesi ({childName})</h3>
-            <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", marginBottom: 15 }}>
-              Öğrencinizin ortaokul LGS müfredatında yer alan kazanımlardaki güncel durumu.
-            </p>
-            <div className="outcome-list">
-              {demoOutcomes.map((outcome) => {
-                const topic = demoTopics.find((t) => t.id === outcome.topicId);
-                const simulatedLevel = outcome.code.endsWith("1") ? 88 : 55;
-                const simulatedStatus = simulatedLevel > 80 ? "iyi" : "orta";
+          <div style={{ width: "100%" }}>
+            {!selectedSubjectId ? (
+              <div className="card">
+                <h3 style={{ marginBottom: 6 }}>5 - 8. Sınıf Müfredat Kazanım Karnesi ({childName})</h3>
+                <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", marginBottom: 20 }}>
+                  Öğrencinizin ders bazlı genel gelişim durumları. Ders kartlarına tıklayarak alt kazanım detaylarını ve AI koç tavsiyelerini görebilirsiniz.
+                </p>
+                
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
+                  {parentSubjectCards.map((subj) => {
+                    const statusText = subj.status === "excellent" ? "Çok İyi" : subj.status === "good" ? "İyi" : subj.status === "warning" ? "Geliştirilmeli" : "Kritik Destek";
+                    const statusColor = subj.status === "excellent" ? "#10b981" : subj.status === "good" ? "var(--primary)" : subj.status === "warning" ? "#f59e0b" : "#ef4444";
+                    
+                    return (
+                      <div 
+                        key={subj.id}
+                        onClick={() => setSelectedSubjectId(subj.id)}
+                        style={{
+                          background: "var(--white)",
+                          border: "1.5px solid var(--border-light)",
+                          borderLeft: `5px solid ${statusColor}`,
+                          borderRadius: "var(--radius-md)",
+                          padding: 20,
+                          cursor: "pointer",
+                          boxShadow: "var(--shadow)",
+                          transition: "all 0.2s"
+                        }}
+                      >
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+                          <span style={{ fontSize: "1.5rem" }}>{subj.icon}</span>
+                          <span style={{ fontSize: "0.72rem", fontWeight: 800, padding: "3px 8px", borderRadius: 4, background: `${statusColor}15`, color: statusColor }}>
+                            {statusText}
+                          </span>
+                        </div>
+                        <h4 style={{ margin: "0 0 10px 0", fontSize: "1.1rem" }}>{subj.name}</h4>
+                        
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 12 }}>
+                          <div>
+                            <span style={{ fontSize: "0.78rem", color: "var(--text-muted)" }}>Genel Gelişim:</span>
+                            <div style={{ fontSize: "1.6rem", fontWeight: 900, color: "var(--text-main)" }}>%{subj.progress}</div>
+                          </div>
+                          <div style={{ textAlign: "right" }}>
+                            <span style={{ fontSize: "0.78rem", color: "var(--text-muted)" }}>Haftalık Değişim:</span>
+                            <div style={{ fontSize: "0.9rem", fontWeight: 800, color: subj.improvement.startsWith("+") ? "#10b981" : "#ef4444" }}>
+                              {subj.improvement.startsWith("+") ? "📈" : "📉"} {subj.improvement}
+                            </div>
+                          </div>
+                        </div>
 
-                return (
-                  <div key={outcome.id} className="outcome-row">
-                    <div>
-                      <strong>{topic?.name} ({outcome.code})</strong>
-                      <p className="outcome-desc">{outcome.description}</p>
-                    </div>
-                    <div className="score-badge">
-                      {simulatedStatus.toUpperCase()} (%{simulatedLevel})
+                        {/* Progress Bar */}
+                        <div style={{ width: "100%", height: 6, background: "var(--bg-body)", borderRadius: 3, overflow: "hidden", marginBottom: 12 }}>
+                          <div style={{ width: `${subj.progress}%`, height: "100%", background: statusColor, borderRadius: 3 }} />
+                        </div>
+
+                        <div style={{ fontSize: "0.78rem", color: "var(--primary)", fontWeight: 700, textAlign: "right" }}>
+                          Detayları ve Kazanımları Gör →
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ) : (() => {
+              const subj = parentSubjectCards.find(s => s.id === selectedSubjectId);
+              if (!subj) return null;
+              const statusColor = subj.status === "excellent" ? "#10b981" : subj.status === "good" ? "var(--primary)" : subj.status === "warning" ? "#f59e0b" : "#ef4444";
+
+              return (
+                <div className="card">
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20, borderBottom: "1.5px solid var(--border-light)", paddingBottom: 12 }}>
+                    <button 
+                      onClick={() => setSelectedSubjectId(null)}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        color: "var(--primary)",
+                        fontWeight: 800,
+                        cursor: "pointer",
+                        fontSize: "0.9rem",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 5
+                      }}
+                    >
+                      ← Tüm Derslere Dön
+                    </button>
+                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                      <span style={{ fontSize: "1.5rem" }}>{subj.icon}</span>
+                      <h3 style={{ margin: 0 }}>{subj.name} Kazanım Detayları</h3>
                     </div>
                   </div>
-                );
-              })}
-            </div>
+
+                  {/* AI Advisory Box for this subject */}
+                  <div style={{ background: "rgba(99, 102, 241, 0.05)", borderLeft: `4px solid ${statusColor}`, padding: 18, borderRadius: 8, marginBottom: 25 }}>
+                    <h4 style={{ margin: "0 0 6px 0", color: "var(--primary)", fontSize: "0.95rem" }}>🤖 Bu Derse Özel AI Koç Tavsiyesi</h4>
+                    <p style={{ margin: 0, fontSize: "0.88rem", lineHeight: 1.5, color: "var(--text-main)" }}>
+                      "{subj.aiTip}"
+                    </p>
+                  </div>
+
+                  {/* Outcomes list */}
+                  <h4 style={{ marginBottom: 15 }}>Alt Kazanım Gelişim Seviyeleri</h4>
+                  <div className="outcome-list">
+                    {subj.outcomes.map((outcome) => {
+                      const simulatedStatus = outcome.score > 80 ? "iyi" : outcome.score > 60 ? "orta" : "destek";
+                      const badgeBg = simulatedStatus === "iyi" ? "rgba(16, 185, 129, 0.1)" : simulatedStatus === "orta" ? "rgba(245, 158, 11, 0.1)" : "rgba(239, 68, 68, 0.1)";
+                      const badgeColor = simulatedStatus === "iyi" ? "#10b981" : simulatedStatus === "orta" ? "#f59e0b" : "#ef4444";
+
+                      return (
+                        <div key={outcome.code} className="outcome-row" style={{ display: "flex", justifyContent: "space-between", padding: "14px 0", borderBottom: "1px solid var(--border-light)" }}>
+                          <div style={{ paddingRight: 20 }}>
+                            <strong style={{ fontSize: "0.9rem", color: "var(--text-main)" }}>{outcome.title} ({outcome.code})</strong>
+                            <p className="outcome-desc" style={{ margin: "4px 0 0 0", fontSize: "0.78rem", color: "var(--text-muted)" }}>{outcome.desc}</p>
+                          </div>
+                          <div style={{
+                            alignSelf: "center",
+                            fontSize: "0.75rem",
+                            fontWeight: 800,
+                            padding: "4px 10px",
+                            borderRadius: 20,
+                            background: badgeBg,
+                            color: badgeColor,
+                            whiteSpace: "nowrap"
+                          }}>
+                            %{outcome.score} {simulatedStatus.toUpperCase()}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         )}
 
