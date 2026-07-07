@@ -2,9 +2,10 @@ import { useState } from "react";
 
 interface LoginPageProps {
   onLogin: (role: string, username: string) => void;
+  onNavigateToRegister: () => void;
 }
 
-export function LoginPage({ onLogin }: LoginPageProps) {
+export function LoginPage({ onLogin, onNavigateToRegister }: LoginPageProps) {
   const [role, setRole] = useState("student");
   const [username, setUsername] = useState("lgs_arda");
   const [password, setPassword] = useState("123");
@@ -36,7 +37,7 @@ export function LoginPage({ onLogin }: LoginPageProps) {
       <div className="login-card">
         <div className="login-logo">✨</div>
         <h2>EduMentor AI</h2>
-        <p className="login-subtitle">Akıllı Eğitim Yönetim & Öğrenim Sistemi</p>
+        <p className="login-subtitle">Akıllı Kişiselleştirilmiş Öğrenim & AI Akademik Koçluk</p>
         
         <form onSubmit={handleSubmit}>
           <div className="form-group">
@@ -77,14 +78,32 @@ export function LoginPage({ onLogin }: LoginPageProps) {
           </div>
 
           <div className="demo-info-box">
-            <strong>💡 Demo Test Bilgisi:</strong>
-            <p>Hızlı test için şifre varsayılan olarak <code>123</code> olarak ayarlanmıştır.</p>
+            <strong>💡 Hızlı Giriş Notu:</strong>
+            <p>Seçtiğiniz role göre test hesapları otomatik doldurulur. Şifre: <code>123</code></p>
           </div>
 
           <button type="submit" className="primary-btn">
             Giriş Yap
           </button>
         </form>
+
+        <div style={{ marginTop: 20, paddingTop: 15, borderTop: "1px solid var(--border-light)", fontSize: "0.88rem" }}>
+          <span>Öğrencinizi kaydetmek mi istiyorsunuz?</span>
+          <button 
+            onClick={onNavigateToRegister}
+            style={{ 
+              background: "none", 
+              border: "none", 
+              color: "var(--primary)", 
+              fontWeight: 700, 
+              cursor: "pointer", 
+              marginLeft: 5,
+              fontSize: "inherit"
+            }}
+          >
+            Online Kayıt Olun &rsaquo;
+          </button>
+        </div>
       </div>
     </div>
   );

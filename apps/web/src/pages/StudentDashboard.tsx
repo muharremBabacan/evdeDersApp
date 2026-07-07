@@ -1,8 +1,8 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { demoOutcomes, demoTopics, demoQuestions } from "../data/demoCurriculum";
 import { evaluateAnswers, scorePercentage } from "../lib/mastery";
 import { updateMasteryFromAnswers } from "../lib/mastery";
-import type { MasteryRecord, TestAnswer } from "../types/curriculum";
+import type { MasteryRecord } from "../types/curriculum";
 
 interface StudentDashboardProps {
   username: string;
@@ -30,6 +30,14 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
     english: false,
   });
 
+  // AI Routine Planner State
+  const [availableHours, setAvailableHours] = useState("2");
+  const [routineResult, setRoutineResult] = useState<Array<{ subject: string; topic: string; duration: number; action: string }>>([
+    { subject: "Matematik", topic: "Çarpanlar ve Katlar", duration: 50, action: "Konu Pekiştirme Soruları" },
+    { subject: "Fen Bilimleri", topic: "Sıvı Basıncı", duration: 40, action: "Deney Temelli Video Anlatım" },
+    { subject: "Türkçe", topic: "Paragrafta Anlam", duration: 30, action: "Okuma Hızı Egzersizi" }
+  ]);
+
   // Flashcards state
   const [flashcardOpen, setFlashcardOpen] = useState(false);
   const [flashcardIndex, setFlashcardIndex] = useState(0);
@@ -41,7 +49,7 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
 
   // Chat state
   const [chatMessages, setChatMessages] = useState<Array<{ sender: "ai" | "student"; text: string }>>([
-    { sender: "ai", text: "Merhaba Arda! Matematikte üslü sayılar konusunu tamamladın, fen bilimlerinde basınç konusuna çalışmak ister misin? Bugün senin için harika tavsiyelerim var!" }
+    { sender: "ai", text: "Merhaba! Bugün ders çalışmak için ne kadar vaktin var? Süreni girerek sana özel LGS hazırlık rutini oluşturabilirsin! 👇" }
   ]);
   const [chatInput, setChatInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
@@ -85,9 +93,46 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
   const totalPoints = 800 + Object.keys(masteryRecords).length * 150;
   const studentLevel = Math.floor(totalPoints / 250) + 1;
 
+  // Generate study routine based on available duration
+  function generateStudyRoutine() {
+    const minutes = parseFloat(availableHours) * 60;
+    if (isNaN(minutes) || minutes <= 0) {
+      alert("Lütfen geçerli bir çalışma süresi girin.");
+      return;
+    }
+
+    // Sort outcomes by lowest mastery level (weakest topics first)
+    const outcomesWithRecords = demoOutcomes.map(outcome => {
+      const record = masteryRecords[outcome.id];
+      return { outcome, level: record ? record.level : 50 }; // default 50
+    }).sort((a, b) => a.level - b.level);
+
+    // Pick top 3 weakest outcomes and allocate time
+    const generated = [];
+    const subjects = ["Matematik", "Fen Bilimleri", "Türkçe"];
+    const actions = ["Kazanım Tarama Soru Çözümü", "Video Dersi & Analoji Tekrarı", "Özet Okuma ve Flashcard"];
+
+    const segments = 3;
+    const segmentDuration = Math.round(minutes / segments);
+
+    for (let i = 0; i < segments; i++) {
+      const item = outcomesWithRecords[i % outcomesWithRecords.length];
+      const topic = demoTopics.find(t => t.id === item.outcome.topicId);
+      
+      generated.push({
+        subject: subjects[i],
+        topic: topic ? topic.name : "Genel LGS",
+        duration: segmentDuration,
+        action: actions[i]
+      });
+    }
+
+    setRoutineResult(generated);
+    alert("Yapay Zeka zayıf olduğunuz kazanımları tarayarak yeni ders çalışma rutininizi oluşturdu!");
+  }
+
   // Launch test
   function startDiagnosticTest() {
-    // Select 1 question per outcome
     const selected = demoOutcomes.map((outcome) => {
       const pool = demoQuestions.filter((q) => q.outcomeId === outcome.id);
       return pool[0];
@@ -107,7 +152,6 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
     if (currentQuestionIndex < testQuestions.length - 1) {
       setCurrentQuestionIndex(prev => prev + 1);
     } else {
-      // Evaluate
       const evaluated = evaluateAnswers(testQuestions, testAnswers);
       const updated = updateMasteryFromAnswers(
         masteryRecords,
@@ -167,6 +211,9 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
           <a onClick={() => { setTestMode(false); setActiveTab("study-plan"); }} className={`nav-item ${activeTab === "study-plan" ? "active" : ""}`}>
             <span className="icon">📅</span> Çalışma Planım
           </a>
+          <a onClick={() => { setTestMode(false); setActiveTab("ai-routine"); }} className={`nav-item ${activeTab === "ai-routine" ? "active" : ""}`}>
+            <span className="icon">⏱️</span> AI Rutinim
+          </a>
           <a onClick={() => { startDiagnosticTest(); }} className={`nav-item ${testMode ? "active" : ""}`}>
             <span className="icon">✏️</span> Diagnostik Test
           </a>
@@ -205,7 +252,7 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
         {/* HEADER */}
         <div className="top-header">
           <div className="top-header-welcome">
-            <h2>Merhaba Arda! 👋</h2>
+            <h2>Merhaba {username === "lgs_arda" ? "Arda" : username}! 👋</h2>
             <p>Bugün harika bir gün, hedeflerine bir adım daha yaklaş!</p>
           </div>
           <div className="top-header-stats">
@@ -266,7 +313,7 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
                     <div className="ai-speech-bubble-wrap">
                       <h4 style={{ margin: "0 0 8px 0", fontSize: "0.8rem", color: "var(--primary)", textTransform: "uppercase", letterSpacing: "1px", fontWeight: 800 }}>Akıllı Yapay Zeka Koçun</h4>
                       <div className="ai-speech-bubble">
-                        Arda, diagnostik test sonuçlarına göre üslü sayılar ve çarpanlar konularında kendini oldukça geliştirmişsin! Fen bilimlerinde basınç konusuna çalışarak hedeflerini tamamlayabilirsin.
+                        Matematikte üslü sayılar ve çarpanlar konularında kendini oldukça geliştirmişsin! Fen bilimlerinde basınç konusuna çalışarak hedeflerini tamamlayabilirsin.
                       </div>
                       <div className="ai-coach-actions">
                         <button className="btn-card-primary" onClick={() => setActiveTab("study-plan")}>Bugünkü Planın</button>
@@ -332,7 +379,6 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
                     <h3>Günlük İlerleme</h3>
                     <div className="daily-progress-row">
                       <div className="progress-circle-wrap">
-                        {/* Custom Circular SVG */}
                         <svg width="100" height="100" viewBox="0 0 100 100">
                           <circle cx="50" cy="50" r="40" fill="transparent" stroke="var(--border-light)" strokeWidth="8" />
                           <circle cx="50" cy="50" r="40" fill="transparent" stroke="var(--primary)" strokeWidth="8"
@@ -353,22 +399,19 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
                     </div>
                   </div>
 
-                  {/* RADAR PERFORMANCE GRAPH (SVG BASED FOR RELIABILITY) */}
+                  {/* RADAR PERFORMANCE GRAPH */}
                   <div className="dashboard-card">
                     <h3>Performans Analizim</h3>
                     <div style={{ height: 180, display: "flex", justifyContent: "center", alignItems: "center" }}>
                       <svg width="180" height="180" viewBox="0 0 200 200">
-                        {/* Grid Pentagons */}
                         <polygon points="100,20 180,80 150,170 50,170 20,80" fill="transparent" stroke="#333" strokeWidth="1" />
                         <polygon points="100,50 160,95 137,150 63,150 40,95" fill="transparent" stroke="#444" strokeWidth="1" />
                         <polygon points="100,80 140,110 125,140 75,140 60,110" fill="transparent" stroke="#555" strokeWidth="1" />
-                        {/* Labels */}
                         <text x="100" y="15" fill="var(--text-muted)" fontSize="10" textAnchor="middle">Matematik</text>
                         <text x="195" y="80" fill="var(--text-muted)" fontSize="10" textAnchor="start">Fen</text>
                         <text x="160" y="185" fill="var(--text-muted)" fontSize="10" textAnchor="middle">İngilizce</text>
                         <text x="40" y="185" fill="var(--text-muted)" fontSize="10" textAnchor="middle">Türkçe</text>
                         <text x="5" y="80" fill="var(--text-muted)" fontSize="10" textAnchor="end">Sosyal</text>
-                        {/* Student Performance Plot */}
                         <polygon points="100,45 165,90 120,150 70,140 45,95" fill="rgba(99, 102, 241, 0.25)" stroke="var(--primary)" strokeWidth="2" />
                       </svg>
                     </div>
@@ -449,6 +492,66 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
                 <button className="primary" onClick={startDiagnosticTest} style={{ marginTop: 20, width: "auto", padding: "10px 20px" }}>
                   Kazanım Tespit Testi Başlat
                 </button>
+              </div>
+            )}
+
+            {/* PANEL: AI ROUTINE PLANNER */}
+            {activeTab === "ai-routine" && (
+              <div>
+                <div className="dashboard-card">
+                  <h3>⏱️ AI Çalışma Rutini Planlayıcısı</h3>
+                  <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", marginBottom: 15 }}>
+                    Bugün ne kadar çalışabileceğinizi girin. AI, en zayıf olduğunuz kazanımları tarayarak size özel ders çalışma süresi ve görevleri dağıtacaktır.
+                  </p>
+                  
+                  <div style={{ display: "flex", gap: 12, alignItems: "flex-end" }} className="form-group">
+                    <div style={{ flex: 1 }}>
+                      <label>Bugün Kaç Saat Çalışabilirsin?</label>
+                      <input 
+                        type="number" 
+                        value={availableHours} 
+                        onChange={(e) => setAvailableHours(e.target.value)} 
+                        placeholder="Örn: 2"
+                        style={{ padding: 10, borderRadius: 8, border: "1.5px solid var(--border-light)" }}
+                      />
+                    </div>
+                    <button onClick={generateStudyRoutine} className="primary-btn" style={{ width: "auto", padding: "11px 20px" }}>
+                      AI Rutinimi Hazırla
+                    </button>
+                  </div>
+                </div>
+
+                <div className="section-card">
+                  <h3>Günlük Çalışma Yol Haritam</h3>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 10 }}>
+                    {routineResult.map((item, idx) => (
+                      <div key={idx} style={{ background: "var(--bg-body)", padding: 15, borderRadius: 8, borderLeft: "4px solid var(--primary)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <div>
+                          <span style={{ fontSize: "0.75rem", color: "var(--primary)", fontWeight: 700, textTransform: "uppercase" }}>{item.subject}</span>
+                          <h4 style={{ margin: "2px 0 4px 0", fontSize: "0.95rem" }}>{item.topic}</h4>
+                          <p style={{ margin: 0, fontSize: "0.8rem", color: "var(--text-muted)" }}>{item.action}</p>
+                        </div>
+                        <div style={{ background: "rgba(99, 102, 241, 0.08)", padding: "8px 12px", borderRadius: 6, fontWeight: 800, color: "var(--primary)", fontSize: "0.9rem" }}>
+                          ⏱️ {item.duration} Dakika
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="dashboard-card">
+                  <h3>🧠 Öğrenme Tarzı Analizi</h3>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 15, marginTop: 10 }}>
+                    <div style={{ padding: 12, background: "var(--bg-body)", borderRadius: 8 }}>
+                      <strong style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>Öğrenme Stili</strong>
+                      <p style={{ margin: "4px 0 0 0", fontWeight: 800, color: "var(--primary)" }}>Görsel & Uygulamalı Soru Çözümü</p>
+                    </div>
+                    <div style={{ padding: 12, background: "var(--bg-body)", borderRadius: 8 }}>
+                      <strong style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>En Verimli Saatlerin</strong>
+                      <p style={{ margin: "4px 0 0 0", fontWeight: 800, color: "var(--success)" }}>16:00 - 18:30 (Okul Sonrası)</p>
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
 
