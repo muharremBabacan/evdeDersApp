@@ -381,9 +381,9 @@ export function ParentDashboard({ username, onLogout }: ParentDashboardProps) {
           <div style={{ width: "100%" }}>
             {!selectedSubjectId ? (
               <div className="card">
-                <h3 style={{ marginBottom: 6 }}>5 - 8. Sınıf Müfredat Kazanım Karnesi ({childName})</h3>
+                <h3 style={{ marginBottom: 6 }}>🎯 Arda'nın LGS Hazırlık & Akademik Gelişim Haritası</h3>
                 <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", marginBottom: 20 }}>
-                  Öğrencinizin ders bazlı genel gelişim durumları. Ders kartlarına tıklayarak alt kazanım detaylarını ve AI koç tavsiyelerini görebilirsiniz.
+                  Öğrencinizin ders bazlı genel başarı durumları ve kazanım seviyeleri. Detaylı alt konuları ve AI koç analizlerini görmek için ders kartlarına tıklayabilirsiniz.
                 </p>
                 
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
