@@ -7,7 +7,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT || 8080;
 const PUBLIC_DIR = path.join(__dirname, "dist");
 
-const MIME_TYPES: Record<string, string> = {
+const MIME_TYPES = {
   ".html": "text/html",
   ".css": "text/css",
   ".js": "text/javascript",
