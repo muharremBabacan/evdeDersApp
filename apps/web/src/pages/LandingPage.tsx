@@ -27,6 +27,9 @@ export function LandingPage({ onNavigateToLogin, onNavigateToRegister }: Landing
       <section className="landing-hero">
         <span className="hero-badge">🚀 Ortaokul LGS Hazırlık Programı (5 - 8. Sınıf)</span>
         <h1>Öğrenci AI Koçluğu ile LGS'ye 4 Yılda Evden Hazırlanın</h1>
+        <p style={{ fontSize: "1.28rem", fontWeight: 850, color: "var(--primary)", margin: "0 auto 20px auto", maxWidth: 680, lineHeight: 1.4 }}>
+          "Biz sana sadece soru vermiyoruz; düzenli çalışma alışkanlığı kazandırıyoruz."
+        </p>
         <p>
           Çocuğunuzun çalışma stilini ve zamanını öğrenen yapay zeka koçuyla, 5. sınıftan 8. sınıfa kadar 
           bireyselleştirilmiş LGS hazırlık ve okul yazılı ders çalışma rutinini hemen başlatın.
