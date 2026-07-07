@@ -3,14 +3,15 @@ import { useState } from "react";
 interface OnlineRegisterProps {
   onRegisterComplete: (studentName: string) => void;
   onBackToLogin: () => void;
+  defaultPackage?: string;
 }
 
-export function OnlineRegister({ onRegisterComplete, onBackToLogin }: OnlineRegisterProps) {
+export function OnlineRegister({ onRegisterComplete, onBackToLogin, defaultPackage }: OnlineRegisterProps) {
   const [step, setStep] = useState<"grade" | "package" | "payment">("grade");
   
   // Selections
   const [selectedGrade, setSelectedGrade] = useState("8");
-  const [selectedPackage, setSelectedPackage] = useState("dijital");
+  const [selectedPackage, setSelectedPackage] = useState(defaultPackage || "duzen");
   
   // Veli / Student Info
   const [parentName, setParentName] = useState("");
@@ -25,29 +26,37 @@ export function OnlineRegister({ onRegisterComplete, onBackToLogin }: OnlineRegi
   const [cardCvv, setCardCvv] = useState("321");
 
   const packagesInfo: Record<string, { title: string; normalPrice: string; promoPrice: string; installment: string; desc: string; icon: string }> = {
-    dijital: {
-      title: "AI Dijital Paket",
-      normalPrice: "12,000 TL",
-      promoPrice: "4,990 TL / Yıl",
-      installment: "12 Taksit ile Ayda 415 TL",
-      desc: "Yapay zeka koçluk motoru, kişiye özel günlük çalışma rutini planlayıcı ve tüm ortaokul dijital kazanım testleri.",
-      icon: "🤖"
+    baslangic: {
+      title: "🌱 Başlangıç (Ücretsiz)",
+      normalPrice: "",
+      promoPrice: "Ücretsiz",
+      installment: "Taahhütsüz & Ücretsiz Deneme",
+      desc: "Temel çalışma planı ve günlük görev takibi ile çalışma alışkanlığı edinme adımı.",
+      icon: "🌱"
     },
-    plus: {
-      title: "AI Plus+ Paket",
-      normalPrice: "24,000 TL",
-      promoPrice: "9,990 TL / Yıl",
-      installment: "12 Taksit ile Ayda 832 TL",
-      desc: "Dijital pakete ek olarak, seviyenize uygun basılı LGS/yazılı soru bankaları setleri adresinize kargolanır.",
-      icon: "📚"
+    duzen: {
+      title: "🚀 Düzen Paketi",
+      normalPrice: "750 TL",
+      promoPrice: "500 TL / Ay",
+      installment: "Aylık Ödeme Seçeneği",
+      desc: "Ertelenen ders analizleri, otomatik rutin revizyonları ve düzenli çalışma alışkanlığı kazandırma koçluğu.",
+      icon: "🚀"
+    },
+    gelisim: {
+      title: "🎯 Gelişim Paketi",
+      normalPrice: "1.800 TL",
+      promoPrice: "1.200 TL / Ay",
+      installment: "Aylık Ödeme Seçeneği",
+      desc: "Ders bazlı uzman AI koçları, deneme analizi yorumlama ve performansa göre anlık plan optimizasyonu.",
+      icon: "🎯"
     },
     premium: {
-      title: "AI Premium Paket",
-      normalPrice: "38,000 TL",
-      promoPrice: "17,990 TL / Yıl",
-      installment: "12 Taksit ile Ayda 1,499 TL",
-      desc: "AI koçluğa ek olarak, haftalık 15 dk birebir rehber öğretmen canlı değerlendirme ve takip görüşmesi.",
-      icon: "✨"
+      title: "👑 Premium Paketi",
+      normalPrice: "3.000 TL",
+      promoPrice: "2.000 TL / Ay",
+      installment: "Aylık Ödeme Seçeneği",
+      desc: "Uzun dönem başarı/motivasyon takibi, proaktif veli danışmanı raporları ve erken başarı risk analizi.",
+      icon: "👑"
     }
   };
 

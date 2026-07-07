@@ -90,53 +90,92 @@ export function LandingPage({ onNavigateToLogin, onNavigateToRegister }: Landing
       <section id="fiyatlar" className="landing-pricing">
         <div className="section-title-wrap">
           <h2>LGS Hazırlık Eğitim Paketleri</h2>
-          <p>Dilediğiniz paketi seçerek online kayıt olabilir, kredi kartınız ile taksitli ödeme gerçekleştirebilirsiniz.</p>
+          <p>Çocuğunuzun ihtiyacına en uygun koçluk düzeyini seçerek hemen başlayın. Paketler arası geçiş yapabilirsiniz.</p>
         </div>
 
-        <div className="pricing-grid-layout">
+        <div className="pricing-grid-layout" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "20px" }}>
           {/* PACKAGE 1 */}
-          <div className="pricing-card-box">
-            <h3>Standart AI Paket</h3>
-            <p className="price-desc">Evde kendi disipliniyle çalışmak ve zengin sınav içeriğine ulaşmak isteyen öğrenciler için ideal.</p>
+          <div className="pricing-card-box" style={{ padding: "25px 20px" }}>
+            <h3 style={{ fontSize: "1.15rem" }}>🌱 Başlangıç</h3>
+            <p className="price-desc" style={{ minHeight: "50px", fontSize: "0.8rem" }}>Temel çalışma planı ve günlük görev takibi ile alışkanlık oluşturma adımı.</p>
             <div className="price-amount-wrap">
-              <span className="old-price">₺12.000</span>
-              <strong className="new-price">₺4.990</strong>
-              <span className="price-period">/ Yıl</span>
+              <strong className="new-price" style={{ fontSize: "1.8rem" }}>Ücretsiz</strong>
             </div>
-            <div className="price-installments">12 taksit imkanıyla</div>
+            <div className="price-installments" style={{ minHeight: "19px" }}>Her zaman ücretsiz</div>
             
-            <ul className="price-features-list">
-              <li>✓ 5-8. Sınıf LGS Eğitim Müfredatı</li>
-              <li>✓ LGS Deneme Sınavları Çözümü</li>
-              <li>✓ Akıllı Çalışma Planı & Süre Sayacı</li>
-              <li>✓ Gelişim Durum Kartı & Veli Takip Paneli</li>
-              <li><del>✗ 7/24 AI Rehber Koç Asistanı</del></li>
+            <ul className="price-features-list" style={{ gap: "8px", marginBottom: "25px" }}>
+              <li>✓ Temel Çalışma Planı</li>
+              <li>✓ Günlük Görev Dağıtımı</li>
+              <li>✓ Basit İlerleme Takibi</li>
+              <li>✓ Kısa Geri Bildirimler</li>
+              <li><del>✗ Ayrıntılı AI Analizleri</del></li>
             </ul>
 
-            <button onClick={() => onNavigateToRegister("dijital")} className="price-buy-btn">Hemen Satın Al</button>
+            <button onClick={() => onNavigateToRegister("baslangic")} className="price-buy-btn" style={{ padding: "10px" }}>Hemen Başla</button>
           </div>
 
           {/* PACKAGE 2 */}
-          <div className="pricing-card-box popular">
-            <div className="popular-badge">EN POPÜLER</div>
-            <h3>Premium VIP AI Paket</h3>
-            <p className="price-desc">Yapay zeka koç desteğiyle, hedeflerini adım adım analiz ederek sınava hazırlanmak isteyen öğrenciler için.</p>
+          <div className="pricing-card-box" style={{ padding: "25px 20px" }}>
+            <h3 style={{ fontSize: "1.15rem" }}>🚀 Düzen Paketi</h3>
+            <p className="price-desc" style={{ minHeight: "50px", fontSize: "0.8rem" }}>Ertelenen ders analizleri ve otomatik revizyonlarla çalışma alışkanlığı kazanma.</p>
             <div className="price-amount-wrap">
-              <span className="old-price">₺24.000</span>
-              <strong className="new-price">₺9.990</strong>
-              <span className="price-period">/ Yıl</span>
+              <strong className="new-price" style={{ fontSize: "1.8rem" }}>₺500</strong>
+              <span className="price-period">/ Ay</span>
             </div>
-            <div className="price-installments">12 taksit imkanıyla</div>
+            <div className="price-installments" style={{ minHeight: "19px" }}>Aylık Ödeme</div>
             
-            <ul className="price-features-list">
-              <li>✓ Tüm Standart LGS İçerikleri</li>
-              <li>✓ Yapay Zeka (AI) Rehber Koç (7/24 Aktif)</li>
-              <li>✓ Kişiye Özel Akıllı Çalışma Planı</li>
-              <li>✓ AI Destekli Gelişim ve Karne Analizleri</li>
-              <li>✓ Seviyeye Göre Basılı Soru Bankası Seti</li>
+            <ul className="price-features-list" style={{ gap: "8px", marginBottom: "25px" }}>
+              <li>✓ Otomatik Haftalık Planlar</li>
+              <li>✓ Günlük Plan Revizyonu</li>
+              <li>✓ Ertelenen Ders Tespiti</li>
+              <li>✓ Temel Veli Raporları</li>
+              <li>✓ Motivasyon Mesajları</li>
             </ul>
 
-            <button onClick={() => onNavigateToRegister("plus")} className="price-buy-btn-popular">Hemen Satın Al</button>
+            <button onClick={() => onNavigateToRegister("duzen")} className="price-buy-btn" style={{ padding: "10px" }}>Satın Al</button>
+          </div>
+
+          {/* PACKAGE 3 */}
+          <div className="pricing-card-box" style={{ padding: "25px 20px" }}>
+            <h3 style={{ fontSize: "1.15rem" }}>🎯 Gelişim Paketi</h3>
+            <p className="price-desc" style={{ minHeight: "50px", fontSize: "0.8rem" }}>Ders bazlı uzman AI koçları ve deneme yorumlarıyla akademik gelişimi kişiselleştirme.</p>
+            <div className="price-amount-wrap">
+              <strong className="new-price" style={{ fontSize: "1.8rem" }}>₺1.200</strong>
+              <span className="price-period">/ Ay</span>
+            </div>
+            <div className="price-installments" style={{ minHeight: "19px" }}>Aylık Ödeme</div>
+            
+            <ul className="price-features-list" style={{ gap: "8px", marginBottom: "25px" }}>
+              <li>✓ Ders Bazlı Uzman AI</li>
+              <li>✓ Performans Optimizasyonu</li>
+              <li>✓ Eksik Kazanım Analizi</li>
+              <li>✓ Deneme Sınavı Yorumları</li>
+              <li>✓ Bireysel Öğrenme DNA'sı</li>
+            </ul>
+
+            <button onClick={() => onNavigateToRegister("gelisim")} className="price-buy-btn" style={{ padding: "10px" }}>Satın Al</button>
+          </div>
+
+          {/* PACKAGE 4 */}
+          <div className="pricing-card-box popular" style={{ padding: "25px 20px" }}>
+            <div className="popular-badge">EN POPÜLER</div>
+            <h3 style={{ fontSize: "1.15rem" }}>👑 Premium Paket</h3>
+            <p className="price-desc" style={{ minHeight: "50px", fontSize: "0.8rem" }}>Uzun dönem başarı takibi ve erken risk tespitleriyle ailenin dijital danışmanı.</p>
+            <div className="price-amount-wrap">
+              <strong className="new-price" style={{ fontSize: "1.8rem" }}>₺2.000</strong>
+              <span className="price-period">/ Ay</span>
+            </div>
+            <div className="price-installments" style={{ minHeight: "19px" }}>Aylık Ödeme</div>
+            
+            <ul className="price-features-list" style={{ gap: "8px", marginBottom: "25px" }}>
+              <li>✓ Uzun Dönem Takip & Hafıza</li>
+              <li>✓ Otomatik Tempo Ayarı</li>
+              <li>✓ Motivasyon Eğilim Analizi</li>
+              <li>✓ Erken Başarı Risk Analizi</li>
+              <li>✓ Proaktif Veli Önerileri</li>
+            </ul>
+
+            <button onClick={() => onNavigateToRegister("premium")} className="price-buy-btn-popular" style={{ padding: "10px" }}>Satın Al</button>
           </div>
         </div>
       </section>

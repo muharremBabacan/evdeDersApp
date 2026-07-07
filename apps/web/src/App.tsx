@@ -13,6 +13,7 @@ export default function App() {
   const [view, setView] = useState<"landing" | "login" | "register" | "dashboard">("landing");
   const [role, setRole] = useState("student");
   const [username, setUsername] = useState("");
+  const [selectedPackage, setSelectedPackage] = useState("duzen");
 
   function handleLogin(selectedRole: string, enteredUsername: string) {
     setRole(selectedRole);
@@ -36,7 +37,10 @@ export default function App() {
     return (
       <LandingPage 
         onNavigateToLogin={() => setView("login")} 
-        onNavigateToRegister={() => setView("register")} 
+        onNavigateToRegister={(pkg) => {
+          if (pkg) setSelectedPackage(pkg);
+          setView("register");
+        }} 
       />
     );
   }
@@ -44,6 +48,7 @@ export default function App() {
   if (view === "register") {
     return (
       <OnlineRegister 
+        defaultPackage={selectedPackage}
         onRegisterComplete={handleRegisterComplete} 
         onBackToLogin={() => setView("login")} 
       />
