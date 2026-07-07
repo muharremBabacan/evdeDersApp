@@ -7,13 +7,6 @@
         { "fieldPath": "outcomeId", "order": "ASCENDING" },
         { "fieldPath": "difficulty", "order": "ASCENDING" }
       ]
-    },
-    {
-      "collectionGroup": "mastery",
-      "queryScope": "COLLECTION_GROUP",
-      "fields": [
-        { "fieldPath": "level", "order": "ASCENDING" }
-      ]
     }
   ],
   "fieldOverrides": []

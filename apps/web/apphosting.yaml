@@ -14,26 +14,26 @@ runConfig:
 # gizli anahtar değildir — Firestore güvenliği rules ile sağlanır).
 env:
   - variable: VITE_FIREBASE_API_KEY
-    value: "BURAYA_FIREBASE_CONSOLE_DEGERI"
+    value: "BURAYA_FIREBASE_API_KEY_GIRIN"
     availability:
       - BUILD
   - variable: VITE_FIREBASE_AUTH_DOMAIN
-    value: "BURAYA_FIREBASE_CONSOLE_DEGERI"
+    value: "evdedersapp.firebaseapp.com"
     availability:
       - BUILD
   - variable: VITE_FIREBASE_PROJECT_ID
-    value: "BURAYA_FIREBASE_CONSOLE_DEGERI"
+    value: "evdedersapp"
     availability:
       - BUILD
   - variable: VITE_FIREBASE_STORAGE_BUCKET
-    value: "BURAYA_FIREBASE_CONSOLE_DEGERI"
+    value: "evdedersapp.firebasestorage.app"
     availability:
       - BUILD
   - variable: VITE_FIREBASE_MESSAGING_SENDER_ID
-    value: "BURAYA_FIREBASE_CONSOLE_DEGERI"
+    value: "695385379153"
     availability:
       - BUILD
   - variable: VITE_FIREBASE_APP_ID
-    value: "BURAYA_FIREBASE_CONSOLE_DEGERI"
+    value: "1:695385379153:web:fdb25b376adf766ca74370"
     availability:
       - BUILD

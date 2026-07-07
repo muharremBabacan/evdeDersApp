@@ -1,40 +1,46 @@
 import { useState } from "react";
-import { DiagnosticTest } from "./pages/DiagnosticTest";
-import { Dashboard } from "./pages/Dashboard";
-import { demoQuestions } from "./data/demoCurriculum";
-import { updateMasteryFromAnswers } from "./lib/mastery";
-import type { MasteryRecord, TestAnswer } from "./types/curriculum";
+import { LoginPage } from "./pages/LoginPage";
+import { StudentDashboard } from "./pages/StudentDashboard";
+import { ParentDashboard } from "./pages/ParentDashboard";
+import { TeacherDashboard } from "./pages/TeacherDashboard";
+import { ManagerDashboard } from "./pages/ManagerDashboard";
+import { AccountingDashboard } from "./pages/AccountingDashboard";
 import "./styles.css";
 
-const DEMO_STUDENT_ID = "student_demo_1";
-
 export default function App() {
-  const [mode, setMode] = useState<"test" | "dashboard">("test");
-  const [masteryRecords, setMasteryRecords] = useState<Record<string, MasteryRecord>>({});
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [role, setRole] = useState("student");
+  const [username, setUsername] = useState("");
 
-  function handleTestComplete(answers: TestAnswer[]) {
-    const updated = updateMasteryFromAnswers(
-      masteryRecords,
-      answers,
-      demoQuestions,
-      DEMO_STUDENT_ID
-    );
-    setMasteryRecords(updated);
-    setMode("dashboard");
+  function handleLogin(selectedRole: string, enteredUsername: string) {
+    setRole(selectedRole);
+    setUsername(enteredUsername);
+    setIsLoggedIn(true);
   }
 
-  return (
-    <div className="app-shell">
-      <header>
-        <h1>Ev'de Ders — Kazanım Takip (v1 Demo)</h1>
-      </header>
-      <main>
-        {mode === "test" ? (
-          <DiagnosticTest studentId={DEMO_STUDENT_ID} onComplete={handleTestComplete} />
-        ) : (
-          <Dashboard masteryRecords={masteryRecords} onRetakeTest={() => setMode("test")} />
-        )}
-      </main>
-    </div>
-  );
+  function handleLogout() {
+    setIsLoggedIn(false);
+    setRole("student");
+    setUsername("");
+  }
+
+  if (!isLoggedIn) {
+    return <LoginPage onLogin={handleLogin} />;
+  }
+
+  // Render dashboard based on active role
+  switch (role) {
+    case "student":
+      return <StudentDashboard username={username} onLogout={handleLogout} />;
+    case "parent":
+      return <ParentDashboard username={username} onLogout={handleLogout} />;
+    case "teacher":
+      return <TeacherDashboard username={username} onLogout={handleLogout} />;
+    case "manager":
+      return <ManagerDashboard username={username} onLogout={handleLogout} />;
+    case "accounting":
+      return <AccountingDashboard username={username} onLogout={handleLogout} />;
+    default:
+      return <LoginPage onLogin={handleLogin} />;
+  }
 }
