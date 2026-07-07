@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { LandingPage } from "./pages/LandingPage";
 import { LoginPage } from "./pages/LoginPage";
 import { OnlineRegister } from "./pages/OnlineRegister";
 import { StudentDashboard } from "./pages/StudentDashboard";
@@ -9,7 +10,7 @@ import { AccountingDashboard } from "./pages/AccountingDashboard";
 import "./styles.css";
 
 export default function App() {
-  const [view, setView] = useState<"login" | "register" | "dashboard">("login");
+  const [view, setView] = useState<"landing" | "login" | "register" | "dashboard">("landing");
   const [role, setRole] = useState("student");
   const [username, setUsername] = useState("");
 
@@ -26,9 +27,18 @@ export default function App() {
   }
 
   function handleLogout() {
-    setView("login");
+    setView("landing");
     setRole("student");
     setUsername("");
+  }
+
+  if (view === "landing") {
+    return (
+      <LandingPage 
+        onNavigateToLogin={() => setView("login")} 
+        onNavigateToRegister={() => setView("register")} 
+      />
+    );
   }
 
   if (view === "register") {
