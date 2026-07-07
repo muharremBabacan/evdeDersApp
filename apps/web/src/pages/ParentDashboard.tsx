@@ -98,13 +98,19 @@ export function ParentDashboard({ username, onLogout }: ParentDashboardProps) {
             </div>
 
             <div className="section-card">
-              <h3>🤖 AI Rehber Koçun Haftalık Raporu</h3>
-              <div style={{ background: "var(--bg-body)", padding: 15, borderRadius: 8, borderLeft: "4px solid var(--primary)", lineHeight: 1.5 }}>
-                <p style={{ margin: 0, fontSize: "0.9rem" }}>
-                  "Arda bu hafta planlanan 4 saatlik çalışma süresinin %90'ını başarıyla tamamladı. 
-                  Matematikte <strong>Üslü Sayılar</strong> konusunu tamamen pekiştirdi. Fen bilimlerinde 
-                  <strong>Sıvı Basıncı</strong> konusunda derinlik etkisini pekiştirmek için görsel deney videolarını 
-                  izlemesini önerdim. Genel durumu LGS 4 yıllık hazırlık programına tam uyumludur."
+              <h3>🤖 AI Rehber Koçun Haftalık Gelişim Raporu</h3>
+              <div style={{ background: "var(--bg-body)", padding: 18, borderRadius: 8, borderLeft: "4px solid var(--primary)", lineHeight: 1.6 }}>
+                <p style={{ margin: "0 0 10px 0", fontSize: "0.92rem", color: "var(--text-main)" }}>
+                  <strong>1. Gözlem:</strong> Arda bu hafta planlanan 4 saatlik LGS çalışma planının %90'ını başarıyla tamamladı. Matematik dersi <strong>Üslü Sayılar</strong> kazanımlarında tam pekiştirme seviyesine ulaştı.
+                </p>
+                <p style={{ margin: "0 0 10px 0", fontSize: "0.92rem", color: "var(--text-main)" }}>
+                  <strong>2. Anlamlandırma:</strong> Fen Bilimlerinde <strong>Sıvı Basıncı</strong> konusunda bazı ufak ayrıntıları kaçırdığı gözlemlendi. Bu durum, konunun soyut yapısı veya görsel deney pratik ihtiyacından kaynaklanabilir.
+                </p>
+                <p style={{ margin: "0 0 10px 0", fontSize: "0.92rem", color: "var(--text-main)" }}>
+                  <strong>3. Yapıcı Öneri:</strong> Günlük planına eklediğimiz 6 dakikalık görsel deney özetini evde birlikte izleyebilir ve günlük yaşam örnekleri üzerinden (örn: su barajları) üzerine sohbet edebilirsiniz.
+                </p>
+                <p style={{ margin: 0, fontSize: "0.92rem", color: "var(--text-main)" }}>
+                  <strong>4. Güçlü Yön:</strong> Arda'nın kendi çalışma planını disiplinli şekilde takip etme gayreti ve hedeflerine olan bağlılığı gelişimini son derece hızlandırıyor.
                 </p>
               </div>
             </div>
