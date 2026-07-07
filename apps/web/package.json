@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "start": "superstatic dist --port $PORT --host 0.0.0.0",
+    "start": "node serve.js",
     "preview": "vite preview"
   },
   "dependencies": {
