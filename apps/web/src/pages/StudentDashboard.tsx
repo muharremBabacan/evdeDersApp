@@ -29,7 +29,7 @@ const studyContentDb: Record<string, TopicStudyContent> = {
   },
   "Sıvı Basıncı": {
     summary: "Sıvı basıncı, sıvının derinliği (h) ve sıvının yoğunluğu (d) ile doğru orantılıdır. Sıvı basıncı formülü: P = h x d x g şeklindedir (LGS'de yerçekimi ivmesi g genellikle sabit kabul edilir).\n\nÖnemli Kurallar:\n1. Derinlik arttıkça sıvı basıncı artar.\n2. Yoğunluk arttıkça sıvı basıncı artar.\n3. Sıvının miktarı veya kabın şekli sıvı basıncını etkilemez.",
-    videoUrl: "https://www.youtube.com/embed/5aJbV_6rV7M",
+    videoUrl: "https://www.youtube.com/embed/J9z58W2mY-s",
     simulationUrl: "https://phet.colorado.edu/sims/html/under-pressure/latest/under-pressure_all.html",
     questions: [
       { id: "sq1", text: "Aşağıdakilerden hangisi sıvı basıncını etkilemez?", options: ["Sıvının derinliği", "Sıvının yoğunluğu", "Kabın şekli", "Sıvının cinsi"], correctAnswer: "Kabın şekli" },
@@ -93,7 +93,7 @@ const studyContentDb: Record<string, TopicStudyContent> = {
   },
   "Geometrik Şekiller ve Çizimler": {
     summary: "Nokta, doğru, ışın, doğru parçası ve düzlem geometrinin temel elemanlarıdır.\n\n- Nokta: Boyutsuzdur, (.) ile gösterilir.\n- Doğru: İki ucu da sonsuza uzayan çizgidir.\n- Işın: Bir ucu sınırlı (başlangıç noktası), diğer ucu sonsuza uzayandır.\n- Doğru Parçası: İki ucu da sınırlı olan çizgi parçasıdır.\n- Dikme: Bir doğruya 90 derece açıyla çizilen çizgidir.",
-    videoUrl: "https://www.youtube.com/embed/fD36N4zD878",
+    videoUrl: "https://www.youtube.com/embed/kYJjZ3Z_J70",
     simulationUrl: "https://phet.colorado.edu/sims/html/area-builder/latest/area-builder_all.html",
     mebPageRange: "5. Sınıf 1. Kitap, Sayfa 17 - 38",
     questions: [
@@ -143,7 +143,7 @@ const studyContentDb: Record<string, TopicStudyContent> = {
   },
   "Çarpanlar ve Katlar": {
     summary: "Bir doğal sayıyı kalansız bölebilen sayılara o sayının çarpanları (bölenleri) denir. 1'den büyük, sadece 1'e ve kendisine bölünebilen sayılara asal sayılar denir.\n\n- Bölünebilme Kuralları: 2 (son basamak çift), 3 (rakam toplamı 3'ün katı), 5 (sonu 0 veya 5), 9 (rakam toplamı 9'nun katı) vb.\n- Ortak Kat ve Bölen: İki veya daha fazla sayının ortak olan katları ile bölenleri problem çözümlerinde kullanılır.",
-    videoUrl: "https://www.youtube.com/embed/3990SntDk4w",
+    videoUrl: "https://www.youtube.com/embed/R9V4P3T1oM0",
     mebPageRange: "6. Sınıf 1. Kitap, Sayfa 14 - 61",
     questions: [
       { id: "m6q1", text: "36 sayısının kaç tane pozitif tam sayı çarpanı vardır?", options: ["6", "8", "9", "10"], correctAnswer: "9" },
@@ -209,7 +209,7 @@ const studyContentDb: Record<string, TopicStudyContent> = {
   },
   "Kesirler, Ondalık ve Yüzdeler": {
     summary: "Birim kesirler, tam sayılı ve bileşik kesirler. Kesirlerin sadeleştirilmesi, genişletilmesi ve sayı doğrusunda gösterimi.\n\n- Ondalık Gösterim: Paydası 10, 100, 1000 olan kesirlerin virgülle gösterilmesidir.\n- Yüzdeler: Paydası 100 olan kesirlerin '%' sembolü ile ifade edilmesidir. Karşılaştırmalar bu temsiller arasında dönüştürülerek yapılır.",
-    videoUrl: "https://www.youtube.com/embed/Q4X-3z57wE0",
+    videoUrl: "https://www.youtube.com/embed/p7s9r8oZ7_k",
     simulationUrl: "https://phet.colorado.edu/sims/html/fractions-intro/latest/fractions-intro_all.html",
     mebPageRange: "5. Sınıf 2. Kitap, Sayfa 17 - 55",
     questions: [
@@ -1103,7 +1103,7 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
                             <p>6 dk video ders özeti</p>
                           </div>
                         </div>
-                        <button className="rec-action-btn" onClick={() => { setVideoTitle("Sıvı ve Katı Basıncı"); setVideoOpen(true); }}>▶</button>
+                        <button className="rec-action-btn" onClick={() => { setVideoTitle("Sıvı ve Katı Basıncı"); setModalVideoUrl("https://www.youtube.com/embed/J9z58W2mY-s"); setVideoOpen(true); }}>▶</button>
                       </div>
 
                       <div className="recommendation-item">
