@@ -269,12 +269,18 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
   // AI Routine Planner State
   const [availableHours, setAvailableHours] = useState("2");
   
-  const [newSubject, setNewSubject] = useState("Matematik (6. Sınıf)");
-  const [newTopic, setNewTopic] = useState("Çarpanlar ve Katlar");
-  const [newDuration, setNewDuration] = useState("30");
-  const [newAction, setNewAction] = useState("");
-  const [newType, setNewType] = useState<"lesson" | "activity" | "test">("lesson");
-  const [newExternalLink, setNewExternalLink] = useState("");
+  // Simple helper to detect student grade level based on username
+  const getGradeLevel = (user: string): number => {
+    const saved = localStorage.getItem("grade_level_" + user);
+    if (saved) return parseInt(saved);
+    const u = user.toLowerCase();
+    if (u.includes("5") || u.includes("ezgi")) return 5;
+    if (u.includes("6") || u.includes("can")) return 6;
+    if (u.includes("7")) return 7;
+    return 8; // Default to 8 (LGS)
+  };
+
+  const studentGrade = getGradeLevel(username);
 
   const subjectTopics: Record<string, string[]> = {
     "Matematik (6. Sınıf)": ["Çarpanlar ve Katlar", "Araştırma Soruları ve Veri", "Ondalık Gösterim ve Yuvarlama", "Olasılık Tahmin Etme", "Açılar ve Dörtgenler", "Cebirsel Düşünme ve Algoritma", "Paralelkenar, Üçgen ve Çember"],
@@ -287,6 +293,30 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
     "Din Kültürü": ["Kader ve Kaza", "İnsanın İradesi"],
     "Mola & Dinlenme": ["Zihin Dinlendirme"]
   };
+
+  const filteredSubjectTopics = Object.keys(subjectTopics).reduce((acc, sub) => {
+    const isRestricted = 
+      (studentGrade === 5 && (sub.includes("6. Sınıf") || (sub !== "Matematik (5. Sınıf)" && sub !== "Fen Bilimleri (5. Sınıf)" && sub !== "Mola & Dinlenme"))) ||
+      (studentGrade === 6 && (sub.includes("5. Sınıf") || (sub !== "Matematik (6. Sınıf)" && sub !== "Mola & Dinlenme"))) ||
+      ((studentGrade === 7 || studentGrade === 8) && (sub.includes("5. Sınıf") || sub.includes("6. Sınıf")));
+
+    if (!isRestricted) {
+      acc[sub] = subjectTopics[sub];
+    }
+    return acc;
+  }, {} as Record<string, string[]>);
+
+  const [newSubject, setNewSubject] = useState(() => {
+    return Object.keys(filteredSubjectTopics)[0] || "Matematik";
+  });
+  const [newTopic, setNewTopic] = useState(() => {
+    const firstSub = Object.keys(filteredSubjectTopics)[0];
+    return firstSub ? filteredSubjectTopics[firstSub][0] : "";
+  });
+  const [newDuration, setNewDuration] = useState("30");
+  const [newAction, setNewAction] = useState("");
+  const [newType, setNewType] = useState<"lesson" | "activity" | "test">("lesson");
+  const [newExternalLink, setNewExternalLink] = useState("");
 
   const [routineResult, setRoutineResult] = useState<Array<{ subject: string; topic: string; duration: number; action: string }>>([
     { subject: "Matematik", topic: "Çarpanlar ve Katlar", duration: 50, action: "Konu Pekiştirme Soruları" },
@@ -774,7 +804,7 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
             <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80" alt="Student Profile" />
             <div className="profile-user-info">
               <h3>{username === "lgs_arda" ? "Arda Yılmaz" : username}</h3>
-              <span>8. Sınıf Öğrencisi</span>
+              <span>{studentGrade}. Sınıf Öğrencisi</span>
             </div>
           </div>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 4 }}>
@@ -782,7 +812,7 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
             <span style={{ fontSize: "0.72rem", fontWeight: 800, color: "rgba(255,255,255,0.95)" }}>Seviye {studentLevel}</span>
           </div>
           <div className="profile-level">
-            <span>Hedef: LGS 2026</span>
+            <span>{studentGrade === 8 ? "Hedef: LGS 2026" : `Hedef: ${studentGrade}. Sınıf Başarısı`}</span>
             <a href="#" onClick={(e) => { e.preventDefault(); onLogout(); }}>Çıkış Yap</a>
           </div>
         </div>
@@ -1122,11 +1152,11 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
                           onChange={(e) => {
                             const val = e.target.value;
                             setNewSubject(val);
-                            setNewTopic(subjectTopics[val][0]);
+                            setNewTopic(filteredSubjectTopics[val][0]);
                           }}
                           style={{ padding: "8px", borderRadius: "6px", border: "1.5px solid var(--border-light)", width: "100%" }}
                         >
-                          {Object.keys(subjectTopics).map(sub => (
+                          {Object.keys(filteredSubjectTopics).map(sub => (
                             <option key={sub} value={sub}>{sub}</option>
                           ))}
                         </select>
@@ -1139,7 +1169,7 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
                           onChange={(e) => setNewTopic(e.target.value)}
                           style={{ padding: "8px", borderRadius: "6px", border: "1.5px solid var(--border-light)", width: "100%" }}
                         >
-                          {subjectTopics[newSubject]?.map(top => (
+                          {filteredSubjectTopics[newSubject]?.map(top => (
                             <option key={top} value={top}>{top}</option>
                           ))}
                         </select>
@@ -1331,18 +1361,18 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
 
                   {/* FULL CURRICULUM ACCORDION */}
                   <div className="dashboard-card" style={{ padding: "18px" }}>
-                    <h3 style={{ margin: "0 0 8px 0" }}>📖 LGS Kütüphanesi</h3>
+                    <h3 style={{ margin: "0 0 8px 0" }}>📖 Müfredat Kütüphanesi</h3>
                     <p style={{ fontSize: "0.72rem", color: "var(--text-muted)", marginBottom: "12px", marginTop: 0 }}>
                       Müfredattaki tüm konu ve derslere buradan ulaşarak çalışabilirsin.
                     </p>
                     <div style={{ display: "flex", flexDirection: "column", gap: "8px", maxHeight: "350px", overflowY: "auto" }}>
-                      {Object.keys(subjectTopics).filter(sub => sub !== "Mola & Dinlenme").map(sub => (
+                      {Object.keys(filteredSubjectTopics).filter(sub => sub !== "Mola & Dinlenme").map(sub => (
                         <details key={sub} style={{ border: "1.5px solid var(--border-light)", borderRadius: "6px", overflow: "hidden" }}>
                           <summary style={{ padding: "10px", fontWeight: 700, fontSize: "0.82rem", background: "var(--bg-body)", cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                            <span>{sub === "Matematik" ? "📐 Matematik" : sub === "Fen Bilimleri" ? "🧪 Fen Bilimleri" : sub === "Türkçe" ? "📖 Türkçe" : sub === "İngilizce" ? "🇬🇧 İngilizce" : sub === "T.C. İnkılap Tarihi" ? "🕌 İnkılap Tarihi" : "🌙 Din Kültürü"}</span>
+                            <span>{sub.includes("Matematik") ? "📐 " + sub : sub.includes("Fen") ? "🧪 " + sub : sub.includes("Türkçe") ? "📖 " + sub : sub.includes("İngilizce") ? "🇬🇧 " + sub : sub.includes("İnkılap") ? "🕌 " + sub : "🌙 " + sub}</span>
                           </summary>
                           <div style={{ padding: "8px", display: "flex", flexDirection: "column", gap: "6px", background: "var(--white)" }}>
-                            {subjectTopics[sub].map(topic => (
+                            {filteredSubjectTopics[sub].map(topic => (
                               <div 
                                 key={topic}
                                 onClick={() => handleStartStudy({
@@ -1352,8 +1382,8 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
                                   type: "lesson",
                                   duration: 30,
                                   completed: false,
-                                  action: "LGS Müfredat Konu Çalışması",
-                                  icon: sub === "Matematik" ? "📐" : sub === "Fen Bilimleri" ? "🧪" : sub === "Türkçe" ? "📖" : sub === "İngilizce" ? "🇬🇧" : sub === "T.C. İnkılap Tarihi" ? "🕌" : "🌙"
+                                  action: "Müfredat Konu Çalışması",
+                                  icon: sub.includes("Matematik") ? "📐" : sub.includes("Fen") ? "🧪" : sub.includes("Türkçe") ? "📖" : sub.includes("İngilizce") ? "🇬🇧" : sub.includes("İnkılap") ? "🕌" : "🌙"
                                 })}
                                 style={{
                                   padding: "6px 8px",

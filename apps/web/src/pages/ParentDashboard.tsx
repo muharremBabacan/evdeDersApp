@@ -34,7 +34,17 @@ export function ParentDashboard({ username, onLogout }: ParentDashboardProps) {
 
   // Mock student stats
   const childName = "Arda Yılmaz";
-  const childGrade = "8. Sınıf";
+  const getChildGrade = () => {
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith("grade_level_")) {
+        const val = localStorage.getItem(key);
+        if (val) return val + ". Sınıf";
+      }
+    }
+    return "8. Sınıf";
+  };
+  const childGrade = getChildGrade();
   const childPoints = 1250;
   const childLevel = 5;
 

@@ -84,6 +84,7 @@ export function OnlineRegister({ onRegisterComplete, onBackToLogin, defaultPacka
     }
     
     const pack = packagesInfo[selectedPackage];
+    localStorage.setItem("grade_level_" + studentUsername, selectedGrade);
     alert(`Ödeme Onaylandı! 🎉\n\n${studentName} öğrencimiz ${selectedGrade}. Sınıf ${pack.title} aboneliği ile kaydedildi.\nKullanıcı adı: ${studentUsername}`);
     onRegisterComplete(studentUsername);
   }
