@@ -655,6 +655,8 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
       setActiveTab("home");
       alert(`Tebrikler! Test başarıyla tamamlandı. Kazanım skorunuz: %${scorePercentage(evaluated)}`);
     }
+  }
+
   const handleAddTask = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newAction.trim()) {
