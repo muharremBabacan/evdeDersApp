@@ -365,6 +365,7 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
   const [newAction, setNewAction] = useState("");
   const [newType, setNewType] = useState<"lesson" | "activity" | "test">("lesson");
   const [newExternalLink, setNewExternalLink] = useState("");
+  const [newLinkPreset, setNewLinkPreset] = useState("");
 
   const [routineResult, setRoutineResult] = useState<Array<{ subject: string; topic: string; duration: number; action: string }>>([
     { subject: "Matematik", topic: "Çarpanlar ve Katlar", duration: 50, action: "Konu Pekiştirme Soruları" },
@@ -738,6 +739,7 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
     setStudyTasks(prev => [...prev, newTask]);
     setNewAction("");
     setNewExternalLink("");
+    setNewLinkPreset("");
     setAiFeedback(null); // Reset feedback
   };
 
@@ -1263,14 +1265,38 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
                       </div>
 
                       <div className="form-group" style={{ gridColumn: "span 2" }}>
-                        <label style={{ fontSize: "0.8rem", fontWeight: 700 }}>EBA veya Harici Kaynak Linki (Opsiyonel)</label>
-                        <input 
-                          type="url" 
-                          value={newExternalLink}
-                          onChange={(e) => setNewExternalLink(e.target.value)}
-                          placeholder="Örn: https://ders.eba.gov.tr/ders/..."
-                          style={{ padding: "8px", borderRadius: "6px", border: "1.5px solid var(--border-light)", width: "100%" }}
-                        />
+                        <label style={{ fontSize: "0.8rem", fontWeight: 700 }}>EBA / Harici Kaynak Yönlendirmesi</label>
+                        <div style={{ display: "flex", gap: "10px", flexDirection: "column" }}>
+                          <select
+                            value={newLinkPreset}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              setNewLinkPreset(val);
+                              if (val === "custom") {
+                                setNewExternalLink("");
+                              } else {
+                                setNewExternalLink(val);
+                              }
+                            }}
+                            style={{ padding: "8px", borderRadius: "6px", border: "1.5px solid var(--border-light)", width: "100%", background: "var(--white)", color: "var(--text-main)", fontWeight: 600 }}
+                          >
+                            <option value="">🚫 Kaynak Yönlendirmesi Ekleme (Boş)</option>
+                            <option value="https://ders.eba.gov.tr">🌐 EBA Ders Portalı</option>
+                            <option value="https://www.eba.gov.tr/ebatv">📺 EBA TV Ortaokul Kanalları</option>
+                            <option value="https://www.eba.gov.tr/ders-kitaplari">📚 EBA Ders Kitapları Kitaplığı</option>
+                            <option value="custom">🔗 Kendim Özel EBA/Web Linki Ekleyeceğim</option>
+                          </select>
+                          
+                          {newLinkPreset === "custom" && (
+                            <input 
+                              type="url" 
+                              value={newExternalLink}
+                              onChange={(e) => setNewExternalLink(e.target.value)}
+                              placeholder="Örn: https://ders.eba.gov.tr/ders/..."
+                              style={{ padding: "8px", borderRadius: "6px", border: "1.5px solid var(--border-light)", width: "100%" }}
+                            />
+                          )}
+                        </div>
                       </div>
 
                       <button 
