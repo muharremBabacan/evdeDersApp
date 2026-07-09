@@ -7,6 +7,7 @@ import type { MasteryRecord } from "../types/curriculum";
 interface TopicStudyContent {
   summary: string;
   videoUrl: string;
+  mebPageRange?: string;
   questions: Array<{
     id: string;
     text: string;
@@ -91,6 +92,7 @@ const studyContentDb: Record<string, TopicStudyContent> = {
   "Geometrik Şekiller ve Çizimler": {
     summary: "Nokta, doğru, ışın, doğru parçası ve düzlem geometrinin temel elemanlarıdır.\n\n- Nokta: Boyutsuzdur, (.) ile gösterilir.\n- Doğru: İki ucu da sonsuza uzayan çizgidir.\n- Işın: Bir ucu sınırlı (başlangıç noktası), diğer ucu sonsuza uzayandır.\n- Doğru Parçası: İki ucu da sınırlı olan çizgi parçasıdır.\n- Dikme: Bir doğruya 90 derece açıyla çizilen çizgidir.",
     videoUrl: "https://www.youtube.com/embed/geo5_1",
+    mebPageRange: "5. Sınıf 1. Kitap, Sayfa 17 - 38",
     questions: [
       { id: "g5q1", text: "Bir ucu kapalı, diğer ucu sonsuza uzayan geometrik çizim hangisidir?", options: ["Doğru", "Işın", "Doğru Parçası", "Açı"], correctAnswer: "Işın" },
       { id: "g5q2", text: "İki ucu da sınırlandırılmış olan düz çizgiye ne denir?", options: ["Işın", "Düzlem", "Doğru Parçası", "Doğru"], correctAnswer: "Doğru Parçası" },
@@ -100,6 +102,7 @@ const studyContentDb: Record<string, TopicStudyContent> = {
   "Açılar ve Doğrular": {
     summary: "Açılar ölçülerine göre dar, dik, geniş ve doğru açı olarak sınıflandırılır:\n\n- Dar Açı: Ölçüsü 0° ile 90° arasındadır.\n- Dik Açı: Ölçüsü tam 90°'dir.\n- Geniş Açı: Ölçüsü 90° ile 180° arasındadır.\n- Doğru Açı: Ölçüsü tam 180°'dir.\n- İki Doğru: Düzlemde paralel olabilir (hiç kesişmez), kesişebilir veya çakışık olabilir.",
     videoUrl: "https://www.youtube.com/embed/geo5_2",
+    mebPageRange: "5. Sınıf 1. Kitap, Sayfa 39 - 56",
     questions: [
       { id: "a5q1", text: "Ölçüsü 115 derece olan bir açı hangi açı çeşidine girer?", options: ["Dik Açı", "Dar Açı", "Geniş Açı", "Doğru Açı"], correctAnswer: "Geniş Açı" },
       { id: "a5q2", text: "Düzlemde hiç kesişmeyen doğrulara ne ad verilir?", options: ["Dik Doğrular", "Paralel Doğrular", "Çakışık Doğrular", "Kesişen Doğrular"], correctAnswer: "Paralel Doğrular" },
@@ -109,6 +112,7 @@ const studyContentDb: Record<string, TopicStudyContent> = {
   "Doğal Sayılar ve İşlemler": {
     summary: "Çok basamaklı doğal sayılar okunurken sağdan sola doğru üçerli gruplara ayrılır. Bu grupların her birine bölük denir (Birler, Binler, Milyonlar bölüğü vb.).\n\nÖrnek: 84 002 105 sayısı 'Seksen dört milyon iki bin yüz beş' şeklinde okunur. Sayıdaki her bir rakamın bulunduğu basamağa göre aldığı değere basamak değeri denir.",
     videoUrl: "https://www.youtube.com/embed/ds5_1",
+    mebPageRange: "5. Sınıf 1. Kitap, Sayfa 94 - 137",
     questions: [
       { id: "d5q1", text: "12 005 080 sayısının doğru okunuşu hangisidir?", options: ["On iki milyon beş yüz seksen", "On iki milyon beş bin seksen", "On iki milyon elli bin seksen", "Yüz yirmi milyon beş bin seksen"], correctAnswer: "On iki milyon beş bin seksen" },
       { id: "d5q2", text: "34 509 120 sayısındaki '5' rakamının basamak değeri kaçtır?", options: ["500 000", "50 000", "5 000", "50"], correctAnswer: "500 000" },
@@ -118,10 +122,11 @@ const studyContentDb: Record<string, TopicStudyContent> = {
   "Çevre ve Alan Ölçümü": {
     summary: "Dikdörtgenin çevre uzunluğu ve alan hesaplaması:\n\n- Çevre: Bütün kenarların uzunlukları toplamıdır. Formül: Ç = 2 x (a + b) [a: kısa kenar, b: uzun kenar]\n- Alan: Kısa ve uzun kenar uzunluklarının çarpımıdır. Formül: A = a x b\n\nÖnemli kural: Aynı alana sahip farklı dikdörtgenlerin kenar uzunlukları birbirine yaklaştıkça çevre uzunluğu küçülür.",
     videoUrl: "https://www.youtube.com/embed/alan5_1",
+    mebPageRange: "5. Sınıf 1. Kitap, Sayfa 140 - 165",
     questions: [
       { id: "al5q1", text: "Uzun kenarı 10 cm, kısa kenarı 6 cm olan bir dikdörtgenin çevresi kaç cm'dir?", options: ["16", "32", "60", "40"], correctAnswer: "32" },
       { id: "al5q2", text: "Alanı 48 santimetrekare olan bir dikdörtgenin kenarları tam sayı ise çevresi en az kaç cm olabilir?", options: ["28", "32", "26", "22"], correctAnswer: "28" },
-      { id: "al5q3", text: "Kenar uzunlukları 7 cm ve 9 cm olan dikdörtgenin alanı kaç santimetrekaredir?", options: ["32", "63", "81", "49"], correctAnswer: "63" }
+      { id: "al5q3", text: "Kenar uzunlukları 7 cm and 9 cm olan dikdörtgenin alanı kaç santimetrekaredir?", options: ["32", "63", "81", "49"], correctAnswer: "63" }
     ]
   },
   "Güneş, Dünya ve Ay": {
@@ -136,6 +141,7 @@ const studyContentDb: Record<string, TopicStudyContent> = {
   "Çarpanlar ve Katlar": {
     summary: "Bir doğal sayıyı kalansız bölebilen sayılara o sayının çarpanları (bölenleri) denir. 1'den büyük, sadece 1'e ve kendisine bölünebilen sayılara asal sayılar denir.\n\n- Bölünebilme Kuralları: 2 (son basamak çift), 3 (rakam toplamı 3'ün katı), 5 (sonu 0 veya 5), 9 (rakam toplamı 9'nun katı) vb.\n- Ortak Kat ve Bölen: İki veya daha fazla sayının ortak olan katları ile bölenleri problem çözümlerinde kullanılır.",
     videoUrl: "https://www.youtube.com/embed/mat6_1",
+    mebPageRange: "6. Sınıf 1. Kitap, Sayfa 14 - 61",
     questions: [
       { id: "m6q1", text: "36 sayısının kaç tane pozitif tam sayı çarpanı vardır?", options: ["6", "8", "9", "10"], correctAnswer: "9" },
       { id: "m6q2", text: "Aşağıdakilerden hangisi bir asal sayıdır?", options: ["15", "21", "29", "33"], correctAnswer: "29" },
@@ -145,6 +151,7 @@ const studyContentDb: Record<string, TopicStudyContent> = {
   "Araştırma Soruları ve Veri": {
     summary: "İstatistiksel araştırma süreci veri toplamayı gerektiren araştırma soruları ile başlar. Veriler sıklık tablosu, sütun grafiği veya daire grafiği ile gösterilir.\n\n- Aritmetik Ortalama: Verilerin toplamının veri sayısına bölünmesidir.\n- Açıklık: Veri grubundaki en büyük değer ile en küçük değer arasındaki farktır, verilerin ne kadar yayıldığını gösterir.",
     videoUrl: "https://www.youtube.com/embed/mat6_2",
+    mebPageRange: "6. Sınıf 1. Kitap, Sayfa 62 - 120",
     questions: [
       { id: "m6q4", text: "Bir gruptaki verilerin toplamının veri sayısına bölünmesiyle hangisi elde edilir?", options: ["Açıklık", "Medyan", "Aritmetik Ortalama", "Mod"], correctAnswer: "Aritmetik Ortalama" },
       { id: "m6q5", text: "7, 12, 5, 23, 18 sayı grubunun açıklığı kaçtır?", options: ["18", "23", "5", "6"], correctAnswer: "18" },
@@ -154,6 +161,7 @@ const studyContentDb: Record<string, TopicStudyContent> = {
   "Ondalık Gösterim ve Yuvarlama": {
     summary: "Paydası 10, 100, 1000 olan kesirlerin virgülle ifadesidir. Ondalık kısımda basamaklar: onda birler, yüzde birler ve binde birlerdir.\n\n- Yuvarlama: Yuvarlanacak basamağın sağındaki ilk rakam 5 veya 5'ten büyükse yuvarlanacak rakam 1 artırılır, küçükse aynen kalır ve sağındaki rakamlar sıfırlanır.",
     videoUrl: "https://www.youtube.com/embed/mat6_3",
+    mebPageRange: "6. Sınıf 1. Kitap, Sayfa 121 - 192",
     questions: [
       { id: "m6q7", text: "3,485 ondalık gösteriminin yüzde birler basamağına göre yuvarlanmış hali nedir?", options: ["3,48", "3,49", "3,50", "3,40"], correctAnswer: "3,49" },
       { id: "m6q8", text: "12,704 sayısındaki '0' rakamının bulunduğu basamağın adı nedir?", options: ["Onda birler basamağı", "Yüzde birler basamağı", "Binde birler basamağı", "Birler basamağı"], correctAnswer: "Yüzde birler basamağı" },
@@ -163,6 +171,7 @@ const studyContentDb: Record<string, TopicStudyContent> = {
   "Olasılık Tahmin Etme": {
     summary: "Bir deneyde elde edilebilecek her bir sonuca çıktı denir. Bir olayın gerçekleşme olasılığı tahmin edilirken gözlemlerden yararlanılır.\n\n- Olasılık Değeri: Her zaman 0 (İmkânsız) ile 1 (Kesin) arasındadır.\n- Eş Olasılıklı: Madeni paranın yazı veya tura gelmesi gibi eşit şansa sahip olaylardır.",
     videoUrl: "https://www.youtube.com/embed/mat6_4",
+    mebPageRange: "6. Sınıf 1. Kitap, Sayfa 198 - 217",
     questions: [
       { id: "m6q10", text: "Bir zar atıldığında üst yüze gelen sayının 7 olması olayının olasılığı türü nedir?", options: ["Kesin Olay", "İmkânsız Olay", "Eş Olasılıklı Olay", "Daha Fazla Olasılıklı Olay"], correctAnswer: "İmkânsız Olay" },
       { id: "m6q11", text: "Havaya atılan hilesiz bir madeni paranın tura gelme olasılığı kaçtır?", options: ["1", "0", "1/2", "1/4"], correctAnswer: "1/2" }
@@ -171,6 +180,7 @@ const studyContentDb: Record<string, TopicStudyContent> = {
   "Açılar ve Dörtgenler": {
     summary: "İki paralel doğrunun bir kesenle oluşturduğu açılarda: yöndeş, iç ters ve dış ters açılar eştir. Üçgenin iç açılarının toplamı 180°'dir.\n\n- Yamuk, paralelkenar, eşkenar dörtgen, dikdörtgen ve karenin kenar, açı ve köşegen özellikleri bulunur. Örneğin, eşkenar dörtgende köşegenler dik kesişir ve birbirini ortalar.",
     videoUrl: "https://www.youtube.com/embed/mat6_5",
+    mebPageRange: "6. Sınıf 2. Kitap, Sayfa 14 - 55",
     questions: [
       { id: "m6q12", text: "İki iç açısı 50° ve 70° olan bir üçgenin üçüncü iç açısı kaç derecedir?", options: ["50°", "60°", "70°", "80°"], correctAnswer: "60°" },
       { id: "m6q13", text: "Karşılıklı kenarları paralel ve tüm kenar uzunlukları eşit olan fakat açıları dik olmayan dörtgen hangisidir?", options: ["Kare", "Yamuk", "Eşkenar Dörtgen", "Dikdörtgen"], correctAnswer: "Eşkenar Dörtgen" }
@@ -179,6 +189,7 @@ const studyContentDb: Record<string, TopicStudyContent> = {
   "Cebirsel Düşünme ve Algoritma": {
     summary: "İçinde en az bir değişken (harf) ve bir işlem bulunan ifadelere cebirsel ifadeler denir (Örn: 3x + 5). Sayı örüntüleri cebirsel kurallarla ifade edilebilir (Örn: 4n - 1).\n\n- Algoritma: Bir problemin çözüm adımlarının mantıksal ve sıralı olarak tasarlanmasıdır.",
     videoUrl: "https://www.youtube.com/embed/mat6_6",
+    mebPageRange: "6. Sınıf 2. Kitap, Sayfa 56 - 99",
     questions: [
       { id: "m6q14", text: "'Bir sayının 3 katının 5 fazlası' ifadesinin cebirsel gösterimi hangisidir?", options: ["3x - 5", "3(x + 5)", "3x + 5", "x/3 + 5"], correctAnswer: "3x + 5" },
       { id: "m6q15", text: "Kuralı 4n - 1 olan sayı örüntüsünün 5. terimi kaçtır?", options: ["19", "20", "21", "24"], correctAnswer: "19" }
@@ -187,6 +198,7 @@ const studyContentDb: Record<string, TopicStudyContent> = {
   "Paralelkenar, Üçgen ve Çember": {
     summary: "Geometrik alan ve uzunluk ölçüleri:\n\n- Paralelkenar Alanı: Taban uzunluğu x Yükseklik\n- Üçgen Alanı: (Taban uzunluğu x Yükseklik) / 2\n- Çember Çevresi: 2 x pi x r (r: yarıçap, pi: yaklaşık 3 veya 3.14). Çevre uzunluğunun çapa oranı pi sayısını verir.",
     videoUrl: "https://www.youtube.com/embed/mat6_7",
+    mebPageRange: "6. Sınıf 2. Kitap, Sayfa 100 - 160",
     questions: [
       { id: "m6q16", text: "Tabanı 8 cm, yüksekliği 5 cm olan bir üçgenin alanı kaç santimetrekaredir?", options: ["40", "20", "15", "10"], correctAnswer: "20" },
       { id: "m6q17", text: "Yarıçapı 5 cm olan bir çemberin çevre uzunluğu kaç cm'dir? (pi = 3 alınız)", options: ["15", "30", "45", "60"], correctAnswer: "30" }
@@ -1465,6 +1477,50 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
                               }
                             </p>
                           </div>
+
+                          {/* MEB Textbook Reference Card (Copyright Friendly) */}
+                          {studyContentDb[activeStudyTask.topic]?.mebPageRange && (
+                            <div style={{
+                              background: "linear-gradient(135deg, rgba(245, 158, 11, 0.07), rgba(239, 68, 68, 0.05))",
+                              padding: "20px",
+                              borderRadius: "8px",
+                              border: "1.5px solid rgba(245, 158, 11, 0.2)",
+                              display: "flex",
+                              flexDirection: "column",
+                              gap: "12px",
+                              boxShadow: "0 4px 12px rgba(245, 158, 11, 0.05)"
+                            }}>
+                              <div style={{ display: "flex", gap: "12px", alignItems: "flex-start" }}>
+                                <span style={{ fontSize: "1.6rem" }}>📖</span>
+                                <div style={{ flex: 1 }}>
+                                  <strong style={{ display: "block", marginBottom: "4px", fontSize: "0.95rem", color: "#d97706" }}>
+                                    MEB Ders Kitabı Referansı ({studyContentDb[activeStudyTask.topic]?.mebPageRange})
+                                  </strong>
+                                  <p style={{ margin: 0, fontSize: "0.82rem", color: "var(--text-muted)", lineHeight: 1.45 }}>
+                                    Bu ünitenin resmi MEB ders kitabı sayfa aralığı yukarıda verilmiştir. Telif hakları kuralları gereği MEB ders kitapları sunucularımızda barındırılmaz. Çalışmak için EBA portalını ziyaret edebilir veya kendi yerel cihazınızdaki kitap dosyasını açabilirsiniz.
+                                  </p>
+                                </div>
+                              </div>
+                              <div style={{ display: "flex", gap: "10px", marginTop: "4px" }}>
+                                <button
+                                  onClick={() => window.open("https://www.eba.gov.tr/ders-kitaplari", "_blank")}
+                                  className="primary"
+                                  style={{
+                                    width: "auto",
+                                    padding: "8px 16px",
+                                    fontSize: "0.8rem",
+                                    background: "linear-gradient(135deg, #f59e0b, #d97706)",
+                                    boxShadow: "0 4px 12px rgba(245, 158, 11, 0.2)",
+                                    border: "none",
+                                    color: "white",
+                                    fontWeight: 700
+                                  }}
+                                >
+                                  🌐 EBA Ders Kitaplığına Git
+                                </button>
+                              </div>
+                            </div>
+                          )}
 
                           {/* EBA / External Link integration */}
                           {activeStudyTask.externalLink && (
