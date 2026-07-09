@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { demoOutcomes, demoTopics, demoQuestions } from "../data/demoCurriculum";
 import { evaluateAnswers, scorePercentage } from "../lib/mastery";
 import { updateMasteryFromAnswers } from "../lib/mastery";
+import { LocalSimulation } from "../components/LocalSimulations";
 import type { MasteryRecord } from "../types/curriculum";
 
 interface TopicStudyContent {
@@ -242,6 +243,77 @@ const studyContentDb: Record<string, TopicStudyContent> = {
     questions: [
       { id: "k5q7", text: "Hilesiz bir madeni para havaya atıldığında üst yüze yazı gelmesi olasılığı nedir?", options: ["Kesin Olay", "Eş Olasılıklı (1/2)", "İmkânsız Olay", "Daha Fazla Olasılıklı"], correctAnswer: "Eş Olasılıklı (1/2)" },
       { id: "k5q8", text: "Bir torbada 3 kırmızı ve 3 mavi top vardır. Rastgele çekilen bir topun kırmızı olma olasılığı ile mavi olma olasılığı için hangisi doğrudur?", options: ["Kırmızı olma olasılığı daha fazladır", "Mavi olma olasılığı daha fazladır", "Olasılıkları eşittir", "Kırmızı çekmek imkansızdır"], correctAnswer: "Olasılıkları eşittir" }
+    ]
+  },
+  "Işığın Yayılması": {
+    summary: "Işık, bir kaynaktan çıktıktan sonra her yöne ve doğrusal (düz çizgiler halinde) yayılır. Işığın izlediği yol ok işaretleri çizilerek gösterilir ve bu çizgilere ışın adı verilir.\n\n- Işın: Başlangıcı olan fakat sonu olmayan düz çizgilerdir.\n- Işık Demeti: Birden fazla ışının oluşturduğu gruptur.",
+    videoUrl: "https://www.youtube.com/embed/DK5Z709J2eo",
+    simulationUrl: "local://light-shadow",
+    mebPageRange: "5. Sınıf 1. Kitap, Sayfa 15 - 23",
+    questions: [
+      { id: "f5s1", text: "Bir kaynaktan çıkan ışık nasıl bir yol izleyerek yayılır?", options: ["Dalgalar halinde", "Eğriler çizerek", "Her yöne doğrusal (düz) olarak", "Yalnızca yukarıya doğru"], correctAnswer: "Her yöne doğrusal (düz) olarak" }
+    ]
+  },
+  "Madde ve Işık": {
+    summary: "Maddeler, üzerlerine düşen ışığı geçirme durumlarına göre üç gruba ayrılır:\n\n- Saydam Madde: Işığı tamamen geçiren, arkasındaki cisimlerin net görüldüğü maddelerdir (Cam, su, hava).\n- Yarı Saydam Madde: Işığın bir kısmını geçiren, arkasındaki cisimlerin bulanık görüldüğü maddelerdir (Buzlu cam, yağlı kağıt).\n- Opak (Saydam Olmayan) Madde: Işığı hiç geçirmeyen, arkasındaki cisimlerin görünmediği maddelerdir (Tahta, taş, demir).",
+    videoUrl: "https://www.youtube.com/embed/DK5Z709J2eo",
+    simulationUrl: "local://light-shadow",
+    mebPageRange: "5. Sınıf 1. Kitap, Sayfa 24 - 33",
+    questions: [
+      { id: "f5s2", text: "Aşağıdaki maddelerden hangisi yarı saydam maddedir?", options: ["Tahta kapı", "Buzlu cam", "Şeffaf poşet", "Ayna"], correctAnswer: "Buzlu cam" }
+    ]
+  },
+  "Tam Gölgenin Oluşumu": {
+    summary: "Işığın doğrusal yayılması ve opak maddelerden geçememesi sonucu cismin arkasında oluşan karanlık bölgeye tam gölge denir.\n\nÖnemli Değişkenler:\n1. Cisim ışık kaynağına yaklaştırılırsa gölge boyu BÜYÜR.\n2. Cisim perdeden uzaklaştırılırsa gölge boyu BÜYÜR.\n3. Işık kaynağı cisimden uzaklaştırılırsa gölge boyu KÜÇÜLÜR.",
+    videoUrl: "https://www.youtube.com/embed/DK5Z709J2eo",
+    simulationUrl: "local://light-shadow",
+    mebPageRange: "5. Sınıf 1. Kitap, Sayfa 34 - 49",
+    questions: [
+      { id: "f5s3", text: "Perdedeki tam gölgeyi büyütmek için hangisi yapılmalıdır?", options: ["Cismi ışık kaynağına yaklaştırmak", "Perdeyi cisimden uzaklaştırmak", "Işık kaynağını cisimden uzaklaştırmak", "Cismi perdeye yaklaştırmak"], correctAnswer: "Cismi ışık kaynağına yaklaştırmak" }
+    ]
+  },
+  "Maddenin Tanecikli Yapısı": {
+    summary: "Tüm maddeler gözle görülemeyecek kadar küçük taneciklerden oluşur. Bu taneciklerin arasındaki boşluk miktarı ve hareket türü maddenin fiziksel haline göre değişir:\n\n- Katı: Tanecikler birbirine çok yakındır, boşluk yok denecek kadar azdır. Sadece titreşim hareketi yaparlar.\n- Sıvı: Tanecikler arasındaki boşluk katılara göre fazladır. Titreşim ve öteleme (akma/kayma) hareketi yaparlar.\n- Gaz: Tanecikler arasındaki boşluk en fazladır. Titreşim, öteleme ve serbest dönme hareketi yaparlar.",
+    videoUrl: "https://www.youtube.com/embed/e4MSN6IImpI",
+    simulationUrl: "local://particle-model",
+    mebPageRange: "5. Sınıf 1. Kitap, Sayfa 53 - 63",
+    questions: [
+      { id: "f5s4", text: "Katı maddelerin tanecikleri hakkında hangisi doğrudur?", options: ["Sadece titreşim hareketi yaparlar.", "Serbestçe dönme hareketi yaparlar.", "Öteleme hareketi yaparlar.", "Aralarında çok büyük boşluklar bulunur."], correctAnswer: "Sadece titreşim hareketi yaparlar." }
+    ]
+  },
+  "Maddenin Hâl Değişimi": {
+    summary: "Maddelerin ısı alarak veya ısı vererek bir fiziksel halden diğerine geçmesine hâl değişimi denir.\n\n- Isı Alan Hâl Değişimleri: Erime (katı->sıvı), Buharlaşma (sıvı->gaz), Süblimleşme (katı->gaz).\n- Isı Veren Hâl Değişimleri: Donma (sıvı->katı), Yoğuşma (gaz->sıvı), Kırağılaşma (gaz->katı).\n\nNot: Hal değişimi süresince saf maddelerin sıcaklığı sabit kalır.",
+    videoUrl: "https://www.youtube.com/embed/e4MSN6IImpI",
+    simulationUrl: "local://phase-change",
+    mebPageRange: "5. Sınıf 1. Kitap, Sayfa 74 - 101",
+    questions: [
+      { id: "f5s5", text: "Maddenin dışarıdan ısı alarak sıvı halden gaz haline geçmesine ne denir?", options: ["Buharlaşma", "Yoğuşma", "Erime", "Donma"], correctAnswer: "Buharlaşma" }
+    ]
+  },
+  "Devre Elemanlarının Sembollerle Gösterimi": {
+    summary: "Elektrik devrelerinin kolayca çizilmesi, anlaşılması ve evrensel bir dil oluşturulması için devre elemanları sembollerle gösterilir.\n\n- Bağlantı Kablosu: Düz çizgi (—)\n- Pil (Üreteç): Biri uzun (+) diğeri kısa (-) paralel iki çizgi (—|ıı—)\n- Ampul: Daire içinde çarpı işareti (—(X)—)\n- Açık Anahtar: Havada duran kol (—/ _—)\n- Kapalı Anahtar: Düz çizgiyle birleşmiş kol (—•—•—)",
+    videoUrl: "https://www.youtube.com/embed/NZcDndCB_BU",
+    simulationUrl: "local://circuit-builder",
+    mebPageRange: "5. Sınıf 1. Kitap, Sayfa 106 - 119",
+    questions: [
+      { id: "f5s6", text: "Basit elektrik devresinde anahtarın açık olması neyi ifade eder?", options: ["Devrenin kapalı olduğunu ve lambanın yandığını", "Akımın geçmediğini ve lambanın yanmadığını", "Pilin bittiğini", "Devrenin kısa devre yaptığını"], correctAnswer: "Akımın geçmediğini ve lambanın yanmadığını" }
+    ]
+  },
+  "Ampul Parlaklığını Etkileyen Değişkenler": {
+    summary: "Basit bir elektrik devresinde ampulün parlaklığı pil sayısı ve ampul sayısına bağlı olarak değişir:\n\n- Bağımsız Değişken: Bizim değiştirdiğimiz değişkendir (örn. pil sayısı veya ampul sayısı).\n- Bağımlı Değişken: Bağımsız değişkene bağlı olarak değişen sonuçtur (örn. ampul parlaklığı).\n- Kontrol Edilen Değişken: Sabit tutulan değişkenlerdir.\n\n* Pil Sayısı arttıkça parlaklık ARTAR. \n* Ampul Sayısı arttıkça parlaklık AZALIR.",
+    videoUrl: "https://www.youtube.com/embed/NZcDndCB_BU",
+    simulationUrl: "local://circuit-builder",
+    mebPageRange: "5. Sınıf 1. Kitap, Sayfa 120 - 136",
+    questions: [
+      { id: "f5s7", text: "Basit bir elektrik devresinde ampul sayısını artırmak parlaklığı nasıl etkiler? (Pil sayısı sabit)", options: ["Parlaklık artar.", "Parlaklık azalır.", "Parlaklık değişmez.", "Lamba patlar."], correctAnswer: "Parlaklık azalır." }
+    ]
+  },
+  "Evsel Atıklar ve Geri Dönüşüm": {
+    summary: "Kullanım süresi dolan ve çevreye zarar vermemesi için doğru şekilde toplanıp işlenmesi gereken maddelere atık denir. \n\nGeri Dönüşümün Yararları:\n1. Doğal kaynakları korur.\n2. Enerji tasarrufu sağlar.\n3. Çevre kirliliğini azaltır.\n4. Ülke ekonomisine katkıda bulunur.\n* Kağıt, plastik, cam, metal ve piller geri dönüştürülebilir atıklardandır.",
+    videoUrl: "https://www.youtube.com/embed/NZcDndCB_BU",
+    mebPageRange: "5. Sınıf 1. Kitap, Sayfa 137 - 159",
+    questions: [
+      { id: "f5s8", text: "Evsel atıkların geri dönüşüme kazandırılması hangisini sağlamaz?", options: ["Doğal kaynakların korunmasını", "Enerji tasarrufu sağlanmasını", "Çevre kirliliğinin artmasını", "Ekonomiye katkı sağlanmasını"], correctAnswer: "Çevre kirliliğinin artmasını" }
     ]
   }
 };
@@ -1914,24 +1986,30 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
                                 Kavramları görsel ve deneysel olarak deneyimlemek için aşağıdaki simülasyonu kullanabilirsin.
                               </span>
                             </div>
-                            <button
-                              onClick={() => window.open(studyContentDb[activeStudyTask.topic].simulationUrl, "_blank")}
-                              className="primary"
-                              style={{ width: "auto", padding: "8px 16px", fontSize: "0.78rem" }}
-                            >
-                              ↗ Tam Ekran Aç
-                            </button>
+                            {!studyContentDb[activeStudyTask.topic]?.simulationUrl?.startsWith("local://") && (
+                              <button
+                                onClick={() => window.open(studyContentDb[activeStudyTask.topic]?.simulationUrl, "_blank")}
+                                className="primary"
+                                style={{ width: "auto", padding: "8px 16px", fontSize: "0.78rem" }}
+                              >
+                                ↗ Tam Ekran Aç
+                              </button>
+                            )}
                           </div>
                           
                           <div style={{ flex: 1, minHeight: "500px", border: "1.5px solid var(--border-light)", borderRadius: "8px", overflow: "hidden", background: "#f8fafc" }}>
-                            <iframe 
-                              src={studyContentDb[activeStudyTask.topic].simulationUrl}
-                              width="100%"
-                              height="500px"
-                              style={{ border: "none" }}
-                              allowFullScreen
-                              title="Ders Simülasyonu"
-                            />
+                            {studyContentDb[activeStudyTask.topic]?.simulationUrl?.startsWith("local://") ? (
+                              <LocalSimulation topic={activeStudyTask.topic} />
+                            ) : (
+                              <iframe 
+                                src={studyContentDb[activeStudyTask.topic]?.simulationUrl}
+                                width="100%"
+                                height="500px"
+                                style={{ border: "none" }}
+                                allowFullScreen
+                                title="Ders Simülasyonu"
+                              />
+                            )}
                           </div>
                         </div>
                       )}

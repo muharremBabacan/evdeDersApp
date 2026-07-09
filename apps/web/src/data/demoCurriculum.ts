@@ -7,6 +7,7 @@ import type { Subject, Unit, Topic, LearningOutcome, Question } from "../types/c
 export const demoSubjects: Subject[] = [
   { id: "sub_mat5", name: "Matematik (5. Sınıf)", gradeLevel: 5, order: 1 },
   { id: "sub_mat6", name: "Matematik (6. Sınıf)", gradeLevel: 6, order: 2 },
+  { id: "sub_fen5", name: "Fen Bilimleri (5. Sınıf)", gradeLevel: 5, order: 3 },
 ];
 
 export const demoUnits: Unit[] = [
@@ -27,6 +28,12 @@ export const demoUnits: Unit[] = [
   { id: "unit_mat6_t5", subjectId: "sub_mat6", name: "5. Tema: Geometrik Şekiller", order: 5 },
   { id: "unit_mat6_t6", subjectId: "sub_mat6", name: "6. Tema: İşlemlerle Cebirsel Düşünme", order: 6 },
   { id: "unit_mat6_t7", subjectId: "sub_mat6", name: "7. Tema: Geometrik Nicelikler", order: 7 },
+
+  // 5. Sınıf Fen Üniteleri
+  { id: "unit_fen5_u4", subjectId: "sub_fen5", name: "4. Ünite: Işığın Dünyası", order: 1 },
+  { id: "unit_fen5_u5", subjectId: "sub_fen5", name: "5. Ünite: Maddenin Doğası", order: 2 },
+  { id: "unit_fen5_u6", subjectId: "sub_fen5", name: "6. Ünite: Yaşamımızdaki Elektrik", order: 3 },
+  { id: "unit_fen5_u7", subjectId: "sub_fen5", name: "7. Ünite: Sürdürülebilir Yaşam ve Geri Dönüşüm", order: 4 },
 ];
 
 export const demoTopics: Topic[] = [
@@ -48,6 +55,16 @@ export const demoTopics: Topic[] = [
   { id: "topic_mat6_acilar", unitId: "unit_mat6_t5", subjectId: "sub_mat6", name: "Açılar ve Dörtgenler", order: 1 },
   { id: "topic_mat6_cebir", unitId: "unit_mat6_t6", subjectId: "sub_mat6", name: "Cebirsel Düşünme ve Algoritma", order: 1 },
   { id: "topic_mat6_alan", unitId: "unit_mat6_t7", subjectId: "sub_mat6", name: "Paralelkenar, Üçgen ve Çember", order: 1 },
+
+  // 5. Sınıf Fen Konuları
+  { id: "topic_fen5_isik_yayilma", unitId: "unit_fen5_u4", subjectId: "sub_fen5", name: "Işığın Yayılması", order: 1 },
+  { id: "topic_fen5_isik_madde", unitId: "unit_fen5_u4", subjectId: "sub_fen5", name: "Madde ve Işık", order: 2 },
+  { id: "topic_fen5_isik_golge", unitId: "unit_fen5_u4", subjectId: "sub_fen5", name: "Tam Gölgenin Oluşumu", order: 3 },
+  { id: "topic_fen5_madde_tanecik", unitId: "unit_fen5_u5", subjectId: "sub_fen5", name: "Maddenin Tanecikli Yapısı", order: 1 },
+  { id: "topic_fen5_madde_haldigisim", unitId: "unit_fen5_u5", subjectId: "sub_fen5", name: "Maddenin Hâl Değişimi", order: 2 },
+  { id: "topic_fen5_elektrik_devre", unitId: "unit_fen5_u6", subjectId: "sub_fen5", name: "Devre Elemanlarının Sembollerle Gösterimi", order: 1 },
+  { id: "topic_fen5_elektrik_parlaklik", unitId: "unit_fen5_u6", subjectId: "sub_fen5", name: "Ampul Parlaklığını Etkileyen Değişkenler", order: 2 },
+  { id: "topic_fen5_atik_geridonusum", unitId: "unit_fen5_u7", subjectId: "sub_fen5", name: "Evsel Atıklar ve Geri Dönüşüm", order: 1 },
 ];
 
 export const demoOutcomes: LearningOutcome[] = [
@@ -69,6 +86,16 @@ export const demoOutcomes: LearningOutcome[] = [
   { id: "lo_mat6_acilar_1", topicId: "topic_mat6_acilar", unitId: "unit_mat6_t5", subjectId: "sub_mat6", code: "M.6.5.1.1", description: "Açılar arasındaki ilişkileri ve dörtgenlerin kenar/köşegen özelliklerini belirler.", difficulty: "zor", order: 1 },
   { id: "lo_mat6_cebir_1", topicId: "topic_mat6_cebir", unitId: "unit_mat6_t6", subjectId: "sub_mat6", code: "M.6.6.1.1", description: "Cebirsel ifadeleri yazar, değerini hesaplar ve basit örüntüleri modeller.", difficulty: "orta", order: 1 },
   { id: "lo_mat6_alan_1", topicId: "topic_mat6_alan", unitId: "unit_mat6_t7", subjectId: "sub_mat6", code: "M.6.7.1.1", description: "Paralelkenar ve üçgenin alanını hesaplar; çemberin çevresini bulur.", difficulty: "zor", order: 1 },
+
+  // 5. Sınıf Fen Kazanımları
+  { id: "lo_fen5_isik_yayilma_1", topicId: "topic_fen5_isik_yayilma", unitId: "unit_fen5_u4", subjectId: "sub_fen5", code: "F.5.4.1.1", description: "Işığın doğrusal olarak yayıldığını ve ışın çizimi ile gösterildiğini açıklar.", difficulty: "kolay", order: 1 },
+  { id: "lo_fen5_isik_madde_1", topicId: "topic_fen5_isik_madde", unitId: "unit_fen5_u4", subjectId: "sub_fen5", code: "F.5.4.2.1", description: "Maddeleri ışığı geçirme durumlarına göre saydam, yarı saydam ve opak olarak sınıflandırır.", difficulty: "kolay", order: 1 },
+  { id: "lo_fen5_isik_golge_1", topicId: "topic_fen5_isik_golge", unitId: "unit_fen5_u4", subjectId: "sub_fen5", code: "F.5.4.3.1", description: "Tam gölgenin boyutunu etkileyen değişkenleri keşfeder.", difficulty: "orta", order: 1 },
+  { id: "lo_fen5_madde_tanecik_1", topicId: "topic_fen5_madde_tanecik", unitId: "unit_fen5_u5", subjectId: "sub_fen5", code: "F.5.5.1.1", description: "Maddeleri tanecikli, boşluklu ve hareketli yapılarına göre sınıflandırır.", difficulty: "orta", order: 1 },
+  { id: "lo_fen5_madde_haldigisim_1", topicId: "topic_fen5_madde_haldigisim", unitId: "unit_fen5_u5", subjectId: "sub_fen5", code: "F.5.5.2.1", description: "Maddenin ısı etkisiyle erime, donma, kaynama gibi hâl değişimlerini gözlemler.", difficulty: "orta", order: 1 },
+  { id: "lo_fen5_elektrik_devre_1", topicId: "topic_fen5_elektrik_devre", unitId: "unit_fen5_u6", subjectId: "sub_fen5", code: "F.5.6.1.1", description: "Basit elektrik devresi elemanlarını sembolleri ile gösterir.", difficulty: "kolay", order: 1 },
+  { id: "lo_fen5_elektrik_parlaklik_1", topicId: "topic_fen5_elektrik_parlaklik", unitId: "unit_fen5_u6", subjectId: "sub_fen5", code: "F.5.6.2.1", description: "Pil ve ampul sayısının ampul parlaklığına etkisini değişkenlerle açıklar.", difficulty: "orta", order: 1 },
+  { id: "lo_fen5_atik_geridonusum_1", topicId: "topic_fen5_atik_geridonusum", unitId: "unit_fen5_u7", subjectId: "sub_fen5", code: "F.5.7.1.1", description: "Evsel atıkların geri dönüşümü ve atık yönetiminin önemini savunur.", difficulty: "kolay", order: 1 },
 ];
 
 export const demoQuestions: Question[] = [
@@ -105,4 +132,14 @@ export const demoQuestions: Question[] = [
   { id: "q35", outcomeId: "lo_mat6_cebir_1", text: "Kuralı 4n - 1 olan sayı örüntüsünün 5. terimi kaçtır?", options: ["19", "20", "21", "24"], correctAnswer: "19", difficulty: "orta", source: "MANUEL" },
   { id: "q36", outcomeId: "lo_mat6_alan_1", text: "Tabanı 8 cm, yüksekliği 5 cm olan bir üçgenin alanını hesaplayınız.", options: ["40", "20", "15", "10"], correctAnswer: "20", difficulty: "orta", source: "MANUEL" },
   { id: "q37", outcomeId: "lo_mat6_alan_1", text: "Yarıçapı 5 cm olan bir çemberin çevre uzunluğu kaç cm'dir? (pi = 3 alınız)", options: ["15", "30", "45", "60"], correctAnswer: "30", difficulty: "zor", source: "MANUEL" },
+
+  // 5. Sınıf Fen Soruları
+  { id: "q_f5_1", outcomeId: "lo_fen5_isik_yayilma_1", text: "Bir kaynaktan çıkan ışık nasıl bir yol izleyerek yayılır?", options: ["Dalgalar halinde", "Eğriler çizerek", "Her yöne doğrusal (düz) olarak", "Yalnızca yukarıya doğru"], correctAnswer: "Her yöne doğrusal (düz) olarak", difficulty: "kolay", source: "MANUEL" },
+  { id: "q_f5_2", outcomeId: "lo_fen5_isik_madde_1", text: "Aşağıdaki maddelerden hangisi yarı saydam maddedir?", options: ["Tahta kapı", "Buzlu cam", "Şeffaf poşet", "Ayna"], correctAnswer: "Buzlu cam", difficulty: "kolay", source: "MANUEL" },
+  { id: "q_f5_3", outcomeId: "lo_fen5_isik_golge_1", text: "Perdedeki tam gölgeyi büyütmek için hangisi yapılmalıdır?", options: ["Cismi ışık kaynağına yaklaştırmak", "Perdeyi cisimden uzaklaştırmak", "Işık kaynağını cisimden uzaklaştırmak", "Cismi perdeye yaklaştırmak"], correctAnswer: "Cismi ışık kaynağına yaklaştırmak", difficulty: "orta", source: "MANUEL" },
+  { id: "q_f5_4", outcomeId: "lo_fen5_madde_tanecik_1", text: "Katı maddelerin tanecikleri hakkında hangisi doğrudur?", options: ["Sadece titreşim hareketi yaparlar.", "Serbestçe dönme hareketi yaparlar.", "Öteleme hareketi yaparlar.", "Aralarında çok büyük boşluklar bulunur."], correctAnswer: "Sadece titreşim hareketi yaparlar.", difficulty: "orta", source: "MANUEL" },
+  { id: "q_f5_5", outcomeId: "lo_fen5_madde_haldigisim_1", text: "Maddenin dışarıdan ısı alarak sıvı halden gaz haline geçmesine ne denir?", options: ["Buharlaşma", "Yoğuşma", "Erime", "Donma"], correctAnswer: "Buharlaşma", difficulty: "kolay", source: "MANUEL" },
+  { id: "q_f5_6", outcomeId: "lo_fen5_elektrik_devre_1", text: "Basit elektrik devresinde anahtarın açık olması neyi ifade eder?", options: ["Devrenin kapalı olduğunu ve lambanın yandığını", "Akımın geçmediğini ve lambanın yanmadığını", "Pilin bittiğini", "Devrenin kısa devre yaptığını"], correctAnswer: "Akımın geçmediğini ve lambanın yanmadığını", difficulty: "kolay", source: "MANUEL" },
+  { id: "q_f5_7", outcomeId: "lo_fen5_elektrik_parlaklik_1", text: "Basit bir elektrik devresinde ampul sayısını artırmak parlaklığı nasıl etkiler? (Pil sayısı sabit)", options: ["Parlaklık artar.", "Parlaklık azalır.", "Parlaklık değişmez.", "Lamba patlar."], correctAnswer: "Parlaklık azalır.", difficulty: "orta", source: "MANUEL" },
+  { id: "q_f5_8", outcomeId: "lo_fen5_atik_geridonusum_1", text: "Evsel atıkların geri dönüşüme kazandırılması hangisini sağlamaz?", options: ["Doğal kaynakların korunmasını", "Enerji tasarrufu sağlanmasını", "Çevre kirliliğinin artmasını", "Ekonomiye katkı sağlanmasını"], correctAnswer: "Çevre kirliliğinin artmasını", difficulty: "kolay", source: "MANUEL" },
 ];
