@@ -132,6 +132,65 @@ const studyContentDb: Record<string, TopicStudyContent> = {
       { id: "f5q2", text: "Ay'ın gökyüzünde farklı şekillerde görünmesinin (evrelerinin) temel sebebi nedir?", options: ["Kendi etrafında çok hızlı dönmesi", "Dünya etrafındaki dolanma hareketi", "Güneş'in soğuması", "Dünya'nın gölgesinin her gün değişmesi"], correctAnswer: "Dünya etrafındaki dolanma hareketi" },
       { id: "f5q3", text: "Aşağıdakilerden hangisi Ay'ın ana evrelerinden biri değildir?", options: ["Yeni Ay", "Dolunay", "Hilal", "İlk Dördün"], correctAnswer: "Hilal" }
     ]
+  },
+  "Çarpanlar ve Katlar": {
+    summary: "Bir doğal sayıyı kalansız bölebilen sayılara o sayının çarpanları (bölenleri) denir. 1'den büyük, sadece 1'e ve kendisine bölünebilen sayılara asal sayılar denir.\n\n- Bölünebilme Kuralları: 2 (son basamak çift), 3 (rakam toplamı 3'ün katı), 5 (sonu 0 veya 5), 9 (rakam toplamı 9'nun katı) vb.\n- Ortak Kat ve Bölen: İki veya daha fazla sayının ortak olan katları ile bölenleri problem çözümlerinde kullanılır.",
+    videoUrl: "https://www.youtube.com/embed/mat6_1",
+    questions: [
+      { id: "m6q1", text: "36 sayısının kaç tane pozitif tam sayı çarpanı vardır?", options: ["6", "8", "9", "10"], correctAnswer: "9" },
+      { id: "m6q2", text: "Aşağıdakilerden hangisi bir asal sayıdır?", options: ["15", "21", "29", "33"], correctAnswer: "29" },
+      { id: "m6q3", text: "Hem 3'e hem de 5'e kalansız bölünebilen en küçük iki basamaklı doğal sayı hangisidir?", options: ["15", "30", "45", "60"], correctAnswer: "15" }
+    ]
+  },
+  "Araştırma Soruları ve Veri": {
+    summary: "İstatistiksel araştırma süreci veri toplamayı gerektiren araştırma soruları ile başlar. Veriler sıklık tablosu, sütun grafiği veya daire grafiği ile gösterilir.\n\n- Aritmetik Ortalama: Verilerin toplamının veri sayısına bölünmesidir.\n- Açıklık: Veri grubundaki en büyük değer ile en küçük değer arasındaki farktır, verilerin ne kadar yayıldığını gösterir.",
+    videoUrl: "https://www.youtube.com/embed/mat6_2",
+    questions: [
+      { id: "m6q4", text: "Bir gruptaki verilerin toplamının veri sayısına bölünmesiyle hangisi elde edilir?", options: ["Açıklık", "Medyan", "Aritmetik Ortalama", "Mod"], correctAnswer: "Aritmetik Ortalama" },
+      { id: "m6q5", text: "7, 12, 5, 23, 18 sayı grubunun açıklığı kaçtır?", options: ["18", "23", "5", "6"], correctAnswer: "18" },
+      { id: "m6q6", text: "Aşağıdakilerden hangisi istatistiksel bir araştırma sorusudur?", options: ["Sınıf arkadaşlarınızın en sevdiği renk nedir?", "Türkiye'nin başkenti neresidir?", "En büyük asal sayı hangisidir?", "2 + 2 kaç eder?"], correctAnswer: "Sınıf arkadaşlarınızın en sevdiği renk nedir?" }
+    ]
+  },
+  "Ondalık Gösterim ve Yuvarlama": {
+    summary: "Paydası 10, 100, 1000 olan kesirlerin virgülle ifadesidir. Ondalık kısımda basamaklar: onda birler, yüzde birler ve binde birlerdir.\n\n- Yuvarlama: Yuvarlanacak basamağın sağındaki ilk rakam 5 veya 5'ten büyükse yuvarlanacak rakam 1 artırılır, küçükse aynen kalır ve sağındaki rakamlar sıfırlanır.",
+    videoUrl: "https://www.youtube.com/embed/mat6_3",
+    questions: [
+      { id: "m6q7", text: "3,485 ondalık gösteriminin yüzde birler basamağına göre yuvarlanmış hali nedir?", options: ["3,48", "3,49", "3,50", "3,40"], correctAnswer: "3,49" },
+      { id: "m6q8", text: "12,704 sayısındaki '0' rakamının bulunduğu basamağın adı nedir?", options: ["Onda birler basamağı", "Yüzde birler basamağı", "Binde birler basamağı", "Birler basamağı"], correctAnswer: "Yüzde birler basamağı" },
+      { id: "m6q9", text: "8 / 5 kesrinin ondalık gösterimi aşağıdakilerden hangisidir?", options: ["1,6", "1,8", "0,8", "1,5"], correctAnswer: "1,6" }
+    ]
+  },
+  "Olasılık Tahmin Etme": {
+    summary: "Bir deneyde elde edilebilecek her bir sonuca çıktı denir. Bir olayın gerçekleşme olasılığı tahmin edilirken gözlemlerden yararlanılır.\n\n- Olasılık Değeri: Her zaman 0 (İmkânsız) ile 1 (Kesin) arasındadır.\n- Eş Olasılıklı: Madeni paranın yazı veya tura gelmesi gibi eşit şansa sahip olaylardır.",
+    videoUrl: "https://www.youtube.com/embed/mat6_4",
+    questions: [
+      { id: "m6q10", text: "Bir zar atıldığında üst yüze gelen sayının 7 olması olayının olasılığı türü nedir?", options: ["Kesin Olay", "İmkânsız Olay", "Eş Olasılıklı Olay", "Daha Fazla Olasılıklı Olay"], correctAnswer: "İmkânsız Olay" },
+      { id: "m6q11", text: "Havaya atılan hilesiz bir madeni paranın tura gelme olasılığı kaçtır?", options: ["1", "0", "1/2", "1/4"], correctAnswer: "1/2" }
+    ]
+  },
+  "Açılar ve Dörtgenler": {
+    summary: "İki paralel doğrunun bir kesenle oluşturduğu açılarda: yöndeş, iç ters ve dış ters açılar eştir. Üçgenin iç açılarının toplamı 180°'dir.\n\n- Yamuk, paralelkenar, eşkenar dörtgen, dikdörtgen ve karenin kenar, açı ve köşegen özellikleri bulunur. Örneğin, eşkenar dörtgende köşegenler dik kesişir ve birbirini ortalar.",
+    videoUrl: "https://www.youtube.com/embed/mat6_5",
+    questions: [
+      { id: "m6q12", text: "İki iç açısı 50° ve 70° olan bir üçgenin üçüncü iç açısı kaç derecedir?", options: ["50°", "60°", "70°", "80°"], correctAnswer: "60°" },
+      { id: "m6q13", text: "Karşılıklı kenarları paralel ve tüm kenar uzunlukları eşit olan fakat açıları dik olmayan dörtgen hangisidir?", options: ["Kare", "Yamuk", "Eşkenar Dörtgen", "Dikdörtgen"], correctAnswer: "Eşkenar Dörtgen" }
+    ]
+  },
+  "Cebirsel Düşünme ve Algoritma": {
+    summary: "İçinde en az bir değişken (harf) ve bir işlem bulunan ifadelere cebirsel ifadeler denir (Örn: 3x + 5). Sayı örüntüleri cebirsel kurallarla ifade edilebilir (Örn: 4n - 1).\n\n- Algoritma: Bir problemin çözüm adımlarının mantıksal ve sıralı olarak tasarlanmasıdır.",
+    videoUrl: "https://www.youtube.com/embed/mat6_6",
+    questions: [
+      { id: "m6q14", text: "'Bir sayının 3 katının 5 fazlası' ifadesinin cebirsel gösterimi hangisidir?", options: ["3x - 5", "3(x + 5)", "3x + 5", "x/3 + 5"], correctAnswer: "3x + 5" },
+      { id: "m6q15", text: "Kuralı 4n - 1 olan sayı örüntüsünün 5. terimi kaçtır?", options: ["19", "20", "21", "24"], correctAnswer: "19" }
+    ]
+  },
+  "Paralelkenar, Üçgen ve Çember": {
+    summary: "Geometrik alan ve uzunluk ölçüleri:\n\n- Paralelkenar Alanı: Taban uzunluğu x Yükseklik\n- Üçgen Alanı: (Taban uzunluğu x Yükseklik) / 2\n- Çember Çevresi: 2 x pi x r (r: yarıçap, pi: yaklaşık 3 veya 3.14). Çevre uzunluğunun çapa oranı pi sayısını verir.",
+    videoUrl: "https://www.youtube.com/embed/mat6_7",
+    questions: [
+      { id: "m6q16", text: "Tabanı 8 cm, yüksekliği 5 cm olan bir üçgenin alanı kaç santimetrekaredir?", options: ["40", "20", "15", "10"], correctAnswer: "20" },
+      { id: "m6q17", text: "Yarıçapı 5 cm olan bir çemberin çevre uzunluğu kaç cm'dir? (pi = 3 alınız)", options: ["15", "30", "45", "60"], correctAnswer: "30" }
+    ]
   }
 };
 
@@ -171,9 +230,9 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
     const saved = localStorage.getItem("student_study_plan_v1");
     if (saved) return JSON.parse(saved);
     return [
-      { id: "task-1", subject: "Matematik", topic: "Kesirler", type: "test", duration: 40, completed: false, action: "Kesirlerle İşlemler Soru Çözümü", icon: "📐" },
+      { id: "task-1", subject: "Matematik (6. Sınıf)", topic: "Çarpanlar ve Katlar", type: "test", duration: 40, completed: false, action: "Çarpanlar ve Katlar Soru Çözümü", icon: "📐" },
       { id: "task-2", subject: "Fen Bilimleri", topic: "Sıvı Basıncı", type: "lesson", duration: 30, completed: false, action: "Sıvı Basıncı Deney Videosu ve Konu Anlatımı", icon: "🧪" },
-      { id: "task-3", subject: "Türkçe", topic: "Paragrafta Anlam", type: "activity", duration: 20, completed: false, action: "LGS Paragraf Okuma Egzersizi", icon: "📖" },
+      { id: "task-3", subject: "Türkçe", topic: "Paragrafta Anlam", type: "activity", duration: 20, completed: false, action: "LGS Metin Okuma Egzersizi", icon: "📖" },
       { id: "task-4", subject: "İngilizce", topic: "Friendship", type: "activity", duration: 15, completed: false, action: "LGS Kelime Kartları Tekrarı", icon: "🇬🇧" }
     ];
   });
@@ -210,16 +269,15 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
   // AI Routine Planner State
   const [availableHours, setAvailableHours] = useState("2");
   
-  // Custom Task Creation States
-  const [newSubject, setNewSubject] = useState("Matematik");
-  const [newTopic, setNewTopic] = useState("Kesirler");
+  const [newSubject, setNewSubject] = useState("Matematik (6. Sınıf)");
+  const [newTopic, setNewTopic] = useState("Çarpanlar ve Katlar");
   const [newDuration, setNewDuration] = useState("30");
   const [newAction, setNewAction] = useState("");
   const [newType, setNewType] = useState<"lesson" | "activity" | "test">("lesson");
   const [newExternalLink, setNewExternalLink] = useState("");
 
   const subjectTopics: Record<string, string[]> = {
-    Matematik: ["Kesirler", "Ondalık Gösterim", "Sütun Grafiği", "Üslü Sayılar", "Çarpanlar ve Katlar"],
+    "Matematik (6. Sınıf)": ["Çarpanlar ve Katlar", "Araştırma Soruları ve Veri", "Ondalık Gösterim ve Yuvarlama", "Olasılık Tahmin Etme", "Açılar ve Dörtgenler", "Cebirsel Düşünme ve Algoritma", "Paralelkenar, Üçgen ve Çember"],
     "Matematik (5. Sınıf)": ["Geometrik Şekiller ve Çizimler", "Açılar ve Doğrular", "Doğal Sayılar ve İşlemler", "Çevre ve Alan Ölçümü"],
     "Fen Bilimleri": ["Katı Basıncı", "Sıvı Basıncı", "Gaz Basıncı"],
     "Fen Bilimleri (5. Sınıf)": ["Güneş, Dünya ve Ay", "Canlıların Çeşitliliği", "Kuvvetin Ölçülmesi"],
@@ -575,7 +633,10 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
     }
     const icons: Record<string, string> = {
       Matematik: "📐",
+      "Matematik (5. Sınıf)": "📐",
+      "Matematik (6. Sınıf)": "📐",
       "Fen Bilimleri": "🧪",
+      "Fen Bilimleri (5. Sınıf)": "🧪",
       Türkçe: "📖",
       İngilizce: "🇬🇧",
       "T.C. İnkılap Tarihi": "🕌",

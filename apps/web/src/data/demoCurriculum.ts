@@ -5,148 +5,84 @@ import type { Subject, Unit, Topic, LearningOutcome, Question } from "../types/c
 // bu tip yapısı (Subject/Unit/Topic/LearningOutcome) sabit kalır.
 
 export const demoSubjects: Subject[] = [
-  { id: "sub_mat6", name: "Matematik", gradeLevel: 6, order: 1 },
-  { id: "sub_mat5", name: "Matematik (5. Sınıf)", gradeLevel: 5, order: 2 },
+  { id: "sub_mat5", name: "Matematik (5. Sınıf)", gradeLevel: 5, order: 1 },
+  { id: "sub_mat6", name: "Matematik (6. Sınıf)", gradeLevel: 6, order: 2 },
 ];
 
 export const demoUnits: Unit[] = [
-  { id: "unit_sayilar", subjectId: "sub_mat6", name: "Sayılar ve İşlemler", order: 1 },
-  { id: "unit_veri", subjectId: "sub_mat6", name: "Veri İşleme", order: 2 },
+  // 5. Sınıf Temaları (Maarif Modeli)
   { id: "unit_mat5_t1", subjectId: "sub_mat5", name: "1. Tema: Geometrik Şekiller", order: 1 },
   { id: "unit_mat5_t2", subjectId: "sub_mat5", name: "2. Tema: Sayılar ve Nicelikler", order: 2 },
   { id: "unit_mat5_t3", subjectId: "sub_mat5", name: "3. Tema: Geometrik Nicelikler", order: 3 },
+
+  // 6. Sınıf Temaları (Maarif Modeli)
+  { id: "unit_mat6_t1", subjectId: "sub_mat6", name: "1. Tema: Sayılar ve Nicelikler (1)", order: 1 },
+  { id: "unit_mat6_t2", subjectId: "sub_mat6", name: "2. Tema: İstatistiksel Araştırma Süreci", order: 2 },
+  { id: "unit_mat6_t3", subjectId: "sub_mat6", name: "3. Tema: Sayılar ve Nicelikler (2)", order: 3 },
+  { id: "unit_mat6_t4", subjectId: "sub_mat6", name: "4. Tema: Veriden Olasılığa", order: 4 },
+  { id: "unit_mat6_t5", subjectId: "sub_mat6", name: "5. Tema: Geometrik Şekiller", order: 5 },
+  { id: "unit_mat6_t6", subjectId: "sub_mat6", name: "6. Tema: İşlemlerle Cebirsel Düşünme", order: 6 },
+  { id: "unit_mat6_t7", subjectId: "sub_mat6", name: "7. Tema: Geometrik Nicelikler", order: 7 },
 ];
 
 export const demoTopics: Topic[] = [
-  { id: "topic_kesirler", unitId: "unit_sayilar", subjectId: "sub_mat6", name: "Kesirler", order: 1 },
-  { id: "topic_ondalik", unitId: "unit_sayilar", subjectId: "sub_mat6", name: "Ondalık Gösterim", order: 2 },
-  { id: "topic_sutun_grafik", unitId: "unit_veri", subjectId: "sub_mat6", name: "Sütun Grafiği", order: 1 },
+  // 5. Sınıf Konuları
   { id: "topic_mat5_geo1", unitId: "unit_mat5_t1", subjectId: "sub_mat5", name: "Geometrik Şekiller ve Çizimler", order: 1 },
   { id: "topic_mat5_aci", unitId: "unit_mat5_t1", subjectId: "sub_mat5", name: "Açılar ve Doğrular", order: 2 },
   { id: "topic_mat5_ds", unitId: "unit_mat5_t2", subjectId: "sub_mat5", name: "Doğal Sayılar ve İşlemler", order: 1 },
   { id: "topic_mat5_alan", unitId: "unit_mat5_t3", subjectId: "sub_mat5", name: "Çevre ve Alan Ölçümü", order: 1 },
+
+  // 6. Sınıf Konuları
+  { id: "topic_mat6_carpan", unitId: "unit_mat6_t1", subjectId: "sub_mat6", name: "Çarpanlar ve Katlar", order: 1 },
+  { id: "topic_mat6_istatistik", unitId: "unit_mat6_t2", subjectId: "sub_mat6", name: "Araştırma Soruları ve Veri", order: 1 },
+  { id: "topic_mat6_ondalik", unitId: "unit_mat6_t3", subjectId: "sub_mat6", name: "Ondalık Gösterim ve Yuvarlama", order: 1 },
+  { id: "topic_mat6_olasilik", unitId: "unit_mat6_t4", subjectId: "sub_mat6", name: "Olasılık Tahmin Etme", order: 1 },
+  { id: "topic_mat6_acilar", unitId: "unit_mat6_t5", subjectId: "sub_mat6", name: "Açılar ve Dörtgenler", order: 1 },
+  { id: "topic_mat6_cebir", unitId: "unit_mat6_t6", subjectId: "sub_mat6", name: "Cebirsel Düşünme ve Algoritma", order: 1 },
+  { id: "topic_mat6_alan", unitId: "unit_mat6_t7", subjectId: "sub_mat6", name: "Paralelkenar, Üçgen ve Çember", order: 1 },
 ];
 
 export const demoOutcomes: LearningOutcome[] = [
-  {
-    id: "lo_kesir_1",
-    topicId: "topic_kesirler",
-    unitId: "unit_sayilar",
-    subjectId: "sub_mat6",
-    code: "M.6.1.4.1",
-    description: "Kesirlerle toplama ve çıkarma işlemlerini yapar.",
-    difficulty: "orta",
-    order: 1,
-  },
-  {
-    id: "lo_kesir_2",
-    topicId: "topic_kesirler",
-    unitId: "unit_sayilar",
-    subjectId: "sub_mat6",
-    code: "M.6.1.4.2",
-    description: "Kesirlerle çarpma ve bölme işlemlerini yapar.",
-    difficulty: "zor",
-    order: 2,
-  },
-  {
-    id: "lo_ondalik_1",
-    topicId: "topic_ondalik",
-    unitId: "unit_sayilar",
-    subjectId: "sub_mat6",
-    code: "M.6.1.5.1",
-    description: "Ondalık gösterimleri kesir olarak, kesirleri ondalık gösterim olarak yazar.",
-    difficulty: "kolay",
-    order: 1,
-  },
-  {
-    id: "lo_sutun_1",
-    topicId: "topic_sutun_grafik",
-    unitId: "unit_veri",
-    subjectId: "sub_mat6",
-    code: "M.6.4.1.1",
-    description: "Verileri sütun grafiği ile gösterir ve yorumlar.",
-    difficulty: "orta",
-    order: 1,
-  },
-  {
-    id: "lo_mat5_geo1_1",
-    topicId: "topic_mat5_geo1",
-    unitId: "unit_mat5_t1",
-    subjectId: "sub_mat5",
-    code: "M.5.1.1.1",
-    description: "Nokta, doğru parçası, ışın ve düzlem kavramlarını açıklar.",
-    difficulty: "kolay",
-    order: 1,
-  },
-  {
-    id: "lo_mat5_aci_1",
-    topicId: "topic_mat5_aci",
-    unitId: "unit_mat5_t1",
-    subjectId: "sub_mat5",
-    code: "M.5.1.2.1",
-    description: "Açıları dar, dik, geniş ve doğru açı olarak sınıflandırır.",
-    difficulty: "orta",
-    order: 1,
-  },
-  {
-    id: "lo_mat5_ds_1",
-    topicId: "topic_mat5_ds",
-    unitId: "unit_mat5_t2",
-    subjectId: "sub_mat5",
-    code: "M.5.1.3.1",
-    description: "Çok basamaklı doğal sayıları okur, yazar ve çözümler.",
-    difficulty: "kolay",
-    order: 1,
-  },
-  {
-    id: "lo_mat5_alan_1",
-    topicId: "topic_mat5_alan",
-    unitId: "unit_mat5_t3",
-    subjectId: "sub_mat5",
-    code: "M.5.1.4.1",
-    description: "Dikdörtgenin çevre uzunluğu ve alanını hesaplar.",
-    difficulty: "orta",
-    order: 1,
-  },
+  // 5. Sınıf Kazanımları
+  { id: "lo_mat5_geo1_1", topicId: "topic_mat5_geo1", unitId: "unit_mat5_t1", subjectId: "sub_mat5", code: "M.5.1.1.1", description: "Nokta, doğru parçası, ışın ve düzlem kavramlarını açıklar.", difficulty: "kolay", order: 1 },
+  { id: "lo_mat5_aci_1", topicId: "topic_mat5_aci", unitId: "unit_mat5_t1", subjectId: "sub_mat5", code: "M.5.1.2.1", description: "Açıları dar, dik, geniş ve doğru açı olarak sınıflandırır.", difficulty: "orta", order: 1 },
+  { id: "lo_mat5_ds_1", topicId: "topic_mat5_ds", unitId: "unit_mat5_t2", subjectId: "sub_mat5", code: "M.5.1.3.1", description: "Çok basamaklı doğal sayıları okur, yazar ve çözümler.", difficulty: "kolay", order: 1 },
+  { id: "lo_mat5_alan_1", topicId: "topic_mat5_alan", unitId: "unit_mat5_t3", subjectId: "sub_mat5", code: "M.5.1.4.1", description: "Dikdörtgenin çevre uzunluğu ve alanını hesaplar.", difficulty: "orta", order: 1 },
+
+  // 6. Sınıf Kazanımları
+  { id: "lo_mat6_carpan_1", topicId: "topic_mat6_carpan", unitId: "unit_mat6_t1", subjectId: "sub_mat6", code: "M.6.1.1.1", description: "Doğal sayıların çarpanlarını ve katlarını bulur; asal sayıları belirler.", difficulty: "orta", order: 1 },
+  { id: "lo_mat6_istatistik_1", topicId: "topic_mat6_istatistik", unitId: "unit_mat6_t2", subjectId: "sub_mat6", code: "M.6.2.1.1", description: "İstatistiksel araştırma soruları oluşturur ve verileri aritmetik ortalama/açıklıkla özetler.", difficulty: "orta", order: 1 },
+  { id: "lo_mat6_ondalik_1", topicId: "topic_mat6_ondalik", unitId: "unit_mat6_t3", subjectId: "sub_mat6", code: "M.6.3.1.1", description: "Ondalık gösterimleri basamak değerlerine göre çözümler ve yuvarlar.", difficulty: "kolay", order: 1 },
+  { id: "lo_mat6_olasilik_1", topicId: "topic_mat6_olasilik", unitId: "unit_mat6_t4", subjectId: "sub_mat6", code: "M.6.4.1.1", description: "Bir olayın gerçekleşme olasılığını tahmin eder.", difficulty: "orta", order: 1 },
+  { id: "lo_mat6_acilar_1", topicId: "topic_mat6_acilar", unitId: "unit_mat6_t5", subjectId: "sub_mat6", code: "M.6.5.1.1", description: "Açılar arasındaki ilişkileri ve dörtgenlerin kenar/köşegen özelliklerini belirler.", difficulty: "zor", order: 1 },
+  { id: "lo_mat6_cebir_1", topicId: "topic_mat6_cebir", unitId: "unit_mat6_t6", subjectId: "sub_mat6", code: "M.6.6.1.1", description: "Cebirsel ifadeleri yazar, değerini hesaplar ve basit örüntüleri modeller.", difficulty: "orta", order: 1 },
+  { id: "lo_mat6_alan_1", topicId: "topic_mat6_alan", unitId: "unit_mat6_t7", subjectId: "sub_mat6", code: "M.6.7.1.1", description: "Paralelkenar ve üçgenin alanını hesaplar; çemberin çevresini bulur.", difficulty: "zor", order: 1 },
 ];
 
 export const demoQuestions: Question[] = [
-  // lo_kesir_1
-  { id: "q1", outcomeId: "lo_kesir_1", text: "1/2 + 1/4 işleminin sonucu kaçtır?", options: ["1/6", "2/6", "3/4", "2/4"], correctAnswer: "3/4", difficulty: "kolay", source: "MANUEL" },
-  { id: "q2", outcomeId: "lo_kesir_1", text: "3/5 - 1/5 işleminin sonucu kaçtır?", options: ["2/5", "2/10", "4/5", "1/5"], correctAnswer: "2/5", difficulty: "kolay", source: "MANUEL" },
-  { id: "q3", outcomeId: "lo_kesir_1", text: "2/3 + 1/6 işleminin sonucu kaçtır?", options: ["3/6", "5/6", "3/9", "1/2"], correctAnswer: "5/6", difficulty: "orta", source: "MANUEL" },
-  { id: "q4", outcomeId: "lo_kesir_1", text: "7/8 - 3/4 işleminin sonucu kaçtır?", options: ["1/8", "4/4", "1/4", "3/8"], correctAnswer: "1/8", difficulty: "orta", source: "MANUEL" },
-  { id: "q5", outcomeId: "lo_kesir_1", text: "1 1/2 + 2 1/3 işleminin sonucu kaçtır?", options: ["3 5/6", "3 1/6", "4 1/6", "3 2/3"], correctAnswer: "3 5/6", difficulty: "zor", source: "MANUEL" },
-
-  // lo_kesir_2
-  { id: "q6", outcomeId: "lo_kesir_2", text: "1/2 x 2/3 işleminin sonucu kaçtır?", options: ["2/6", "1/3", "3/5", "2/5"], correctAnswer: "1/3", difficulty: "kolay", source: "MANUEL" },
-  { id: "q7", outcomeId: "lo_kesir_2", text: "3/4 ÷ 1/2 işleminin sonucu kaçtır?", options: ["3/8", "3/2", "1/2", "6/4"], correctAnswer: "3/2", difficulty: "orta", source: "MANUEL" },
-  { id: "q8", outcomeId: "lo_kesir_2", text: "2/5 x 5/6 işleminin sonucu kaçtır?", options: ["1/3", "10/30", "2/6", "7/11"], correctAnswer: "1/3", difficulty: "orta", source: "MANUEL" },
-  { id: "q9", outcomeId: "lo_kesir_2", text: "5/6 ÷ 2/3 işleminin sonucu kaçtır?", options: ["5/4", "10/18", "5/9", "3/4"], correctAnswer: "5/4", difficulty: "zor", source: "MANUEL" },
-  { id: "q10", outcomeId: "lo_kesir_2", text: "4/9 x 3/8 işleminin sonucu kaçtır?", options: ["1/6", "12/72", "7/17", "1/3"], correctAnswer: "1/6", difficulty: "zor", source: "MANUEL" },
-
-  // lo_ondalik_1
-  { id: "q11", outcomeId: "lo_ondalik_1", text: "3/10 kesrinin ondalık gösterimi nedir?", options: ["0.3", "3.0", "0.03", "1.3"], correctAnswer: "0.3", difficulty: "kolay", source: "MANUEL" },
-  { id: "q12", outcomeId: "lo_ondalik_1", text: "0.75 ondalık gösteriminin kesir hali nedir?", options: ["75/10", "3/4", "7/5", "5/7"], correctAnswer: "3/4", difficulty: "orta", source: "MANUEL" },
-  { id: "q13", outcomeId: "lo_ondalik_1", text: "7/100 kesrinin ondalık gösterimi nedir?", options: ["0.7", "0.07", "7.00", "0.007"], correctAnswer: "0.07", difficulty: "kolay", source: "MANUEL" },
-
-  // lo_sutun_1
-  { id: "q14", outcomeId: "lo_sutun_1", text: "Sütun grafiğinde çubukların yüksekliği neyi temsil eder?", options: ["Rengi", "Sıklığı/değeri", "Adını", "Şeklini"], correctAnswer: "Sıklığı/değeri", difficulty: "kolay", source: "MANUEL" },
-  { id: "q15", outcomeId: "lo_sutun_1", text: "Bir sütun grafiğinde en yüksek çubuk neyi gösterir?", options: ["En küçük değeri", "En sık tekrar eden/en büyük değeri", "Ortalamayı", "Toplamı"], correctAnswer: "En sık tekrar eden/en büyük değeri", difficulty: "orta", source: "MANUEL" },
-
-  // lo_mat5_geo1_1
+  // 5. Sınıf Soruları
   { id: "q16", outcomeId: "lo_mat5_geo1_1", text: "Bir ucu kapalı, diğer ucu sonsuza uzayan geometrik çizim hangisidir?", options: ["Doğru", "Işın", "Doğru Parçası", "Açı"], correctAnswer: "Işın", difficulty: "kolay", source: "MANUEL" },
   { id: "q17", outcomeId: "lo_mat5_geo1_1", text: "İki ucu da sınırlandırılmış olan düz çizgiye ne denir?", options: ["Işın", "Düzlem", "Doğru Parçası", "Doğru"], correctAnswer: "Doğru Parçası", difficulty: "kolay", source: "MANUEL" },
-
-  // lo_mat5_aci_1
   { id: "q18", outcomeId: "lo_mat5_aci_1", text: "Ölçüsü 115 derece olan bir açı hangi açı çeşidine girer?", options: ["Dik Açı", "Dar Açı", "Geniş Açı", "Doğru Açı"], correctAnswer: "Geniş Açı", difficulty: "orta", source: "MANUEL" },
   { id: "q19", outcomeId: "lo_mat5_aci_1", text: "Düzlemde hiç kesişmeyen doğrulara ne ad verilir?", options: ["Dik Doğrular", "Paralel Doğrular", "Çakışık Doğrular", "Kesişen Doğrular"], correctAnswer: "Paralel Doğrular", difficulty: "orta", source: "MANUEL" },
-
-  // lo_mat5_ds_1
   { id: "q20", outcomeId: "lo_mat5_ds_1", text: "12 005 080 sayısının doğru okunuşu hangisidir?", options: ["On iki milyon beş yüz seksen", "On iki milyon beş bin seksen", "On iki milyon elli bin seksen", "Yüz yirmi milyon beş bin seksen"], correctAnswer: "On iki milyon beş bin seksen", difficulty: "kolay", source: "MANUEL" },
   { id: "q21", outcomeId: "lo_mat5_ds_1", text: "34 509 120 sayısındaki '5' rakamının basamak değeri kaçtır?", options: ["500 000", "50 000", "5 000", "50"], correctAnswer: "500 000", difficulty: "orta", source: "MANUEL" },
-
-  // lo_mat5_alan_1
   { id: "q22", outcomeId: "lo_mat5_alan_1", text: "Uzun kenarı 10 cm, kısa kenarı 6 cm olan bir dikdörtgenin çevresi kaç cm'dir?", options: ["16", "32", "60", "40"], correctAnswer: "32", difficulty: "kolay", source: "MANUEL" },
   { id: "q23", outcomeId: "lo_mat5_alan_1", text: "Alanı 48 santimetrekare olan bir dikdörtgenin kenarları tam sayı ise çevresi en az kaç cm olabilir?", options: ["28", "32", "26", "22"], correctAnswer: "28", difficulty: "zor", source: "MANUEL" },
+
+  // 6. Sınıf Soruları
+  { id: "q24", outcomeId: "lo_mat6_carpan_1", text: "36 sayısının kaç tane pozitif tam sayı çarpanı vardır?", options: ["6", "8", "9", "10"], correctAnswer: "9", difficulty: "orta", source: "MANUEL" },
+  { id: "q25", outcomeId: "lo_mat6_carpan_1", text: "Aşağıdakilerden hangisi bir asal sayıdır?", options: ["15", "21", "29", "33"], correctAnswer: "29", difficulty: "kolay", source: "MANUEL" },
+  { id: "q26", outcomeId: "lo_mat6_istatistik_1", text: "Bir gruptaki verilerin toplamının veri sayısına bölünmesiyle hangisi elde edilir?", options: ["Açıklık", "Medyan", "Aritmetik Ortalama", "Mod"], correctAnswer: "Aritmetik Ortalama", difficulty: "kolay", source: "MANUEL" },
+  { id: "q27", outcomeId: "lo_mat6_istatistik_1", text: "7, 12, 5, 23, 18 sayı grubunun açıklığı kaçtır?", options: ["18", "23", "5", "6"], correctAnswer: "18", difficulty: "orta", source: "MANUEL" },
+  { id: "q28", outcomeId: "lo_mat6_ondalik_1", text: "3,485 ondalık gösteriminin yüzde birler basamağına göre yuvarlanmış hali nedir?", options: ["3,48", "3,49", "3,50", "3,40"], correctAnswer: "3,49", difficulty: "orta", source: "MANUEL" },
+  { id: "q29", outcomeId: "lo_mat6_ondalik_1", text: "12,704 sayısındaki '0' rakamının bulunduğu basamağın adı nedir?", options: ["Onda birler basamağı", "Yüzde birler basamağı", "Binde birler basamağı", "Birler basamağı"], correctAnswer: "Yüzde birler basamağı", difficulty: "kolay", source: "MANUEL" },
+  { id: "q30", outcomeId: "lo_mat6_olasilik_1", text: "Bir zar atıldığında üst yüze gelen sayının 7 olması olayının olasılığı türü nedir?", options: ["Kesin Olay", "İmkânsız Olay", "Eş Olasılıklı Olay", "Daha Fazla Olasılıklı Olay"], correctAnswer: "İmkânsız Olay", difficulty: "kolay", source: "MANUEL" },
+  { id: "q31", outcomeId: "lo_mat6_olasilik_1", text: "Havaya atılan hilesiz bir madeni paranın tura gelme olasılığı kaçtır?", options: ["1", "0", "1/2", "1/4"], correctAnswer: "1/2", difficulty: "orta", source: "MANUEL" },
+  { id: "q32", outcomeId: "lo_mat6_acilar_1", text: "İki iç açısı 50° ve 70° olan bir üçgenin üçüncü iç açısı kaç derecedir?", options: ["50°", "60°", "70°", "80°"], correctAnswer: "60°", difficulty: "orta", source: "MANUEL" },
+  { id: "q33", outcomeId: "lo_mat6_acilar_1", text: "Karşılıklı kenarları paralel ve tüm kenar uzunlukları eşit olan fakat açıları dik olmayan dörtgen hangisidir?", options: ["Kare", "Yamuk", "Eşkenar Dörtgen", "Dikdörtgen"], correctAnswer: "Eşkenar Dörtgen", difficulty: "zor", source: "MANUEL" },
+  { id: "q34", outcomeId: "lo_mat6_cebir_1", text: "'Bir sayının 3 katının 5 fazlası' ifadesinin cebirsel gösterimi hangisidir?", options: ["3x - 5", "3(x + 5)", "3x + 5", "x/3 + 5"], correctAnswer: "3x + 5", difficulty: "kolay", source: "MANUEL" },
+  { id: "q35", outcomeId: "lo_mat6_cebir_1", text: "Kuralı 4n - 1 olan sayı örüntüsünün 5. terimi kaçtır?", options: ["19", "20", "21", "24"], correctAnswer: "19", difficulty: "orta", source: "MANUEL" },
+  { id: "q36", outcomeId: "lo_mat6_alan_1", text: "Tabanı 8 cm, yüksekliği 5 cm olan bir üçgenin alanını hesaplayınız.", options: ["40", "20", "15", "10"], correctAnswer: "20", difficulty: "orta", source: "MANUEL" },
+  { id: "q37", outcomeId: "lo_mat6_alan_1", text: "Yarıçapı 5 cm olan bir çemberin çevre uzunluğu kaç cm'dir? (pi = 3 alınız)", options: ["15", "30", "45", "60"], correctAnswer: "30", difficulty: "zor", source: "MANUEL" },
 ];
