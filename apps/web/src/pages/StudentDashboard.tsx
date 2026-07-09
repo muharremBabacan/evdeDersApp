@@ -799,15 +799,61 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
 
     setTimeout(() => {
       setIsTyping(false);
-      let response = "LGS hazırlık planlaman için harika bir konu! Çözemediğin soruları bana gönderebilir, konu özetlerine çalışabilirsin.";
+      
       const textLower = studentText.toLowerCase();
-      if (textLower.includes("matematik") || textLower.includes("soru")) {
-        response = "Matematikte üslü ifadeler konusundan günde 20 soru çözmeni öneririm. Çarpanlar ve Katlar konusundaki eksiklerini kapatırsan deneme netlerin hızla yükselecek!";
-      } else if (textLower.includes("fen") || textLower.includes("basınç")) {
-        response = "Fen Bilimlerinde Basınç konusu LGS'de çok belirleyicidir. Katı basıncında formülü P=G/S olarak aklında tutmalısın.";
-      } else if (textLower.includes("zor") || textLower.includes("stres")) {
-        response = "Unutma, düzenli uyku ve günde 25 dakika kesintisiz çalışmak stresini azaltacaktır. Sen çok iyi ilerliyorsun!";
+      const studentName = username === "lgs_arda" ? "Arda" : username;
+      
+      // Filter outcomes corresponding to the student's grade level
+      const relatedOutcomes = demoOutcomes.filter(lo => {
+        if (studentGrade === 5) return lo.subjectId === "sub_mat5";
+        if (studentGrade === 6) return lo.subjectId === "sub_mat6";
+        return lo.subjectId === "sub_mat6"; // Default fallback
+      });
+      
+      let weakOutcome = null;
+      let unattemptedOutcome = null;
+      
+      for (const lo of relatedOutcomes) {
+        const record = masteryRecords[lo.id];
+        if (record) {
+          if (record.level < 75) {
+            weakOutcome = lo;
+            break;
+          }
+        } else {
+          if (!unattemptedOutcome) {
+            unattemptedOutcome = lo;
+          }
+        }
       }
+      
+      const targetOutcome = weakOutcome || unattemptedOutcome || relatedOutcomes[0];
+      const targetTopic = demoTopics.find(t => t.id === targetOutcome?.topicId);
+      const topicName = targetTopic ? targetTopic.name : "Geometrik Şekiller";
+      const pageRange = studyContentDb[topicName]?.mebPageRange || "ilgili sayfalardan";
+
+      let response = `Sevgili ${studentName}, LGS ve okul dersleri planlaman için harika bir soru! Kendini geliştirmek istediğin konuları her zaman benimle paylaşabilirsin. Eksiklerini kapatmak için konu özetlerini okuyup mini pratik testleri çözmeye devam etmelisin.`;
+      
+      if (textLower.includes("eksik") || textLower.includes("zayıf") || textLower.includes("ne çalış") || textLower.includes("konu") || textLower.includes("bugün") || textLower.includes("hata") || textLower.includes("tamamla")) {
+        if (weakOutcome) {
+          response = `Merhaba ${studentName}! Gelişim verilerini incelediğimde, Matematik dersinde "${topicName}" konusunda çözdüğümüz mini testlerde başarı oranımızın henüz %${masteryRecords[weakOutcome.id].level} seviyesinde olduğunu gözlemledim. Bu konunun formülleri ve mantığı başlangıçta biraz karmaşık gelebilir, bu çok doğaldır. Bugün ders çalışma planına bu konudan 25 dakikalık bir 'Konu Anlatımı' görevi ekleyebiliriz. Ayrıca ders kitabının "${pageRange}" sayfaları arasındaki etkinlikleri incelemek sana çok iyi gelecektir. Düzenli çalışma disiplinin sayesinde bu konudaki eksikleri hızla kapatacağından hiç şüphem yok!`;
+        } else if (unattemptedOutcome) {
+          response = `Merhaba ${studentName}! Güncel müfredat ilerlemeni incelediğimde, Matematik dersinde "${topicName}" konusuna ait kazanım tarama testlerini henüz tamamlamadığını gözlemledim. Yeni müfredat Maarif Modeli çerçevesinde bu konu sıradaki hedeflerimiz arasında kritik bir yer tutuyor. Bugün ders çalışma planına bu konudan 20 dakikalık bir 'Konu Çalışması' ekleyerek ilk adımı atabiliriz. Dilersen kitabının "${pageRange}" sayfaları arasındaki konu özetine de göz atabilirsin. Öğrenme heyecanının ve gayretinin bu konuyu da başarıyla tamamlamanı sağlayacağından eminim!`;
+        } else {
+          response = `Tebrikler ${studentName}! Kayıtlı olduğun Matematik (${studentGrade}. Sınıf) müfredatındaki tüm kazanımları başarıyla tamamlamış ve yüksek seviyede pekiştirmiş görünüyorsun. Gözlemlerim, çalışma disiplininin mükemmel seviyede olduğunu gösteriyor. Bugün genel tekrar yapmak adına en çok keyif aldığın bir konudan soru çözümü yapabilir veya zihnini dinlendirmek için planına mola ekleyebilirsin. Başarın daim olsun!`;
+        }
+      } else if (textLower.includes("puan") || textLower.includes("seviye") || textLower.includes("xp")) {
+        response = `Sevgili ${studentName}, şu anda sistemde toplam **${totalPoints} XP** puana sahipsin ve **Seviye ${studentLevel}** düzeyindesin. Bu puanlar senin gayretinin ve düzenli ders çalışma çabalarının somut bir göstergesidir. Tamamladığın her görev ve test sana yeni puanlar kazandırmaya devam edecek!`;
+      } else if (textLower.includes("merhaba") || textLower.includes("selam") || textLower.includes("hey")) {
+        response = `Merhaba ${studentName}! ${studentGrade}. Sınıf eğitim yolculuğunda sana rehberlik etmek için buradayım. Bugün çalışma planımızı düzenlemek, ders eksiklerini belirlemek veya dersler hakkında soru sormak için bana yazabilirsin. Bugün ne üzerinde çalışalım?`;
+      } else if (textLower.includes("matematik") || textLower.includes("soru")) {
+        response = `${studentGrade}. Sınıf Matematik dersinde "${topicName}" konusu üzerinde durmanı öneririm. Bu konuya ders kitabının "${pageRange}" sayfalarından çalışıp mini pratik testleri çözerek eksiklerini kolayca kapatabilirsin.`;
+      } else if (textLower.includes("fen") || textLower.includes("basınç")) {
+        response = `Fen Bilimleri dersinde Basınç konusu (özellikle Katı ve Sıvı basıncı) LGS hazırlığında çok önemlidir. Sıvı basıncında derinlik ve yoğunluk arttıkça basıncın arttığını unutmamalısın.`;
+      } else if (textLower.includes("zor") || textLower.includes("stres") || textLower.includes("yorgun")) {
+        response = `Eğitim yolculuğunda zaman zaman yorgun hissetmen veya kaygılanman son derece normaldir. Bu durumlarda çalışma planına mutlaka 'Zihin Dinlendirme' molaları eklemeni ve günde en az 8 saat uyumanı tavsiye ederim. Sen elinden gelenin en iyisini yapıyorsun ve ben seninle gurur duyuyorum!`;
+      }
+      
       setChatMessages(prev => [...prev, { sender: "ai", text: response }]);
     }, 1000);
   }
