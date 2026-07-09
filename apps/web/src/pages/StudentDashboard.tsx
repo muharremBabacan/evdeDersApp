@@ -4,6 +4,137 @@ import { evaluateAnswers, scorePercentage } from "../lib/mastery";
 import { updateMasteryFromAnswers } from "../lib/mastery";
 import type { MasteryRecord } from "../types/curriculum";
 
+interface TopicStudyContent {
+  summary: string;
+  videoUrl: string;
+  questions: Array<{
+    id: string;
+    text: string;
+    options: string[];
+    correctAnswer: string;
+  }>;
+}
+
+const studyContentDb: Record<string, TopicStudyContent> = {
+  "Kesirler": {
+    summary: "Kesirlerle toplama ve çıkarma işlemlerinde paydaların eşit olması gerekir. Paydaları eşit olmayan kesirlerin önce paydaları eşitlenir (genişletme veya sadeleştirme yoluyla), ardından paylar toplanır veya çıkarılır, ortak payda aynen yazılır.\n\nÇarpma işleminde paylar kendi arasında, paydalar kendi arasında çarpılır. Bölme işleminde ise ilk kesir aynen kalır, ikinci kesir ters çevrilerek çarpılır.",
+    videoUrl: "https://www.youtube.com/embed/demo1",
+    questions: [
+      { id: "kq1", text: "1/3 + 1/6 işleminin sonucu hangisidir?", options: ["2/9", "3/6", "1/2", "5/6"], correctAnswer: "1/2" },
+      { id: "kq2", text: "2/5 x 3/4 işleminin sonucu sadeleştirildiğinde hangisi olur?", options: ["6/20", "3/10", "5/9", "3/5"], correctAnswer: "3/10" },
+      { id: "kq3", text: "1/2 ÷ 1/4 işleminin sonucu kaçtır?", options: ["1/8", "2", "4", "1/2"], correctAnswer: "2" }
+    ]
+  },
+  "Sıvı Basıncı": {
+    summary: "Sıvı basıncı, sıvının derinliği (h) ve sıvının yoğunluğu (d) ile doğru orantılıdır. Sıvı basıncı formülü: P = h x d x g şeklindedir (LGS'de yerçekimi ivmesi g genellikle sabit kabul edilir).\n\nÖnemli Kurallar:\n1. Derinlik arttıkça sıvı basıncı artar.\n2. Yoğunluk arttıkça sıvı basıncı artar.\n3. Sıvının miktarı veya kabın şekli sıvı basıncını etkilemez.",
+    videoUrl: "https://www.youtube.com/embed/demo2",
+    questions: [
+      { id: "sq1", text: "Aşağıdakilerden hangisi sıvı basıncını etkilemez?", options: ["Sıvının derinliği", "Sıvının yoğunluğu", "Kabın şekli", "Sıvının cinsi"], correctAnswer: "Kabın şekli" },
+      { id: "sq2", text: "Sıvı dolu bir kabın tabanına yapılan basınç, sıvının hangi yüksekliğine bağlıdır?", options: ["En üst yüzeyine olan dik uzaklığa (derinlik)", "Kabın genişliğine", "Sıvının hacmine", "Kabın duruş açısına"], correctAnswer: "En üst yüzeyine olan dik uzaklığa (derinlik)" },
+      { id: "sq3", text: "Aynı derinlikteki su (d=1) ve zeytinyağının (d=0.9) kap tabanında oluşturduğu basınçlar hakkında hangisi doğrudur?", options: ["Basınçları eşittir.", "Suyun basıncı zeytinyağından büyüktür.", "Zeytinyağının basıncı daha büyüktür.", "Kapların hacmine bağlıdır."], correctAnswer: "Suyun basıncı zeytinyağından büyüktür." }
+    ]
+  },
+  "Paragrafta Anlam": {
+    summary: "Paragrafta anlam, okuduğunu anlama ve yorumlama becerisine dayanır. LGS Türkçe sınavının en büyük kısmını oluşturur.\n\nAna Fikir (Ana Düşünce): Yazarın okuyucuya vermek istediği temel mesajdır. Genellikle paragrafın son cümlelerinde vurgulanır.\n\nYardımcı Fikirler: Ana fikri destekleyen, açıklayan cümlelerdir. Soru köklerinde 'çıkarılamaz', 'değinilmemiştir' şeklinde sorulur.",
+    videoUrl: "https://www.youtube.com/embed/demo3",
+    questions: [
+      { id: "pq1", text: "Bir metnin yazılış amacına ne denir?", options: ["Ana fikir / Ana düşünce", "Konu", "Yardımcı düşünce", "Başlık"], correctAnswer: "Ana fikir / Ana düşünce" },
+      { id: "pq2", text: "Okuma yaparken odaklanmayı artırmak için hangisi uygulanmalıdır?", options: ["İç sesle heceleyerek okumak", "Gözle blok halinde okuma yapmak", "Sadece son paragrafa odaklanmak", "Hızlıca sayfaları atlamak"], correctAnswer: "Gözle blok halinde okuma yapmak" },
+      { id: "pq3", text: "LGS paragraf sorularını çözerken ilk olarak hangisi okunmalıdır?", options: ["Paragraf metni", "Seçenekler", "Soru kökü", "Yazar adı"], correctAnswer: "Soru kökü" }
+    ]
+  },
+  "Ondalık Gösterim": {
+    summary: "Paydası 10, 100, 1000 gibi 10'un kuvvetleri olan kesirlerin virgül kullanılarak gösterilmesine ondalık gösterim denir. Örneğin: 3/10 = 0.3, 7/100 = 0.07, 125/1000 = 0.125.",
+    videoUrl: "https://www.youtube.com/embed/demo4",
+    questions: [
+      { id: "oq1", text: "3/5 kesrinin ondalık gösterimi aşağıdakilerden hangisidir?", options: ["0.3", "0.5", "0.6", "1.5"], correctAnswer: "0.6" },
+      { id: "oq2", text: "1.25 ondalık gösteriminin en sade kesir hali nedir?", options: ["125/10", "5/4", "1 25/10", "4/5"], correctAnswer: "5/4" },
+      { id: "oq3", text: "0.08 kesir olarak yazıldığında paydası kaç olur?", options: ["8", "10", "100", "1000"], correctAnswer: "100" }
+    ]
+  },
+  "Sütun Grafiği": {
+    summary: "Verilerin dikey veya yatay sütunlar (çubuklar) halinde gösterilmesine sütun grafiği denir. Sütunların yükseklikleri (veya uzunlukları) verilerin sıklıklarını/değerlerini gösterir. Karşılaştırma yapmak için idealdir.",
+    videoUrl: "https://www.youtube.com/embed/demo5",
+    questions: [
+      { id: "sg1", text: "Sütun grafikleri en çok hangi amaçla kullanılır?", options: ["Verileri karşılaştırmak ve grupları kıyaslamak", "Zaman içindeki sürekli değişimi göstermek", "Bir bütünün parçalarını oranlamak", "Verilerin coğrafi dağılımını göstermek"], correctAnswer: "Verileri karşılaştırmak ve grupları kıyaslamak" },
+      { id: "sg2", text: "Grafikteki sütunların kalınlıkları hakkında hangisi doğrudur?", options: ["Sütun kalınlıkları farklı olmalıdır.", "Sütun kalınlıkları ve aralıkları eşit olmalıdır.", "Kalınlık değer miktarına göre değişir.", "Kalınlık önemsizdir."], correctAnswer: "Sütun kalınlıkları ve aralıkları eşit olmalıdır." },
+      { id: "sg3", text: "Grafik yorumlanırken ilk olarak neye dikkat edilmelidir?", options: ["Sütunların renklerine", "Eksenlerin neyi temsil ettiğine ve birimlerine", "En son sütuna", "Sayfanın düzenine"], correctAnswer: "Eksenlerin neyi temsil ettiğine ve birimlerine" }
+    ]
+  },
+  "Katı Basıncı": {
+    summary: "Katıların uyguladığı basınç, katının ağırlığı (G) ile doğru orantılı, temas eden yüzey alanı (S) ile ters orantılıdır. Formül: P = G / S.",
+    videoUrl: "https://www.youtube.com/embed/demo6",
+    questions: [
+      { id: "kb1", text: "Raptiyenin ucunun sivri yapılmasının sebebi nedir?", options: ["Ağırlığı azaltmak", "Temas alanını küçülterek basıncı artırmak", "Yüzey alanını büyüterek basıncı azaltmak", "Görünüşü güzelleştirmek"], correctAnswer: "Temas alanını küçülterek basıncı artırmak" },
+      { id: "kb2", text: "Aynı ağırlıktaki iki çocuktan biri kumda botla, diğeri ise topuklu ayakkabıyla yürümektedir. Hangisinin kuma batma oranı daha fazladır?", options: ["Botlu olan çocuk", "Topuklu ayakkabılı olan çocuk", "Eşit batarlar", "Hacimlerine bağlıdır"], correctAnswer: "Topuklu ayakkabılı olan çocuk" },
+      { id: "kb3", text: "Katı bir bloğun kum havuzuna temas eden yüzey alanı 2 katına çıkarılırsa kumdaki batma derinliği nasıl değişir?", options: ["Yarıya iner", "2 katına çıkar", "Değişmez", "Ağırlığa bağlı olarak artar"], correctAnswer: "Yarıya iner" }
+    ]
+  },
+  "Gaz Basıncı": {
+    summary: "Gazlar da sıvılar gibi ağırlıkları ve tanecik hareketleri nedeniyle temas ettikleri yüzeylere basınç uygular. Açık hava basıncı (atmosfer basıncı) Toriçelli deneyi ile ölçülmüştür. Toriçelli, deniz seviyesinde 0°C'ta açık hava basıncının 76 cm cıva basıncına eşit olduğunu bulmuştur.",
+    videoUrl: "https://www.youtube.com/embed/demo7",
+    questions: [
+      { id: "gb1", text: "Açık hava basıncını ilk ölçen bilim insanı kimdir?", options: ["Pascal", "Newton", "Toriçelli", "Galileo"], correctAnswer: "Toriçelli" },
+      { id: "gb2", text: "Deniz seviyesinden yukarılara çıkıldıkça açık hava basıncı nasıl değişir?", options: ["Artar", "Azalır", "Değişmez", "Önce artar sonra azalır"], correctAnswer: "Azalır" },
+      { id: "gb3", text: "Vantuzların veya pipetlerin çalışmasını sağlayan temel fiziksel ilke nedir?", options: ["Sıvı kaldırma kuvveti", "İç ve dış basınç farkı", "Yerçekimi ivmesi", "Gazların genleşmesi"], correctAnswer: "İç ve dış basınç farkı" }
+    ]
+  },
+  "Friendship": {
+    summary: "LGS İngilizce 1. Ünite konusu olan 'Friendship' (Arkadaşlık) kelimeler ve kalıplar üzerine kuruludur. \n\nÖnemli Kalıplar:\n- Would you like to join us? (Bize katılmak ister misin?)\n- Accept (Kabul etmek): Yes, I'd love to.\n- Refuse (Reddetmek): I'm sorry, but I can't.\n- Apologize (Özür dilemek): I have another plan.",
+    videoUrl: "https://www.youtube.com/embed/demo8",
+    questions: [
+      { id: "fq1", text: "Which adjective is positive for a friend?", options: ["Jealous", "Unreliable", "Supportive", "Stubborn"], correctAnswer: "Supportive" },
+      { id: "fq2", text: "If you always tell the truth to your friends, you are a/an ______ person.", options: ["honest", "mean", "bad-temped", "sneaky"], correctAnswer: "honest" },
+      { id: "fq3", text: "Complete: 'My best friend always back me up.' What does 'back up' mean?", options: ["argue", "support", "lie", "ignore"], correctAnswer: "support" }
+    ]
+  },
+  "Geometrik Şekiller ve Çizimler": {
+    summary: "Nokta, doğru, ışın, doğru parçası ve düzlem geometrinin temel elemanlarıdır.\n\n- Nokta: Boyutsuzdur, (.) ile gösterilir.\n- Doğru: İki ucu da sonsuza uzayan çizgidir.\n- Işın: Bir ucu sınırlı (başlangıç noktası), diğer ucu sonsuza uzayandır.\n- Doğru Parçası: İki ucu da sınırlı olan çizgi parçasıdır.\n- Dikme: Bir doğruya 90 derece açıyla çizilen çizgidir.",
+    videoUrl: "https://www.youtube.com/embed/geo5_1",
+    questions: [
+      { id: "g5q1", text: "Bir ucu kapalı, diğer ucu sonsuza uzayan geometrik çizim hangisidir?", options: ["Doğru", "Işın", "Doğru Parçası", "Açı"], correctAnswer: "Işın" },
+      { id: "g5q2", text: "İki ucu da sınırlandırılmış olan düz çizgiye ne denir?", options: ["Işın", "Düzlem", "Doğru Parçası", "Doğru"], correctAnswer: "Doğru Parçası" },
+      { id: "g5q3", text: "Bir doğruya çizilen ve 90 derecelik açı oluşturan doğruya ne ad verilir?", options: ["Kesen", "Paralel", "Dikme", "Teğet"], correctAnswer: "Dikme" }
+    ]
+  },
+  "Açılar ve Doğrular": {
+    summary: "Açılar ölçülerine göre dar, dik, geniş ve doğru açı olarak sınıflandırılır:\n\n- Dar Açı: Ölçüsü 0° ile 90° arasındadır.\n- Dik Açı: Ölçüsü tam 90°'dir.\n- Geniş Açı: Ölçüsü 90° ile 180° arasındadır.\n- Doğru Açı: Ölçüsü tam 180°'dir.\n- İki Doğru: Düzlemde paralel olabilir (hiç kesişmez), kesişebilir veya çakışık olabilir.",
+    videoUrl: "https://www.youtube.com/embed/geo5_2",
+    questions: [
+      { id: "a5q1", text: "Ölçüsü 115 derece olan bir açı hangi açı çeşidine girer?", options: ["Dik Açı", "Dar Açı", "Geniş Açı", "Doğru Açı"], correctAnswer: "Geniş Açı" },
+      { id: "a5q2", text: "Düzlemde hiç kesişmeyen doğrulara ne ad verilir?", options: ["Dik Doğrular", "Paralel Doğrular", "Çakışık Doğrular", "Kesişen Doğrular"], correctAnswer: "Paralel Doğrular" },
+      { id: "a5q3", text: "Ölçüsü tam olarak 180 derece olan açılara ne denir?", options: ["Geniş Açı", "Dar Açı", "Doğru Açı", "Tam Açı"], correctAnswer: "Doğru Açı" }
+    ]
+  },
+  "Doğal Sayılar ve İşlemler": {
+    summary: "Çok basamaklı doğal sayılar okunurken sağdan sola doğru üçerli gruplara ayrılır. Bu grupların her birine bölük denir (Birler, Binler, Milyonlar bölüğü vb.).\n\nÖrnek: 84 002 105 sayısı 'Seksen dört milyon iki bin yüz beş' şeklinde okunur. Sayıdaki her bir rakamın bulunduğu basamağa göre aldığı değere basamak değeri denir.",
+    videoUrl: "https://www.youtube.com/embed/ds5_1",
+    questions: [
+      { id: "d5q1", text: "12 005 080 sayısının doğru okunuşu hangisidir?", options: ["On iki milyon beş yüz seksen", "On iki milyon beş bin seksen", "On iki milyon elli bin seksen", "Yüz yirmi milyon beş bin seksen"], correctAnswer: "On iki milyon beş bin seksen" },
+      { id: "d5q2", text: "34 509 120 sayısındaki '5' rakamının basamak değeri kaçtır?", options: ["500 000", "50 000", "5 000", "50"], correctAnswer: "500 000" },
+      { id: "d5q3", text: "Birler bölüğü 405, binler bölüğü 12, milyonlar bölüğü 85 olan sayı hangisidir?", options: ["405 012 085", "85 405 012", "85 012 405", "12 085 405"], correctAnswer: "85 012 405" }
+    ]
+  },
+  "Çevre ve Alan Ölçümü": {
+    summary: "Dikdörtgenin çevre uzunluğu ve alan hesaplaması:\n\n- Çevre: Bütün kenarların uzunlukları toplamıdır. Formül: Ç = 2 x (a + b) [a: kısa kenar, b: uzun kenar]\n- Alan: Kısa ve uzun kenar uzunluklarının çarpımıdır. Formül: A = a x b\n\nÖnemli kural: Aynı alana sahip farklı dikdörtgenlerin kenar uzunlukları birbirine yaklaştıkça çevre uzunluğu küçülür.",
+    videoUrl: "https://www.youtube.com/embed/alan5_1",
+    questions: [
+      { id: "al5q1", text: "Uzun kenarı 10 cm, kısa kenarı 6 cm olan bir dikdörtgenin çevresi kaç cm'dir?", options: ["16", "32", "60", "40"], correctAnswer: "32" },
+      { id: "al5q2", text: "Alanı 48 santimetrekare olan bir dikdörtgenin kenarları tam sayı ise çevresi en az kaç cm olabilir?", options: ["28", "32", "26", "22"], correctAnswer: "28" },
+      { id: "al5q3", text: "Kenar uzunlukları 7 cm ve 9 cm olan dikdörtgenin alanı kaç santimetrekaredir?", options: ["32", "63", "81", "49"], correctAnswer: "63" }
+    ]
+  },
+  "Güneş, Dünya ve Ay": {
+    summary: "Güneş, Dünya ve Ay'ın şekilleri küreye benzer. \n\n- Güneş: Orta büyüklükte bir yıldızdır, kendi ekseni etrafında döner.\n- Dünya: Güneş'in etrafında dolanır, kendi ekseni etrafında döner.\n- Ay: Dünya'nın tek doğal uydusudur. Kendi ekseninde döner, Dünya etrafında dolanır ve Dünya ile birlikte Güneş etrafında dolanır. Ay'ın hareketleri sonucu evreleri (Yeni Ay, İlk Dördün, Dolunay, Son Dördün) oluşur.",
+    videoUrl: "https://www.youtube.com/embed/fen5_1",
+    questions: [
+      { id: "f5q1", text: "Güneş, Dünya ve Ay'ın ortak şekilsel özelliği hangisidir?", options: ["Düz olmaları", "Küre şeklinde olmaları", "Aynı boyutta olmaları", "Işık kaynağı olmaları"], correctAnswer: "Küre şeklinde olmaları" },
+      { id: "f5q2", text: "Ay'ın gökyüzünde farklı şekillerde görünmesinin (evrelerinin) temel sebebi nedir?", options: ["Kendi etrafında çok hızlı dönmesi", "Dünya etrafındaki dolanma hareketi", "Güneş'in soğuması", "Dünya'nın gölgesinin her gün değişmesi"], correctAnswer: "Dünya etrafındaki dolanma hareketi" },
+      { id: "f5q3", text: "Aşağıdakilerden hangisi Ay'ın ana evrelerinden biri değildir?", options: ["Yeni Ay", "Dolunay", "Hilal", "İlk Dördün"], correctAnswer: "Hilal" }
+    ]
+  }
+};
+
 interface StudentDashboardProps {
   username: string;
   onLogout: () => void;
@@ -22,7 +153,53 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
   const [testAnswers, setTestAnswers] = useState<Record<string, string>>({});
   const [testQuestions, setTestQuestions] = useState<typeof demoQuestions>([]);
 
-  // Interactive Checklist State
+  // Study Plan Task Interface
+  interface StudyTask {
+    id: string;
+    subject: string;
+    topic: string;
+    type: "lesson" | "activity" | "test";
+    duration: number; // minutes
+    completed: boolean;
+    action: string;
+    icon: string;
+    externalLink?: string;
+  }
+
+  // Active study tasks state (shared with parent via localStorage)
+  const [studyTasks, setStudyTasks] = useState<StudyTask[]>(() => {
+    const saved = localStorage.getItem("student_study_plan_v1");
+    if (saved) return JSON.parse(saved);
+    return [
+      { id: "task-1", subject: "Matematik", topic: "Kesirler", type: "test", duration: 40, completed: false, action: "Kesirlerle İşlemler Soru Çözümü", icon: "📐" },
+      { id: "task-2", subject: "Fen Bilimleri", topic: "Sıvı Basıncı", type: "lesson", duration: 30, completed: false, action: "Sıvı Basıncı Deney Videosu ve Konu Anlatımı", icon: "🧪" },
+      { id: "task-3", subject: "Türkçe", topic: "Paragrafta Anlam", type: "activity", duration: 20, completed: false, action: "LGS Paragraf Okuma Egzersizi", icon: "📖" },
+      { id: "task-4", subject: "İngilizce", topic: "Friendship", type: "activity", duration: 15, completed: false, action: "LGS Kelime Kartları Tekrarı", icon: "🇬🇧" }
+    ];
+  });
+
+  // Points tracking
+  const [extraPoints, setExtraPoints] = useState<number>(() => {
+    const saved = localStorage.getItem("student_extra_points");
+    return saved ? parseInt(saved) : 0;
+  });
+
+  // Drag and Drop Index State
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+
+  // AI Planner / Checker States
+  const [aiFeedback, setAiFeedback] = useState<{ text: string; type: "success" | "warning" | "info"; suggestions?: any } | null>(null);
+
+  // Focused Study Workspace States
+  const [activeStudyTask, setActiveStudyTask] = useState<StudyTask | null>(null);
+  const [studySubTab, setStudySubTab] = useState<"summary" | "quiz" | "timer">("summary");
+  const [timerSeconds, setTimerSeconds] = useState(0);
+  const [timerActive, setTimerActive] = useState(false);
+  const [quizAnswers, setQuizAnswers] = useState<Record<string, string>>({});
+  const [quizChecked, setQuizChecked] = useState(false);
+  const [quizScore, setQuizScore] = useState<number | null>(null);
+
+  // Interactive Checklist State - Backwards compatibility fallback
   const [checklist, setChecklist] = useState<Record<string, boolean>>({
     math: true,
     science: false,
@@ -32,6 +209,27 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
 
   // AI Routine Planner State
   const [availableHours, setAvailableHours] = useState("2");
+  
+  // Custom Task Creation States
+  const [newSubject, setNewSubject] = useState("Matematik");
+  const [newTopic, setNewTopic] = useState("Kesirler");
+  const [newDuration, setNewDuration] = useState("30");
+  const [newAction, setNewAction] = useState("");
+  const [newType, setNewType] = useState<"lesson" | "activity" | "test">("lesson");
+  const [newExternalLink, setNewExternalLink] = useState("");
+
+  const subjectTopics: Record<string, string[]> = {
+    Matematik: ["Kesirler", "Ondalık Gösterim", "Sütun Grafiği", "Üslü Sayılar", "Çarpanlar ve Katlar"],
+    "Matematik (5. Sınıf)": ["Geometrik Şekiller ve Çizimler", "Açılar ve Doğrular", "Doğal Sayılar ve İşlemler", "Çevre ve Alan Ölçümü"],
+    "Fen Bilimleri": ["Katı Basıncı", "Sıvı Basıncı", "Gaz Basıncı"],
+    "Fen Bilimleri (5. Sınıf)": ["Güneş, Dünya ve Ay", "Canlıların Çeşitliliği", "Kuvvetin Ölçülmesi"],
+    Türkçe: ["Paragrafta Anlam", "Sözcükte Anlam", "Yazım Kuralları"],
+    İngilizce: ["Friendship", "Teen Life"],
+    "T.C. İnkılap Tarihi": ["Uyanan Avrupa", "Mustafa Kemal'in Çocukluğu"],
+    "Din Kültürü": ["Kader ve Kaza", "İnsanın İradesi"],
+    "Mola & Dinlenme": ["Zihin Dinlendirme"]
+  };
+
   const [routineResult, setRoutineResult] = useState<Array<{ subject: string; topic: string; duration: number; action: string }>>([
     { subject: "Matematik", topic: "Çarpanlar ve Katlar", duration: 50, action: "Konu Pekiştirme Soruları" },
     { subject: "Fen Bilimleri", topic: "Sıvı Basıncı", duration: 40, action: "Deney Temelli Video Anlatım" },
@@ -59,6 +257,11 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
     return localStorage.getItem("theme") === "dark";
   });
 
+  // Sync tasks to localstorage
+  useEffect(() => {
+    localStorage.setItem("student_study_plan_v1", JSON.stringify(studyTasks));
+  }, [studyTasks]);
+
   useEffect(() => {
     localStorage.setItem("masteryRecords", JSON.stringify(masteryRecords));
   }, [masteryRecords]);
@@ -73,6 +276,23 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
     }
   }, [darkMode]);
 
+  // Pomodoro countdown timer logic
+  useEffect(() => {
+    let interval: any = null;
+    if (timerActive && timerSeconds > 0) {
+      interval = setInterval(() => {
+        setTimerSeconds(prev => prev - 1);
+      }, 1000);
+    } else if (timerSeconds === 0 && timerActive) {
+      setTimerActive(false);
+      if (activeStudyTask) {
+        handleCompleteTask(activeStudyTask.id);
+        alert(`Tebrikler! ${activeStudyTask.subject} - ${activeStudyTask.topic} çalışmasını başarıyla tamamladın! Planına check işareti eklendi ve +100 XP kazandın.`);
+      }
+    }
+    return () => clearInterval(interval);
+  }, [timerActive, timerSeconds]);
+
   // Flashcards deck
   const flashcardsDeck = [
     { q: "Katıların basıncı yüzey alanı ile ters orantılı mıdır?", a: "Evet! Yüzey alanı küçüldükçe, katının uyguladığı basınç artar (Örn: Çivinin ucu)." },
@@ -82,16 +302,72 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
   ];
 
   // Dynamic calculations
-  const totalCompletedTasks = Object.keys(checklist).filter(k => checklist[k]).length;
-  const totalTasks = Object.keys(checklist).length;
-  const progressPercent = Math.round((totalCompletedTasks / totalTasks) * 100);
+  const totalCompletedTasks = studyTasks.filter(t => t.completed).length;
+  const totalTasks = studyTasks.length;
+  const progressPercent = totalTasks > 0 ? Math.round((totalCompletedTasks / totalTasks) * 100) : 0;
 
   const completedOutcomesCount = Object.values(masteryRecords).filter(r => r.status === "iyi" || r.status === "tam").length;
   const totalOutcomesCount = demoOutcomes.length;
   const targetPercent = totalOutcomesCount > 0 ? Math.round((completedOutcomesCount / totalOutcomesCount) * 100) : 0;
 
-  const totalPoints = 800 + Object.keys(masteryRecords).length * 150;
+  const totalPoints = 800 + Object.keys(masteryRecords).length * 150 + extraPoints;
   const studentLevel = Math.floor(totalPoints / 250) + 1;
+
+  // Complete a task and award points
+  const handleCompleteTask = (taskId: string) => {
+    setStudyTasks(prev => prev.map(t => {
+      if (t.id === taskId && !t.completed) {
+        const newExtra = extraPoints + 100;
+        setExtraPoints(newExtra);
+        localStorage.setItem("student_extra_points", newExtra.toString());
+        return { ...t, completed: true };
+      }
+      return t;
+    }));
+  };
+
+  // Toggle checklist check
+  const handleToggleTask = (taskId: string) => {
+    setStudyTasks(prev => prev.map(t => {
+      if (t.id === taskId) {
+        const nextState = !t.completed;
+        if (nextState) {
+          const newExtra = extraPoints + 100;
+          setExtraPoints(newExtra);
+          localStorage.setItem("student_extra_points", newExtra.toString());
+        } else {
+          const newExtra = Math.max(0, extraPoints - 100);
+          setExtraPoints(newExtra);
+          localStorage.setItem("student_extra_points", newExtra.toString());
+        }
+        return { ...t, completed: nextState };
+      }
+      return t;
+    }));
+  };
+
+  // HTML5 Drag and Drop handlers
+  const handleDragStart = (e: React.DragEvent, index: number) => {
+    setDraggedIndex(index);
+    e.dataTransfer.effectAllowed = "move";
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e: React.DragEvent, targetIndex: number) => {
+    e.preventDefault();
+    if (draggedIndex === null || draggedIndex === targetIndex) return;
+
+    const list = [...studyTasks];
+    const draggedItem = list[draggedIndex];
+    list.splice(draggedIndex, 1);
+    list.splice(targetIndex, 0, draggedItem);
+
+    setStudyTasks(list);
+    setDraggedIndex(null);
+  };
 
   // Generate study routine based on available duration
   function generateStudyRoutine() {
@@ -131,6 +407,133 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
     alert("Yapay Zeka zayıf olduğunuz kazanımları tarayarak yeni ders çalışma rutininizi oluşturdu!");
   }
 
+  // Generate complete AI Plan and save
+  const generateAiPlan = () => {
+    const aiPlan: StudyTask[] = [
+      {
+        id: "ai-task-1",
+        subject: "Matematik",
+        topic: "Kesirler",
+        type: "test",
+        duration: 35,
+        completed: false,
+        action: "Kesirlerle Bölme ve Çarpma Kazanım Testi",
+        icon: "📐"
+      },
+      {
+        id: "ai-task-2",
+        subject: "Fen Bilimleri",
+        topic: "Sıvı Basıncı",
+        type: "lesson",
+        duration: 30,
+        completed: false,
+        action: "Sıvı Basıncı Formül Mantığı ve Video Dersi",
+        icon: "🧪"
+      },
+      {
+        id: "ai-task-3",
+        subject: "Türkçe",
+        topic: "Paragrafta Anlam",
+        type: "activity",
+        duration: 20,
+        completed: false,
+        action: "Hızlı Paragraf Okuma ve Odaklanma Egzersizi",
+        icon: "📖"
+      },
+      {
+        id: "ai-task-4",
+        subject: "İngilizce",
+        topic: "Friendship",
+        type: "activity",
+        duration: 20,
+        completed: false,
+        action: "Friendship Ünitesi Kelime Eşleştirme Kartları",
+        icon: "🇬🇧"
+      }
+    ];
+
+    setStudyTasks(aiPlan);
+    setAiFeedback({
+      text: "AI Koçunuz, gelişim karnenizdeki zayıf noktaları (Sıvı Basıncı ve Kesir İşlemleri) analiz ederek sizin için en verimli dengeli LGS programını oluşturdu ve kaydetti.",
+      type: "success"
+    });
+  };
+
+  // AI Plan Checker
+  const checkPlanWithAi = () => {
+    const totalDuration = studyTasks.reduce((sum, t) => sum + t.duration, 0);
+    const hasMath = studyTasks.some(t => t.subject === "Matematik");
+    const hasScience = studyTasks.some(t => t.subject === "Fen Bilimleri");
+    
+    let responseText = "";
+    let feedbackType: "success" | "warning" | "info" = "success";
+    let suggestions = null;
+
+    if (studyTasks.length === 0) {
+      responseText = "Gözlem: Bugün için henüz bir çalışma planı oluşturmadınız.\nAnlamlandırma: Plansızlık çalışma motivasyonunu düşürebilir ve odaklanmayı zorlaştırabilir.\nYapıcı Öneri: 'AI Benim Adıma Plan Oluştursun' seçeneğini deneyebilir ya da listeden ders ekleyebilirsiniz.\nGüçlü Yön: Kendi planınızı yapmak için kontrol mekanizmasını çalıştırmanız harika bir adım.";
+      feedbackType = "info";
+    } else if (totalDuration > 180) {
+      responseText = `Gözlem: Bugün için planlanan toplam süre ${totalDuration} dakika (3 saatten fazla).\nAnlamlandırma: Çok uzun süre kesintisiz çalışmak aşırı yorgunluğa ve odaklanma kaybına sebep olabilir.\nYapıcı Öneri: Planı 120-150 dakikaya indirip derslerin arasına 10-15 dakikalık dinlenme etkinlikleri eklemeniz daha verimli olacaktır.\nGüçlü Yön: Yüksek çalışma motivasyonunuz ve azminiz harika bir gelişim göstergesi.`;
+      feedbackType = "warning";
+      suggestions = { action: "reduce_time", text: "Çalışma sürelerini kısalt ve aralara mola ekle." };
+    } else if (!hasScience) {
+      responseText = "Gözlem: Bugünkü planda Fen Bilimleri dersine yer verilmemiş.\nAnlamlandırma: Kazanım karnenizde Fen Bilimleri 'Sıvı Basıncı' konusunun desteklenmesi gerektiği görülüyor. Bu konunun ertelenmesi sınav başarısını etkileyebilir.\nYapıcı Öneri: Planda İngilizce süresini biraz azaltıp Fen Bilimleri için 25 dakikalık bir 'Video Anlatım İzleme' eklemenizi öneririm.\nGüçlü Yön: Planı kendinizin tasarlamış olması bağımsız çalışma becerinizin güçlü olduğunu gösteriyor.";
+      feedbackType = "warning";
+      suggestions = {
+        action: "add_science",
+        text: "Fen Bilimleri - Sıvı Basıncı (25 dk) Ekle",
+        task: {
+          id: "task-science-added",
+          subject: "Fen Bilimleri",
+          topic: "Sıvı Basıncı",
+          type: "lesson",
+          duration: 25,
+          completed: false,
+          action: "Sıvı Basıncı Konu Anlatımı Video Takibi",
+          icon: "🧪"
+        }
+      };
+    } else {
+      responseText = "Gözlem: Bugünkü planınız ders dağılımı ve toplam çalışma süresi açısından son derece dengeli.\nAnlamlandırma: Hem pratik soru çözümü hem de konu tekrarı içeriyor, bu da uzun vadeli hafızayı destekler.\nYapıcı Öneri: Bu sırayı takip ederek her konudan sonra 5 dakika gözlerinizi dinlendirin.\nGüçlü Yön: Planlama disiplininiz LGS başarınızı doğrudan destekleyecek seviyede.";
+      feedbackType = "success";
+    }
+
+    setAiFeedback({ text: responseText, type: feedbackType, suggestions });
+  };
+
+  const applyAiSuggestion = () => {
+    if (!aiFeedback || !aiFeedback.suggestions) return;
+    const { action, task } = aiFeedback.suggestions;
+
+    if (action === "add_science" && task) {
+      setStudyTasks(prev => [...prev, task]);
+      setAiFeedback({
+        text: "Fen Bilimleri görevi planınıza başarıyla eklendi! Planınız şimdi pedagojik olarak optimize edildi.",
+        type: "success"
+      });
+    } else if (action === "reduce_time") {
+      const reduced = studyTasks.map(t => ({
+        ...t,
+        duration: Math.round(t.duration * 0.8)
+      }));
+      reduced.push({
+        id: "task-break",
+        subject: "Mola & Dinlenme",
+        topic: "Zihin Dinlendirme",
+        type: "activity",
+        duration: 15,
+        completed: false,
+        action: "Gözleri dinlendirme ve esneme hareketleri",
+        icon: "☕"
+      });
+      setStudyTasks(reduced);
+      setAiFeedback({
+        text: "Süreler dengelendi ve zihin dinlendirme molası eklendi! Planınız optimize edildi.",
+        type: "success"
+      });
+    }
+  };
+
   // Launch test
   function startDiagnosticTest() {
     const selected = demoOutcomes.map((outcome) => {
@@ -164,7 +567,81 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
       setActiveTab("home");
       alert(`Tebrikler! Test başarıyla tamamlandı. Kazanım skorunuz: %${scorePercentage(evaluated)}`);
     }
-  }
+  const handleAddTask = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newAction.trim()) {
+      alert("Lütfen yapılacak çalışmayı yazın.");
+      return;
+    }
+    const icons: Record<string, string> = {
+      Matematik: "📐",
+      "Fen Bilimleri": "🧪",
+      Türkçe: "📖",
+      İngilizce: "🇬🇧",
+      "T.C. İnkılap Tarihi": "🕌",
+      "Din Kültürü": "🌙",
+      "Mola & Dinlenme": "☕"
+    };
+    const newTask: StudyTask = {
+      id: "task-" + Date.now(),
+      subject: newSubject,
+      topic: newTopic,
+      type: newType,
+      duration: parseInt(newDuration) || 30,
+      completed: false,
+      action: newAction,
+      icon: icons[newSubject] || "📚",
+      externalLink: newExternalLink.trim() || undefined
+    };
+
+    setStudyTasks(prev => [...prev, newTask]);
+    setNewAction("");
+    setNewExternalLink("");
+    setAiFeedback(null); // Reset feedback
+  };
+
+  const handleDeleteTask = (taskId: string) => {
+    setStudyTasks(prev => prev.filter(t => t.id !== taskId));
+    setAiFeedback(null); // Reset feedback
+  };
+
+  const handleStartStudy = (task: any) => {
+    setActiveStudyTask(task);
+    setStudySubTab("summary");
+    setTimerSeconds(task.duration * 60);
+    setTimerActive(false);
+    setQuizAnswers({});
+    setQuizChecked(false);
+    setQuizScore(null);
+  };
+
+  const handleQuizAnswerSelect = (questionId: string, option: string) => {
+    if (quizChecked) return; // locked after checking
+    setQuizAnswers(prev => ({ ...prev, [questionId]: option }));
+  };
+
+  const handleQuizSubmit = () => {
+    if (!activeStudyTask) return;
+    const content = studyContentDb[activeStudyTask.topic];
+    if (!content) return;
+
+    let correctCount = 0;
+    content.questions.forEach(q => {
+      if (quizAnswers[q.id] === q.correctAnswer) {
+        correctCount++;
+      }
+    });
+
+    setQuizScore(correctCount);
+    setQuizChecked(true);
+
+    if (correctCount === content.questions.length) {
+      handleCompleteTask(activeStudyTask.id);
+      const newExtra = extraPoints + 150;
+      setExtraPoints(newExtra);
+      localStorage.setItem("student_extra_points", newExtra.toString());
+    }
+  };
 
   function handleChecklistToggle(subject: string) {
     setChecklist(prev => ({ ...prev, [subject]: !prev[subject] }));
@@ -210,6 +687,9 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
           </a>
           <a onClick={() => { setTestMode(false); setActiveTab("study-plan"); }} className={`nav-item ${activeTab === "study-plan" ? "active" : ""}`}>
             <span className="icon">📅</span> Çalışma Planım
+          </a>
+          <a onClick={() => { setTestMode(false); setActiveTab("study-room"); }} className={`nav-item ${activeTab === "study-room" ? "active" : ""}`}>
+            <span className="icon">📖</span> Ders Çalış (Oda)
           </a>
           <a onClick={() => { setTestMode(false); setActiveTab("ai-routine"); }} className={`nav-item ${activeTab === "ai-routine" ? "active" : ""}`}>
             <span className="icon">⏱️</span> AI Rutinim
@@ -450,48 +930,680 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
 
             {/* PANEL: STUDY PLAN */}
             {activeTab === "study-plan" && (
-              <div className="card">
-                <h3>Müfredat Kazanım Takibi</h3>
-                <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", marginBottom: 15 }}>
-                  Aşağıda diagnostik ve adaptif testlerinizin sonucunda güncellenen kişisel öğrenme seviyeleriniz listelenmiştir.
-                </p>
-                <div className="outcome-list">
-                  {demoOutcomes.map((outcome) => {
-                    const topic = demoTopics.find((t) => t.id === outcome.topicId);
-                    const record = masteryRecords[outcome.id];
-                    
-                    const statusColors: Record<string, string> = {
-                      zayif: "var(--danger)",
-                      orta: "var(--warning)",
-                      iyi: "var(--primary)",
-                      tam: "var(--success)",
-                    };
+              <div className="study-plan-container" style={{ display: "grid", gridTemplateColumns: "1.2fr 0.8fr", gap: "20px" }}>
+                {/* LEFT COLUMN: DYNAMIC PROGRAM EDITOR */}
+                <div>
+                  <div className="dashboard-card" style={{ padding: "20px", marginBottom: "20px" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "15px", borderBottom: "1.5px solid var(--border-light)", paddingBottom: "10px" }}>
+                      <h3 style={{ margin: 0 }}>📅 Bugünün Çalışma Programı (Sürükle-Sırala)</h3>
+                      <div style={{ display: "flex", gap: "8px" }}>
+                        <button className="btn-card-secondary" onClick={checkPlanWithAi} style={{ fontSize: "0.78rem", fontWeight: 700, display: "flex", alignItems: "center", gap: "4px" }}>
+                          🤖 AI Kontrol Et
+                        </button>
+                        <button className="btn-card-primary" onClick={generateAiPlan} style={{ fontSize: "0.78rem", fontWeight: 700, display: "flex", alignItems: "center", gap: "4px" }}>
+                          ✨ AI Plan Oluştur
+                        </button>
+                      </div>
+                    </div>
 
-                    return (
-                      <div key={outcome.id} className="outcome-row">
-                        <div>
-                          <strong>{topic?.name} ({outcome.code})</strong>
-                          <p className="outcome-desc">{outcome.description}</p>
-                        </div>
-                        <div
-                          className="mastery-badge"
-                          style={{
-                            background: record ? statusColors[record.status] : "#555",
-                            color: "white",
-                            padding: "6px 12px",
-                            borderRadius: "6px",
-                            fontWeight: 800,
-                          }}
-                        >
-                          {record ? `${record.status.toUpperCase()} (%${record.level})` : "Ölçülmedi"}
+                    {/* AI FEEDBACK AREA */}
+                    {aiFeedback && (
+                      <div style={{ 
+                        background: aiFeedback.type === "success" ? "rgba(16, 185, 129, 0.08)" : aiFeedback.type === "warning" ? "rgba(245, 158, 11, 0.08)" : "rgba(99, 102, 241, 0.08)",
+                        borderLeft: `4px solid ${aiFeedback.type === "success" ? "var(--success)" : aiFeedback.type === "warning" ? "var(--warning)" : "var(--primary)"}`,
+                        padding: "15px",
+                        borderRadius: "8px",
+                        marginBottom: "15px",
+                        fontSize: "0.85rem",
+                        lineHeight: 1.5
+                      }}>
+                        <div style={{ display: "flex", gap: "10px", alignItems: "flex-start" }}>
+                          <span style={{ fontSize: "1.2rem" }}>{aiFeedback.type === "success" ? "💡" : "⚠️"}</span>
+                          <div style={{ flex: 1 }}>
+                            <strong style={{ display: "block", marginBottom: "4px", color: "var(--text-main)" }}>AI Gelişim Koçu Geri Bildirimi:</strong>
+                            <p style={{ margin: 0, whiteSpace: "pre-line", color: "var(--text-muted)" }}>{aiFeedback.text}</p>
+                            {aiFeedback.suggestions && (
+                              <button 
+                                onClick={applyAiSuggestion}
+                                className="primary"
+                                style={{ marginTop: "10px", padding: "6px 12px", fontSize: "0.75rem", borderRadius: "4px", width: "auto" }}
+                              >
+                                ✓ {aiFeedback.suggestions.text}
+                              </button>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    );
-                  })}
+                    )}
+
+                    <p style={{ fontSize: "0.8rem", color: "var(--text-muted)", marginTop: "-5px", marginBottom: "15px" }}>
+                      * Sıralamayı değiştirmek için satırları sürükleyip bırakabilirsiniz. Planınız velinizle gerçek zamanlı senkronize olur.
+                    </p>
+
+                    {/* TASKS LIST */}
+                    {studyTasks.length === 0 ? (
+                      <div style={{ textAlign: "center", padding: "30px", border: "2px dashed var(--border-light)", borderRadius: "8px", color: "var(--text-muted)" }}>
+                        <p style={{ margin: "0 0 10px 0", fontSize: "0.9rem" }}>Henüz çalışma planınıza ders eklemediniz.</p>
+                        <button className="btn-card-primary" onClick={generateAiPlan} style={{ width: "auto" }}>AI ile Otomatik Planla</button>
+                      </div>
+                    ) : (
+                      <div className="study-tasks-drag-list" style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                        {studyTasks.map((task, idx) => (
+                          <div 
+                            key={task.id}
+                            draggable="true"
+                            onDragStart={(e) => handleDragStart(e, idx)}
+                            onDragOver={handleDragOver}
+                            onDrop={(e) => handleDrop(e, idx)}
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              padding: "12px 15px",
+                              background: "var(--white)",
+                              borderRadius: "8px",
+                              border: "1.5px solid var(--border-light)",
+                              borderLeft: `4px solid ${task.completed ? "var(--success)" : "var(--primary)"}`,
+                              cursor: "grab",
+                              transition: "all 0.2s",
+                              opacity: task.completed ? 0.7 : 1
+                            }}
+                            className="drag-task-item"
+                          >
+                            {/* Drag handle */}
+                            <span style={{ fontSize: "1.2rem", color: "var(--text-muted)", marginRight: "10px", cursor: "grab" }}>☰</span>
+                            
+                            {/* Checkbox */}
+                            <input 
+                              type="checkbox" 
+                              checked={task.completed}
+                              onChange={() => handleToggleTask(task.id)}
+                              style={{ width: "18px", height: "18px", marginRight: "12px", cursor: "pointer" }}
+                            />
+
+                            {/* Task Icon & Text */}
+                            <span style={{ fontSize: "1.4rem", marginRight: "10px" }}>{task.icon}</span>
+                            <div style={{ flex: 1 }}>
+                              <span style={{ fontSize: "0.72rem", fontWeight: 800, textTransform: "uppercase", color: "var(--text-muted)" }}>
+                                {task.subject} • {task.topic} ({task.type === "lesson" ? "Konu Anlatımı" : task.type === "test" ? "Mini Test" : "Etkinlik"})
+                              </span>
+                              <p style={{ margin: "2px 0 0 0", fontSize: "0.88rem", fontWeight: 600, color: "var(--text-main)" }}>
+                                {task.action}
+                              </p>
+                            </div>
+
+                            {/* Duration & Delete */}
+                            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                              <span style={{ fontSize: "0.78rem", fontWeight: 800, color: "var(--primary)", background: "rgba(99, 102, 241, 0.08)", padding: "4px 8px", borderRadius: "4px" }}>
+                                ⏱️ {task.duration} dk
+                              </span>
+                              <button 
+                                onClick={() => handleDeleteTask(task.id)}
+                                style={{ background: "none", border: "none", color: "var(--danger)", cursor: "pointer", fontSize: "1.1rem", padding: "0 4px" }}
+                                title="Görevi Sil"
+                              >
+                                &times;
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* MANUAL ADD FORM */}
+                  <div className="dashboard-card" style={{ padding: "20px" }}>
+                    <h3 style={{ margin: "0 0 15px 0", borderBottom: "1.5px solid var(--border-light)", paddingBottom: "10px" }}>➕ Programa Yeni Görev Ekle</h3>
+                    <form onSubmit={handleAddTask} style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+                      <div className="form-group">
+                        <label style={{ fontSize: "0.8rem", fontWeight: 700 }}>Ders / Alan</label>
+                        <select 
+                          value={newSubject}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            setNewSubject(val);
+                            setNewTopic(subjectTopics[val][0]);
+                          }}
+                          style={{ padding: "8px", borderRadius: "6px", border: "1.5px solid var(--border-light)", width: "100%" }}
+                        >
+                          {Object.keys(subjectTopics).map(sub => (
+                            <option key={sub} value={sub}>{sub}</option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div className="form-group">
+                        <label style={{ fontSize: "0.8rem", fontWeight: 700 }}>Konu Başlığı</label>
+                        <select 
+                          value={newTopic}
+                          onChange={(e) => setNewTopic(e.target.value)}
+                          style={{ padding: "8px", borderRadius: "6px", border: "1.5px solid var(--border-light)", width: "100%" }}
+                        >
+                          {subjectTopics[newSubject]?.map(top => (
+                            <option key={top} value={top}>{top}</option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div className="form-group">
+                        <label style={{ fontSize: "0.8rem", fontWeight: 700 }}>Çalışma Türü</label>
+                        <select 
+                          value={newType}
+                          onChange={(e) => setNewType(e.target.value as any)}
+                          style={{ padding: "8px", borderRadius: "6px", border: "1.5px solid var(--border-light)", width: "100%" }}
+                        >
+                          <option value="lesson">📖 Konu Anlatımı & Video</option>
+                          <option value="activity">🎴 Tekrar Etkinliği</option>
+                          <option value="test">✏️ Kazanım Tarama Testi</option>
+                        </select>
+                      </div>
+
+                      <div className="form-group">
+                        <label style={{ fontSize: "0.8rem", fontWeight: 700 }}>Planlanan Süre (Dakika)</label>
+                        <input 
+                          type="number" 
+                          value={newDuration}
+                          onChange={(e) => setNewDuration(e.target.value)}
+                          placeholder="Örn: 30"
+                          min="5"
+                          max="180"
+                          style={{ padding: "8px", borderRadius: "6px", border: "1.5px solid var(--border-light)", width: "100%" }}
+                        />
+                      </div>
+
+                      <div className="form-group" style={{ gridColumn: "span 2" }}>
+                        <label style={{ fontSize: "0.8rem", fontWeight: 700 }}>Yapılacak Çalışma / Görev Detayı</label>
+                        <input 
+                          type="text" 
+                          value={newAction}
+                          onChange={(e) => setNewAction(e.target.value)}
+                          placeholder="Örn: 20 Soru Çöz ve Hata Analizi Yap"
+                          style={{ padding: "8px", borderRadius: "6px", border: "1.5px solid var(--border-light)", width: "100%" }}
+                        />
+                      </div>
+
+                      <div className="form-group" style={{ gridColumn: "span 2" }}>
+                        <label style={{ fontSize: "0.8rem", fontWeight: 700 }}>EBA veya Harici Kaynak Linki (Opsiyonel)</label>
+                        <input 
+                          type="url" 
+                          value={newExternalLink}
+                          onChange={(e) => setNewExternalLink(e.target.value)}
+                          placeholder="Örn: https://ders.eba.gov.tr/ders/..."
+                          style={{ padding: "8px", borderRadius: "6px", border: "1.5px solid var(--border-light)", width: "100%" }}
+                        />
+                      </div>
+
+                      <button 
+                        type="submit" 
+                        className="primary" 
+                        style={{ gridColumn: "span 2", marginTop: "5px", padding: "10px", borderRadius: "6px" }}
+                      >
+                        ✓ Görevi Programa Ekle
+                      </button>
+                    </form>
+                  </div>
                 </div>
-                <button className="primary" onClick={startDiagnosticTest} style={{ marginTop: 20, width: "auto", padding: "10px 20px" }}>
-                  Kazanım Tespit Testi Başlat
-                </button>
+
+                {/* RIGHT COLUMN: MASTERY & ADAPTIVE GUIDE */}
+                <div>
+                  {/* PROGRESS OVERVIEW */}
+                  <div className="dashboard-card" style={{ padding: "20px", marginBottom: "20px", textAlign: "center" }}>
+                    <h3 style={{ margin: "0 0 15px 0" }}>📊 Bugünkü İlerleme</h3>
+                    <div style={{ width: "120px", height: "120px", margin: "0 auto 15px auto", position: "relative" }}>
+                      <svg width="120" height="120" viewBox="0 0 120 120">
+                        <circle cx="60" cy="60" r="50" fill="transparent" stroke="var(--border-light)" strokeWidth="8" />
+                        <circle cx="60" cy="60" r="50" fill="transparent" stroke="var(--success)" strokeWidth="8"
+                          strokeDasharray="314.16" strokeDashoffset={314.16 - (314.16 * progressPercent) / 100}
+                          strokeLinecap="round" transform="rotate(-90 60 60)" style={{ transition: "stroke-dashoffset 0.3s" }} />
+                      </svg>
+                      <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
+                        <h2 style={{ margin: 0, fontSize: "1.8rem", fontWeight: 800 }}>{progressPercent}%</h2>
+                        <span style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>Tamamlandı</span>
+                      </div>
+                    </div>
+                    <div style={{ fontSize: "0.85rem", color: "var(--text-main)" }}>
+                      <strong>{totalCompletedTasks}</strong> / {totalTasks} Görev Bitti
+                    </div>
+                  </div>
+
+                  {/* WEAK TOPICS GUIDE */}
+                  <div className="dashboard-card" style={{ padding: "20px" }}>
+                    <h3 style={{ margin: "0 0 10px 0" }}>🎯 Hedef Kazanım Karnen</h3>
+                    <p style={{ fontSize: "0.78rem", color: "var(--text-muted)", marginBottom: "15px" }}>
+                      Aşağıdaki kazanım seviyelerinize göre eksik olduğunuz dersleri çalışma programınıza ekleyebilirsiniz.
+                    </p>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "10px", maxHeight: "350px", overflowY: "auto" }}>
+                      {demoOutcomes.map((outcome) => {
+                        const topic = demoTopics.find((t) => t.id === outcome.topicId);
+                        const record = masteryRecords[outcome.id];
+                        
+                        const statusColors: Record<string, string> = {
+                          zayif: "var(--danger)",
+                          orta: "var(--warning)",
+                          iyi: "var(--primary)",
+                          tam: "var(--success)",
+                        };
+
+                        return (
+                          <div 
+                            key={outcome.id} 
+                            style={{ 
+                              padding: "10px", 
+                              borderRadius: "6px", 
+                              background: "var(--bg-body)", 
+                              border: "1px solid var(--border-light)",
+                              display: "flex", 
+                              justifyContent: "space-between", 
+                              alignItems: "center"
+                            }}
+                          >
+                            <div style={{ flex: 1, paddingRight: "10px" }}>
+                              <strong style={{ fontSize: "0.8rem", color: "var(--text-main)" }}>{topic?.name}</strong>
+                              <p style={{ margin: "2px 0 0 0", fontSize: "0.72rem", color: "var(--text-muted)", lineHeight: 1.3 }}>{outcome.description}</p>
+                            </div>
+                            <span 
+                              style={{ 
+                                padding: "4px 8px", 
+                                borderRadius: "4px", 
+                                fontSize: "0.68rem", 
+                                fontWeight: 800, 
+                                background: record ? statusColors[record.status] : "#777",
+                                color: "white" 
+                              }}
+                            >
+                              {record ? `${record.status.toUpperCase()}` : "Ölçülmedi"}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                    <button className="primary" onClick={startDiagnosticTest} style={{ marginTop: "15px", padding: "8px", fontSize: "0.8rem" }}>
+                      ✏️ Kazanım Tespit Testi Başlat
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* PANEL: STUDY ROOM */}
+            {activeTab === "study-room" && (
+              <div className="study-room-layout" style={{ display: "grid", gridTemplateColumns: "0.8fr 1.2fr", gap: "20px" }}>
+                {/* LEFT SIDEBAR: STUDY PLAN & FULL CURRICULUM */}
+                <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+                  {/* ACTIVE TASKS */}
+                  <div className="dashboard-card" style={{ padding: "18px" }}>
+                    <h3 style={{ margin: "0 0 12px 0", borderBottom: "1.5px solid var(--border-light)", paddingBottom: "8px" }}>📋 Plandaki Dersler</h3>
+                    {studyTasks.filter(t => !t.completed).length === 0 ? (
+                      <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", margin: 0, fontStyle: "italic" }}>
+                        Bugünkü planındaki tüm dersleri tamamladın! 🎉
+                      </p>
+                    ) : (
+                      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                        {studyTasks.filter(t => !t.completed).map(task => (
+                          <div 
+                            key={task.id}
+                            onClick={() => handleStartStudy(task)}
+                            style={{
+                              padding: "10px 12px",
+                              background: activeStudyTask?.id === task.id ? "rgba(99, 102, 241, 0.08)" : "var(--bg-body)",
+                              border: activeStudyTask?.id === task.id ? "1.5px solid var(--primary)" : "1.5px solid var(--border-light)",
+                              borderRadius: "6px",
+                              cursor: "pointer",
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                              transition: "all 0.2s"
+                            }}
+                          >
+                            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                              <span>{task.icon}</span>
+                              <div>
+                                <h4 style={{ margin: 0, fontSize: "0.82rem", fontWeight: 700 }}>{task.subject}</h4>
+                                <span style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>{task.topic}</span>
+                              </div>
+                            </div>
+                            <span style={{ fontSize: "0.75rem", fontWeight: 800, color: "var(--primary)" }}>▶ Başla</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* FULL CURRICULUM ACCORDION */}
+                  <div className="dashboard-card" style={{ padding: "18px" }}>
+                    <h3 style={{ margin: "0 0 8px 0" }}>📖 LGS Kütüphanesi</h3>
+                    <p style={{ fontSize: "0.72rem", color: "var(--text-muted)", marginBottom: "12px", marginTop: 0 }}>
+                      Müfredattaki tüm konu ve derslere buradan ulaşarak çalışabilirsin.
+                    </p>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "8px", maxHeight: "350px", overflowY: "auto" }}>
+                      {Object.keys(subjectTopics).filter(sub => sub !== "Mola & Dinlenme").map(sub => (
+                        <details key={sub} style={{ border: "1.5px solid var(--border-light)", borderRadius: "6px", overflow: "hidden" }}>
+                          <summary style={{ padding: "10px", fontWeight: 700, fontSize: "0.82rem", background: "var(--bg-body)", cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                            <span>{sub === "Matematik" ? "📐 Matematik" : sub === "Fen Bilimleri" ? "🧪 Fen Bilimleri" : sub === "Türkçe" ? "📖 Türkçe" : sub === "İngilizce" ? "🇬🇧 İngilizce" : sub === "T.C. İnkılap Tarihi" ? "🕌 İnkılap Tarihi" : "🌙 Din Kültürü"}</span>
+                          </summary>
+                          <div style={{ padding: "8px", display: "flex", flexDirection: "column", gap: "6px", background: "var(--white)" }}>
+                            {subjectTopics[sub].map(topic => (
+                              <div 
+                                key={topic}
+                                onClick={() => handleStartStudy({
+                                  id: "temp-" + topic,
+                                  subject: sub,
+                                  topic: topic,
+                                  type: "lesson",
+                                  duration: 30,
+                                  completed: false,
+                                  action: "LGS Müfredat Konu Çalışması",
+                                  icon: sub === "Matematik" ? "📐" : sub === "Fen Bilimleri" ? "🧪" : sub === "Türkçe" ? "📖" : sub === "İngilizce" ? "🇬🇧" : sub === "T.C. İnkılap Tarihi" ? "🕌" : "🌙"
+                                })}
+                                style={{
+                                  padding: "6px 8px",
+                                  fontSize: "0.78rem",
+                                  borderRadius: "4px",
+                                  cursor: "pointer",
+                                  background: activeStudyTask?.topic === topic ? "rgba(99, 102, 241, 0.05)" : "transparent",
+                                  color: activeStudyTask?.topic === topic ? "var(--primary)" : "var(--text-main)",
+                                  fontWeight: activeStudyTask?.topic === topic ? 800 : 500,
+                                  borderLeft: activeStudyTask?.topic === topic ? "3px solid var(--primary)" : "3px solid transparent"
+                                }}
+                                className="curriculum-item-hover"
+                              >
+                                • {topic}
+                              </div>
+                            ))}
+                          </div>
+                        </details>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* RIGHT AREA: WORKSPACE VIEW */}
+                <div className="dashboard-card" style={{ padding: "20px", display: "flex", flexDirection: "column", minHeight: "500px" }}>
+                  {!activeStudyTask ? (
+                    <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center", padding: "40px" }}>
+                      <span style={{ fontSize: "4rem", marginBottom: "15px", display: "block" }}>📚</span>
+                      <h3 style={{ margin: "0 0 10px 0", fontSize: "1.4rem", fontWeight: 800 }}>EduMentor Çalışma Odası</h3>
+                      <p style={{ margin: 0, fontSize: "0.9rem", color: "var(--text-muted)", maxWidth: "400px", lineHeight: 1.5 }}>
+                        Çalışmak istediğin konuyu sol taraftaki plandan seçerek veya kütüphaneden bir ders açarak hemen konu anlatımı, mini test ve zamanlayıcıyı kullanmaya başla.
+                      </p>
+                    </div>
+                  ) : (
+                    <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
+                      {/* Task Header */}
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1.5px solid var(--border-light)", paddingBottom: "12px", marginBottom: "15px" }}>
+                        <div>
+                          <span style={{ fontSize: "0.72rem", color: "var(--primary)", fontWeight: 800, textTransform: "uppercase" }}>{activeStudyTask.subject}</span>
+                          <h3 style={{ margin: "2px 0 0 0", fontSize: "1.2rem", fontWeight: 800 }}>{activeStudyTask.topic}</h3>
+                        </div>
+                        <button className="btn-card-secondary" onClick={() => setActiveStudyTask(null)} style={{ fontSize: "0.75rem", padding: "6px 12px" }}>
+                          Kapat
+                        </button>
+                      </div>
+
+                      {/* Sub-Tabs Selector */}
+                      <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
+                        {(["summary", "quiz", "timer"] as const).map(tab => (
+                          <button
+                            key={tab}
+                            onClick={() => setStudySubTab(tab)}
+                            style={{
+                              padding: "8px 16px",
+                              fontSize: "0.82rem",
+                              fontWeight: 800,
+                              borderRadius: "6px",
+                              border: "1.5px solid var(--border-light)",
+                              cursor: "pointer",
+                              background: studySubTab === tab ? "var(--primary)" : "var(--white)",
+                              color: studySubTab === tab ? "white" : "var(--text-main)"
+                            }}
+                          >
+                            {tab === "summary" ? "📖 Konu Anlatımı & Video" : tab === "quiz" ? "✏️ Mini Pratik Test" : "⏱️ Pomodoro Zamanlayıcı"}
+                          </button>
+                        ))}
+                      </div>
+
+                      {/* Tab Content 1: Summary */}
+                      {studySubTab === "summary" && (
+                        <div style={{ display: "flex", flexDirection: "column", gap: "20px", flex: 1 }}>
+                          <div style={{ background: "var(--bg-body)", padding: "20px", borderRadius: "8px", borderLeft: "4px solid var(--primary)", lineHeight: 1.6 }}>
+                            <strong style={{ display: "block", marginBottom: "8px", fontSize: "0.95rem" }}>Konu Özeti ve Kritik Detaylar</strong>
+                            <p style={{ margin: 0, fontSize: "0.88rem", color: "var(--text-muted)", whiteSpace: "pre-line" }}>
+                              {studyContentDb[activeStudyTask.topic]?.summary || 
+                                `${activeStudyTask.topic} konusu hakkında LGS sınavında çıkabilecek temel kavramlar ve formüller bu alanda listelenmiştir. LGS hazırlığı için konu özetlerini dikkatlice okuyup önemli kısımları not almanız hafızada kalıcılığı artırır.`
+                              }
+                            </p>
+                          </div>
+
+                          {/* EBA / External Link integration */}
+                          {activeStudyTask.externalLink && (
+                            <div style={{ 
+                              background: "linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(6, 182, 212, 0.08))",
+                              padding: "20px", 
+                              borderRadius: "8px", 
+                              border: "1.5px solid rgba(99, 102, 241, 0.15)",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "space-between",
+                              gap: "15px"
+                            }}>
+                              <div style={{ flex: 1 }}>
+                                <strong style={{ display: "block", marginBottom: "4px", fontSize: "0.95rem", color: "var(--primary)" }}>🌐 MEB EBA / Dış Kaynak Dersi Hazır!</strong>
+                                <p style={{ margin: 0, fontSize: "0.82rem", color: "var(--text-muted)", lineHeight: 1.4 }}>
+                                  Bu konunun resmi MEB EBA / harici eğitim materyali eklenmiştir. EBA yönlendirmeleri giriş yapmanızı isteyebilir; EBA şifrenizle giriş yaptıktan sonra doğrudan kaynağa yönlendirileceksiniz.
+                                </p>
+                              </div>
+                              <button 
+                                onClick={() => {
+                                  window.open(activeStudyTask.externalLink, "_blank");
+                                }}
+                                className="primary" 
+                                style={{ width: "auto", padding: "10px 18px", fontSize: "0.85rem", whiteSpace: "nowrap" }}
+                              >
+                                🚀 EBA'da Çalışmaya Başla
+                              </button>
+                            </div>
+                          )}
+
+                          {/* Video player simulation */}
+                          <div style={{ 
+                            background: "#000", 
+                            aspectRatio: "16/9", 
+                            borderRadius: "8px", 
+                            display: "flex", 
+                            flexDirection: "column", 
+                            alignItems: "center", 
+                            justifyContent: "center",
+                            color: "white",
+                            padding: "20px",
+                            textAlign: "center"
+                          }}>
+                            <span style={{ fontSize: "3rem", marginBottom: "10px" }}>🎬</span>
+                            <strong style={{ fontSize: "1rem" }}>{activeStudyTask.topic} Konu Anlatım Videosu</strong>
+                            <p style={{ fontSize: "0.75rem", color: "#888", margin: "4px 0 15px 0" }}>LGS Soru Çözüm Taktikleri & Pratik Anlatım</p>
+                            <button 
+                              onClick={() => {
+                                handleCompleteTask(activeStudyTask.id);
+                                alert("Harika! Konu anlatım dersini başarıyla tamamladın! Çalışma planın güncellendi ve +100 XP kazandın.");
+                              }}
+                              className="primary" 
+                              style={{ width: "auto", padding: "10px 20px" }}
+                            >
+                              Videoyu Bitirdim (✓ Görevi Tamamla)
+                            </button>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Tab Content 2: Quiz */}
+                      {studySubTab === "quiz" && (
+                        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "15px" }}>
+                          {studyContentDb[activeStudyTask.topic] ? (
+                            <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+                              {studyContentDb[activeStudyTask.topic].questions.map((q, qidx) => (
+                                <div key={q.id} style={{ border: "1.5px solid var(--border-light)", padding: "15px", borderRadius: "8px", background: "var(--white)" }}>
+                                  <strong style={{ display: "block", marginBottom: "10px", fontSize: "0.9rem" }}>Soru {qidx + 1}: {q.text}</strong>
+                                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
+                                    {q.options.map(opt => {
+                                      const isSelected = quizAnswers[q.id] === opt;
+                                      const isCorrect = q.correctAnswer === opt;
+                                      let btnBg = "var(--white)";
+                                      let btnColor = "var(--text-main)";
+                                      let btnBorder = "1.5px solid var(--border-light)";
+
+                                      if (isSelected) {
+                                        btnBg = "var(--primary)";
+                                        btnColor = "white";
+                                        btnBorder = "1.5px solid var(--primary)";
+                                      }
+
+                                      if (quizChecked) {
+                                        if (isCorrect) {
+                                          btnBg = "var(--success)";
+                                          btnColor = "white";
+                                          btnBorder = "1.5px solid var(--success)";
+                                        } else if (isSelected) {
+                                          btnBg = "var(--danger)";
+                                          btnColor = "white";
+                                          btnBorder = "1.5px solid var(--danger)";
+                                        }
+                                      }
+
+                                      return (
+                                        <button
+                                          key={opt}
+                                          type="button"
+                                          onClick={() => handleQuizAnswerSelect(q.id, opt)}
+                                          disabled={quizChecked}
+                                          style={{
+                                            padding: "10px",
+                                            borderRadius: "6px",
+                                            border: btnBorder,
+                                            background: btnBg,
+                                            color: btnColor,
+                                            fontSize: "0.8rem",
+                                            fontWeight: 600,
+                                            cursor: quizChecked ? "default" : "pointer",
+                                            textAlign: "left"
+                                          }}
+                                        >
+                                          {opt}
+                                        </button>
+                                      );
+                                    })}
+                                  </div>
+                                </div>
+                              ))}
+
+                              {/* Action button */}
+                              {!quizChecked ? (
+                                <button 
+                                  onClick={handleQuizSubmit}
+                                  disabled={Object.keys(quizAnswers).length < studyContentDb[activeStudyTask.topic].questions.length}
+                                  className="primary"
+                                  style={{ padding: "12px", borderRadius: "6px", marginTop: "10px" }}
+                                >
+                                  Cevapları Kontrol Et
+                                </button>
+                              ) : (
+                                <div style={{ 
+                                  background: quizScore === studyContentDb[activeStudyTask.topic].questions.length ? "rgba(16, 185, 129, 0.08)" : "rgba(239, 68, 68, 0.08)",
+                                  borderLeft: `4px solid ${quizScore === studyContentDb[activeStudyTask.topic].questions.length ? "var(--success)" : "var(--danger)"}`,
+                                  padding: "15px",
+                                  borderRadius: "8px",
+                                  marginTop: "10px",
+                                  textAlign: "center"
+                                }}>
+                                  <strong>Doğru Sayısı: {quizScore} / {studyContentDb[activeStudyTask.topic].questions.length}</strong>
+                                  <p style={{ margin: "4px 0 10px 0", fontSize: "0.82rem", color: "var(--text-muted)" }}>
+                                    {quizScore === studyContentDb[activeStudyTask.topic].questions.length ? 
+                                      "Tebrikler! Konuyu pekiştirdin. +150 XP profil puanına eklendi ve görev tamamlandı!" : 
+                                      "Bazı hataların var. Yukarıda yeşil renkli doğru şıkları inceleyerek tekrar deneyebilirsin!"
+                                    }
+                                  </p>
+                                  {quizScore !== studyContentDb[activeStudyTask.topic].questions.length && (
+                                    <button 
+                                      onClick={() => {
+                                        setQuizAnswers({});
+                                        setQuizChecked(false);
+                                        setQuizScore(null);
+                                      }}
+                                      className="primary"
+                                      style={{ width: "auto", padding: "8px 16px" }}
+                                    >
+                                      Yeniden Dene
+                                    </button>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                          ) : (
+                            <div style={{ textAlign: "center", padding: "40px" }}>
+                              <p>Bu konu için pratik testi henüz hazırlanmadı. Konu özetine çalışabilirsiniz.</p>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Tab Content 3: Timer */}
+                      {studySubTab === "timer" && (
+                        <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "20px" }}>
+                          {/* Circular Timer Visual */}
+                          <div style={{ width: "200px", height: "200px", position: "relative", marginBottom: "30px" }}>
+                            <svg width="200" height="200" viewBox="0 0 200 200">
+                              <circle cx="100" cy="100" r="85" fill="transparent" stroke="var(--border-light)" strokeWidth="10" />
+                              <circle cx="100" cy="100" r="85" fill="transparent" stroke="var(--primary)" strokeWidth="10"
+                                strokeDasharray="534.07" 
+                                strokeDashoffset={534.07 - (534.07 * timerSeconds) / (activeStudyTask.duration * 60 || 1800)}
+                                strokeLinecap="round" transform="rotate(-90 100 100)" style={{ transition: "stroke-dashoffset 1s linear" }} />
+                            </svg>
+                            <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", textAlign: "center" }}>
+                              <h1 style={{ margin: 0, fontSize: "2.4rem", fontWeight: 800 }}>
+                                {Math.floor(timerSeconds / 60)}:{(timerSeconds % 60).toString().padStart(2, "0")}
+                              </h1>
+                              <span style={{ fontSize: "0.75rem", color: "var(--text-muted)", textTransform: "uppercase" }}>Odaklanma Süresi</span>
+                            </div>
+                          </div>
+
+                          {/* Control Buttons */}
+                          <div style={{ display: "flex", gap: "15px" }}>
+                            <button
+                              onClick={() => setTimerActive(!timerActive)}
+                              style={{
+                                padding: "10px 24px",
+                                fontSize: "0.9rem",
+                                fontWeight: 800,
+                                borderRadius: "6px",
+                                border: "none",
+                                background: timerActive ? "var(--warning)" : "var(--success)",
+                                color: "white",
+                                cursor: "pointer"
+                              }}
+                            >
+                              {timerActive ? "⏸ Duraklat" : "▶ Başlat"}
+                            </button>
+                            <button
+                              onClick={() => {
+                                setTimerActive(false);
+                                setTimerSeconds(activeStudyTask.duration * 60);
+                              }}
+                              style={{
+                                padding: "10px 24px",
+                                fontSize: "0.9rem",
+                                fontWeight: 800,
+                                borderRadius: "6px",
+                                border: "1.5px solid var(--border-light)",
+                                background: "var(--white)",
+                                color: "var(--text-main)",
+                                cursor: "pointer"
+                              }}
+                            >
+                              ⏱️ Sıfırla
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
             )}
 

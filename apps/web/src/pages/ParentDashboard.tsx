@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { demoOutcomes, demoTopics } from "../data/demoCurriculum";
 
 interface ParentDashboardProps {
@@ -9,6 +9,22 @@ interface ParentDashboardProps {
 export function ParentDashboard({ username, onLogout }: ParentDashboardProps) {
   const [activeTab, setActiveTab] = useState("overview");
   const [reportType, setReportType] = useState<"daily" | "weekly" | "monthly">("weekly");
+  
+  const [parentStudyPlan, setParentStudyPlan] = useState<any[]>([]);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("student_study_plan_v1");
+    if (saved) {
+      setParentStudyPlan(JSON.parse(saved));
+    }
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === "student_study_plan_v1" && e.newValue) {
+        setParentStudyPlan(JSON.parse(e.newValue));
+      }
+    };
+    window.addEventListener("storage", handleStorage);
+    return () => window.removeEventListener("storage", handleStorage);
+  }, []);
   
   // Interactive Chat State
   const [chatMessages, setChatMessages] = useState([
@@ -301,6 +317,82 @@ export function ParentDashboard({ username, onLogout }: ParentDashboardProps) {
                   <p style={{ margin: 0, fontSize: "0.9rem", lineHeight: 1.5 }}>
                     <strong>Öğrenme DNA'sı Özeti:</strong> Arda en yüksek verimlilik oranına 16:00-18:00 saatleri arasında ulaşıyor. Matematikteki gelişim hızı oldukça istikrarlıdır. Önümüzdeki ay, Sıvı Basıncı gibi soyut Fen kazanımlarını oyunlaştırılmış LGS denemeleriyle desteklemeye devam edeceğiz. Herhangi bir başarı riski bulunmamaktadır.
                   </p>
+                </div>
+              )}
+            </div>
+
+            {/* LIVE ÖĞRENCİ ÇALIŞMA PLANI TAKİBİ */}
+            <div className="section-card" style={{ marginTop: 25 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 15, borderBottom: "1.5px solid var(--border-light)", paddingBottom: 10 }}>
+                <h3 style={{ margin: 0 }}>📅 Arda'nın Bugünkü Çalışma Planı (Canlı Takip)</h3>
+                <span style={{ fontSize: "0.82rem", color: "var(--primary)", fontWeight: 800 }}>Canlı Senkronize</span>
+              </div>
+              
+              {parentStudyPlan.length === 0 ? (
+                <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", fontStyle: "italic", margin: 0 }}>
+                  Öğrenciniz bugün için henüz bir ders çalışma planı oluşturmadı.
+                </p>
+              ) : (
+                <div>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 20, marginBottom: 15, background: "var(--bg-body)", padding: 15, borderRadius: 8, alignItems: "center" }}>
+                    <div><strong>Toplam Hedef:</strong> {parentStudyPlan.length} Görev</div>
+                    <div><strong>Tamamlanan:</strong> {parentStudyPlan.filter(t => t.completed).length} Görev</div>
+                    <div style={{ flex: 1, display: "flex", alignItems: "center", gap: 10, minWidth: "200px" }}>
+                      <strong>İlerleme:</strong>
+                      <div style={{ flex: 1, height: 8, background: "var(--border-light)", borderRadius: 4, overflow: "hidden" }}>
+                        <div style={{ width: `${Math.round((parentStudyPlan.filter(t => t.completed).length / parentStudyPlan.length) * 100)}%`, height: "100%", background: "var(--success)", transition: "width 0.3s" }}></div>
+                      </div>
+                      <span style={{ fontWeight: 850, color: "var(--success)" }}>
+                        {Math.round((parentStudyPlan.filter(t => t.completed).length / parentStudyPlan.length) * 100)}%
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                    {parentStudyPlan.map((task: any, idx: number) => (
+                      <div 
+                        key={task.id || idx} 
+                        style={{ 
+                          display: "flex", 
+                          justifyContent: "space-between", 
+                          alignItems: "center", 
+                          padding: "12px 15px", 
+                          background: "var(--white)", 
+                          borderRadius: 8, 
+                          border: "1.5px solid var(--border-light)",
+                          borderLeft: `4px solid ${task.completed ? "var(--success)" : "var(--primary)"}`,
+                          opacity: task.completed ? 0.75 : 1
+                        }}
+                      >
+                        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                          <span style={{ fontSize: "1.3rem" }}>{task.icon}</span>
+                          <div>
+                            <span style={{ fontSize: "0.72rem", textTransform: "uppercase", fontWeight: 800, color: "var(--text-muted)" }}>
+                              {task.subject} • {task.topic} ({task.type === "lesson" ? "Konu Anlatımı" : task.type === "test" ? "Mini Test" : "Etkinlik"})
+                            </span>
+                            <p style={{ margin: "2px 0 0 0", fontSize: "0.88rem", color: "var(--text-main)", fontWeight: 600 }}>
+                              {task.action} {task.externalLink && <span style={{ fontSize: "0.68rem", fontWeight: 800, color: "var(--primary)", background: "rgba(99, 102, 241, 0.08)", padding: "2px 6px", borderRadius: 4, marginLeft: 6 }}>🌐 EBA</span>}
+                            </p>
+                          </div>
+                        </div>
+                        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                          <span style={{ fontSize: "0.78rem", fontWeight: 800, color: "var(--primary)" }}>⏱️ {task.duration} dk</span>
+                          <span 
+                            style={{ 
+                              padding: "4px 8px", 
+                              borderRadius: 6, 
+                              fontSize: "0.72rem", 
+                              fontWeight: 800, 
+                              background: task.completed ? "rgba(16, 185, 129, 0.1)" : "rgba(99, 102, 241, 0.1)",
+                              color: task.completed ? "var(--success)" : "var(--primary)"
+                            }}
+                          >
+                            {task.completed ? "✓ Tamamlandı" : "⏳ Çalışılıyor"}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
