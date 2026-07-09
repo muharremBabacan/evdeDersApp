@@ -14,6 +14,10 @@ export const demoUnits: Unit[] = [
   { id: "unit_mat5_t1", subjectId: "sub_mat5", name: "1. Tema: Geometrik Şekiller", order: 1 },
   { id: "unit_mat5_t2", subjectId: "sub_mat5", name: "2. Tema: Sayılar ve Nicelikler", order: 2 },
   { id: "unit_mat5_t3", subjectId: "sub_mat5", name: "3. Tema: Geometrik Nicelikler", order: 3 },
+  { id: "unit_mat5_t4", subjectId: "sub_mat5", name: "4. Tema: Sayılar ve Nicelikler (2): Kesirler", order: 4 },
+  { id: "unit_mat5_t5", subjectId: "sub_mat5", name: "5. Tema: İstatistiksel Araştırma Süreci", order: 5 },
+  { id: "unit_mat5_t6", subjectId: "sub_mat5", name: "6. Tema: İşlemlerle Cebirsel Düşünme", order: 6 },
+  { id: "unit_mat5_t7", subjectId: "sub_mat5", name: "7. Tema: Veriden Olasılığa", order: 7 },
 
   // 6. Sınıf Temaları (Maarif Modeli)
   { id: "unit_mat6_t1", subjectId: "sub_mat6", name: "1. Tema: Sayılar ve Nicelikler (1)", order: 1 },
@@ -31,6 +35,10 @@ export const demoTopics: Topic[] = [
   { id: "topic_mat5_aci", unitId: "unit_mat5_t1", subjectId: "sub_mat5", name: "Açılar ve Doğrular", order: 2 },
   { id: "topic_mat5_ds", unitId: "unit_mat5_t2", subjectId: "sub_mat5", name: "Doğal Sayılar ve İşlemler", order: 1 },
   { id: "topic_mat5_alan", unitId: "unit_mat5_t3", subjectId: "sub_mat5", name: "Çevre ve Alan Ölçümü", order: 1 },
+  { id: "topic_mat5_kesir", unitId: "unit_mat5_t4", subjectId: "sub_mat5", name: "Kesirler, Ondalık ve Yüzdeler", order: 1 },
+  { id: "topic_mat5_tablo", unitId: "unit_mat5_t5", subjectId: "sub_mat5", name: "Araştırma Soruları ve Tablo/Grafik", order: 1 },
+  { id: "topic_mat5_cebir", unitId: "unit_mat5_t6", subjectId: "sub_mat5", name: "İşlem Önceliği ve Örüntüler", order: 1 },
+  { id: "topic_mat5_olas", unitId: "unit_mat5_t7", subjectId: "sub_mat5", name: "Olayların Olasılığı", order: 1 },
 
   // 6. Sınıf Konuları
   { id: "topic_mat6_carpan", unitId: "unit_mat6_t1", subjectId: "sub_mat6", name: "Çarpanlar ve Katlar", order: 1 },
@@ -48,6 +56,10 @@ export const demoOutcomes: LearningOutcome[] = [
   { id: "lo_mat5_aci_1", topicId: "topic_mat5_aci", unitId: "unit_mat5_t1", subjectId: "sub_mat5", code: "M.5.1.2.1", description: "Açıları dar, dik, geniş ve doğru açı olarak sınıflandırır.", difficulty: "orta", order: 1 },
   { id: "lo_mat5_ds_1", topicId: "topic_mat5_ds", unitId: "unit_mat5_t2", subjectId: "sub_mat5", code: "M.5.1.3.1", description: "Çok basamaklı doğal sayıları okur, yazar ve çözümler.", difficulty: "kolay", order: 1 },
   { id: "lo_mat5_alan_1", topicId: "topic_mat5_alan", unitId: "unit_mat5_t3", subjectId: "sub_mat5", code: "M.5.1.4.1", description: "Dikdörtgenin çevre uzunluğu ve alanını hesaplar.", difficulty: "orta", order: 1 },
+  { id: "lo_mat5_kesir_1", topicId: "topic_mat5_kesir", unitId: "unit_mat5_t4", subjectId: "sub_mat5", code: "M.5.2.1.1", description: "Kesirleri karşılaştırır, ondalık gösterim ve yüzde ile ifade eder.", difficulty: "orta", order: 1 },
+  { id: "lo_mat5_tablo_1", topicId: "topic_mat5_tablo", unitId: "unit_mat5_t5", subjectId: "sub_mat5", code: "M.5.2.2.1", description: "Araştırma sorularına uygun veri toplar ve sıklık tablosu/sütun grafiği ile gösterir.", difficulty: "orta", order: 1 },
+  { id: "lo_mat5_cebir_1", topicId: "topic_mat5_cebir", unitId: "unit_mat5_t6", subjectId: "sub_mat5", code: "M.5.2.3.1", description: "Basit sayı örüntülerini inceler, üslü ifadeler ve işlem önceliğini uygular.", difficulty: "orta", order: 1 },
+  { id: "lo_mat5_olas_1", topicId: "topic_mat5_olas", unitId: "unit_mat5_t7", subjectId: "sub_mat5", code: "M.5.2.4.1", description: "Basit olayların gerçekleşme olasılığını tahmin eder ve karşılaştırır.", difficulty: "orta", order: 1 },
 
   // 6. Sınıf Kazanımları
   { id: "lo_mat6_carpan_1", topicId: "topic_mat6_carpan", unitId: "unit_mat6_t1", subjectId: "sub_mat6", code: "M.6.1.1.1", description: "Doğal sayıların çarpanlarını ve katlarını bulur; asal sayıları belirler.", difficulty: "orta", order: 1 },
@@ -69,6 +81,14 @@ export const demoQuestions: Question[] = [
   { id: "q21", outcomeId: "lo_mat5_ds_1", text: "34 509 120 sayısındaki '5' rakamının basamak değeri kaçtır?", options: ["500 000", "50 000", "5 000", "50"], correctAnswer: "500 000", difficulty: "orta", source: "MANUEL" },
   { id: "q22", outcomeId: "lo_mat5_alan_1", text: "Uzun kenarı 10 cm, kısa kenarı 6 cm olan bir dikdörtgenin çevresi kaç cm'dir?", options: ["16", "32", "60", "40"], correctAnswer: "32", difficulty: "kolay", source: "MANUEL" },
   { id: "q23", outcomeId: "lo_mat5_alan_1", text: "Alanı 48 santimetrekare olan bir dikdörtgenin kenarları tam sayı ise çevresi en az kaç cm olabilir?", options: ["28", "32", "26", "22"], correctAnswer: "28", difficulty: "zor", source: "MANUEL" },
+  { id: "q38", outcomeId: "lo_mat5_kesir_1", text: "Payı 1 olan kesirlere ne ad verilir?", options: ["Birim Kesir", "Bileşik Kesir", "Tam Sayılı Kesir", "Denk Kesir"], correctAnswer: "Birim Kesir", difficulty: "kolay", source: "MANUEL" },
+  { id: "q39", outcomeId: "lo_mat5_kesir_1", text: "0,75 ondalık gösteriminin yüzde sembolü ile yazılışı hangisidir?", options: ["%7,5", "%0,75", "%75", "%750"], correctAnswer: "%75", difficulty: "orta", source: "MANUEL" },
+  { id: "q40", outcomeId: "lo_mat5_tablo_1", text: "Bir okuldaki öğrencilerin en sevdiği spor dalını araştırmak için en uygun yöntem hangisidir?", options: ["Tahmin etme", "Rastgele sayı seçme", "Anket uygulama ve veri toplama", "Rapor okuma"], correctAnswer: "Anket uygulama ve veri toplama", difficulty: "orta", source: "MANUEL" },
+  { id: "q41", outcomeId: "lo_mat5_tablo_1", text: "Ende edilen verilerin dikey veya yatay sütunlar halinde gösterildiği grafiğe ne denir?", options: ["Daire Grafiği", "Sütun Grafiği", "Çizgi Grafiği", "Sıklık Tablosu"], correctAnswer: "Sütun Grafiği", difficulty: "kolay", source: "MANUEL" },
+  { id: "q42", outcomeId: "lo_mat5_cebir_1", text: "3 x (5 + 4) işleminin sonucu kaçtır?", options: ["27", "19", "12", "32"], correctAnswer: "27", difficulty: "kolay", source: "MANUEL" },
+  { id: "q43", outcomeId: "lo_mat5_cebir_1", text: "2, 5, 8, 11... şeklinde devam eden örüntünün 5. terimi kaçtır?", options: ["14", "13", "12", "15"], correctAnswer: "14", difficulty: "orta", source: "MANUEL" },
+  { id: "q44", outcomeId: "lo_mat5_olas_1", text: "Hilesiz bir madeni para havaya atıldığında üst yüze yazı gelmesi olasılığı nedir?", options: ["Kesin Olay", "Eş Olasılıklı (1/2)", "İmkânsız Olay", "Daha Fazla Olasılıklı"], correctAnswer: "Eş Olasılıklı (1/2)", difficulty: "kolay", source: "MANUEL" },
+  { id: "q45", outcomeId: "lo_mat5_olas_1", text: "Bir torbada 3 kırmızı ve 3 mavi top vardır. Rastgele çekilen bir topun kırmızı olma olasılığı ile mavi olma olasılığı için hangisi doğrudur?", options: ["Kırmızı olma olasılığı daha fazladır", "Mavi olma olasılığı daha fazladır", "Olasılıkları eşittir", "Kırmızı çekmek imkansızdır"], correctAnswer: "Olasılıkları eşittir", difficulty: "orta", source: "MANUEL" },
 
   // 6. Sınıf Soruları
   { id: "q24", outcomeId: "lo_mat6_carpan_1", text: "36 sayısının kaç tane pozitif tam sayı çarpanı vardır?", options: ["6", "8", "9", "10"], correctAnswer: "9", difficulty: "orta", source: "MANUEL" },

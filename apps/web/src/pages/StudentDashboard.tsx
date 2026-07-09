@@ -203,6 +203,42 @@ const studyContentDb: Record<string, TopicStudyContent> = {
       { id: "m6q16", text: "Tabanı 8 cm, yüksekliği 5 cm olan bir üçgenin alanı kaç santimetrekaredir?", options: ["40", "20", "15", "10"], correctAnswer: "20" },
       { id: "m6q17", text: "Yarıçapı 5 cm olan bir çemberin çevre uzunluğu kaç cm'dir? (pi = 3 alınız)", options: ["15", "30", "45", "60"], correctAnswer: "30" }
     ]
+  },
+  "Kesirler, Ondalık ve Yüzdeler": {
+    summary: "Birim kesirler, tam sayılı ve bileşik kesirler. Kesirlerin sadeleştirilmesi, genişletilmesi ve sayı doğrusunda gösterimi.\n\n- Ondalık Gösterim: Paydası 10, 100, 1000 olan kesirlerin virgülle gösterilmesidir.\n- Yüzdeler: Paydası 100 olan kesirlerin '%' sembolü ile ifade edilmesidir. Karşılaştırmalar bu temsiller arasında dönüştürülerek yapılır.",
+    videoUrl: "https://www.youtube.com/embed/demo_kesir5",
+    mebPageRange: "5. Sınıf 2. Kitap, Sayfa 17 - 55",
+    questions: [
+      { id: "k5q1", text: "Payı 1 olan kesirlere ne ad verilir?", options: ["Birim Kesir", "Bileşik Kesir", "Tam Sayılı Kesir", "Denk Kesir"], correctAnswer: "Birim Kesir" },
+      { id: "k5q2", text: "0,75 ondalık gösteriminin yüzde sembolü ile yazılışı hangisidir?", options: ["%7,5", "%0,75", "%75", "%750"], correctAnswer: "%75" }
+    ]
+  },
+  "Araştırma Soruları ve Tablo/Grafik": {
+    summary: "Veri analizinin ilk aşaması araştırma sorusu oluşturmaktır. Veriler anket veya gözlem yoluyla toplanır, sıklık tablosu ve sütun grafiği ile gösterilir.\n\n- Sütun Grafiği: Verilerin karşılaştırılmasını kolaylaştıran dikey/yatay sütunlardır.\n- Daire Grafiği: Verilerin bir bütün içindeki oranlarını dilimler halinde sunar.",
+    videoUrl: "https://www.youtube.com/embed/demo_ist5",
+    mebPageRange: "5. Sınıf 2. Kitap, Sayfa 58 - 110",
+    questions: [
+      { id: "k5q3", text: "Bir okuldaki öğrencilerin en sevdiği spor dalını araştırmak için en uygun yöntem hangisidir?", options: ["Tahmin etme", "Rastgele sayı seçme", "Anket uygulama ve veri toplama", "Rapor okuma"], correctAnswer: "Anket uygulama ve veri toplama" },
+      { id: "k5q4", text: "Elde edilen verilerin dikey veya yatay sütunlar halinde gösterildiği grafiğe ne denir?", options: ["Daire Grafiği", "Sütun Grafiği", "Çizgi Grafiği", "Sıklık Tablosu"], correctAnswer: "Sütun Grafiği" }
+    ]
+  },
+  "İşlem Önceliği ve Örüntüler": {
+    summary: "İşlemlerde öncelik sırası: 1. Üslü İfadeler, 2. Parantez İçi, 3. Çarpma/Bölme, 4. Toplama/Çıkarma.\n\n- Sayı ve Şekil Örüntüleri: Belirli bir düzen veya kurala göre artan ya da azalan sayılar/şekillerdir. Kurallar adımlar arasındaki farklar bulunarak tespit edilir.",
+    videoUrl: "https://www.youtube.com/embed/demo_alg5",
+    mebPageRange: "5. Sınıf 2. Kitap, Sayfa 116 - 160",
+    questions: [
+      { id: "k5q5", text: "3 x (5 + 4) işleminin sonucu kaçtır?", options: ["27", "19", "12", "32"], correctAnswer: "27" },
+      { id: "k5q6", text: "2, 5, 8, 11... şeklinde devam eden örüntünün kuralı nedir?", options: ["Rakamlar 2'şer artıyor", "Rakamlar 3'er artıyor", "Rakamlar 5'er artıyor", "Rakamlar 3'er azalıyor"], correctAnswer: "Rakamlar 3'er artıyor" }
+    ]
+  },
+  "Olayların Olasılığı": {
+    summary: "Bir olayın gerçekleşme şansının sayısal ifadesidir. Olasılık olasılık spektrumunda 0 (İmkânsız) ile 1 (Kesin) arasında yer alır.\n\n- Eş Olasılıklı: Yazı-tura gelmesi veya aynı sayıda renkli toplardan birinin çekilmesi gibi eşit şanslı olaylardır.",
+    videoUrl: "https://www.youtube.com/embed/demo_olas5",
+    mebPageRange: "5. Sınıf 2. Kitap, Sayfa 166 - 180",
+    questions: [
+      { id: "k5q7", text: "Hilesiz bir madeni para havaya atıldığında üst yüze yazı gelmesi olasılığı nedir?", options: ["Kesin Olay", "Eş Olasılıklı (1/2)", "İmkânsız Olay", "Daha Fazla Olasılıklı"], correctAnswer: "Eş Olasılıklı (1/2)" },
+      { id: "k5q8", text: "Bir torbada 3 kırmızı ve 3 mavi top vardır. Rastgele çekilen bir topun kırmızı olma olasılığı ile mavi olma olasılığı için hangisi doğrudur?", options: ["Kırmızı olma olasılığı daha fazladır", "Mavi olma olasılığı daha fazladır", "Olasılıkları eşittir", "Kırmızı çekmek imkansızdır"], correctAnswer: "Olasılıkları eşittir" }
+    ]
   }
 };
 
@@ -296,7 +332,7 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
 
   const subjectTopics: Record<string, string[]> = {
     "Matematik (6. Sınıf)": ["Çarpanlar ve Katlar", "Araştırma Soruları ve Veri", "Ondalık Gösterim ve Yuvarlama", "Olasılık Tahmin Etme", "Açılar ve Dörtgenler", "Cebirsel Düşünme ve Algoritma", "Paralelkenar, Üçgen ve Çember"],
-    "Matematik (5. Sınıf)": ["Geometrik Şekiller ve Çizimler", "Açılar ve Doğrular", "Doğal Sayılar ve İşlemler", "Çevre ve Alan Ölçümü"],
+    "Matematik (5. Sınıf)": ["Geometrik Şekiller ve Çizimler", "Açılar ve Doğrular", "Doğal Sayılar ve İşlemler", "Çevre ve Alan Ölçümü", "Kesirler, Ondalık ve Yüzdeler", "Araştırma Soruları ve Tablo/Grafik", "İşlem Önceliği ve Örüntüler", "Olayların Olasılığı"],
     "Fen Bilimleri": ["Katı Basıncı", "Sıvı Basıncı", "Gaz Basıncı"],
     "Fen Bilimleri (5. Sınıf)": ["Güneş, Dünya ve Ay", "Canlıların Çeşitliliği", "Kuvvetin Ölçülmesi"],
     Türkçe: ["Paragrafta Anlam", "Sözcükte Anlam", "Yazım Kuralları"],
