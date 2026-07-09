@@ -8,6 +8,7 @@ interface TopicStudyContent {
   summary: string;
   videoUrl: string;
   mebPageRange?: string;
+  simulationUrl?: string;
   questions: Array<{
     id: string;
     text: string;
@@ -28,7 +29,8 @@ const studyContentDb: Record<string, TopicStudyContent> = {
   },
   "Sıvı Basıncı": {
     summary: "Sıvı basıncı, sıvının derinliği (h) ve sıvının yoğunluğu (d) ile doğru orantılıdır. Sıvı basıncı formülü: P = h x d x g şeklindedir (LGS'de yerçekimi ivmesi g genellikle sabit kabul edilir).\n\nÖnemli Kurallar:\n1. Derinlik arttıkça sıvı basıncı artar.\n2. Yoğunluk arttıkça sıvı basıncı artar.\n3. Sıvının miktarı veya kabın şekli sıvı basıncını etkilemez.",
-    videoUrl: "https://www.youtube.com/embed/demo2",
+    videoUrl: "https://www.youtube.com/embed/5aJbV_6rV7M",
+    simulationUrl: "https://phet.colorado.edu/sims/html/under-pressure/latest/under-pressure_all.html",
     questions: [
       { id: "sq1", text: "Aşağıdakilerden hangisi sıvı basıncını etkilemez?", options: ["Sıvının derinliği", "Sıvının yoğunluğu", "Kabın şekli", "Sıvının cinsi"], correctAnswer: "Kabın şekli" },
       { id: "sq2", text: "Sıvı dolu bir kabın tabanına yapılan basınç, sıvının hangi yüksekliğine bağlıdır?", options: ["En üst yüzeyine olan dik uzaklığa (derinlik)", "Kabın genişliğine", "Sıvının hacmine", "Kabın duruş açısına"], correctAnswer: "En üst yüzeyine olan dik uzaklığa (derinlik)" },
@@ -91,7 +93,8 @@ const studyContentDb: Record<string, TopicStudyContent> = {
   },
   "Geometrik Şekiller ve Çizimler": {
     summary: "Nokta, doğru, ışın, doğru parçası ve düzlem geometrinin temel elemanlarıdır.\n\n- Nokta: Boyutsuzdur, (.) ile gösterilir.\n- Doğru: İki ucu da sonsuza uzayan çizgidir.\n- Işın: Bir ucu sınırlı (başlangıç noktası), diğer ucu sonsuza uzayandır.\n- Doğru Parçası: İki ucu da sınırlı olan çizgi parçasıdır.\n- Dikme: Bir doğruya 90 derece açıyla çizilen çizgidir.",
-    videoUrl: "https://www.youtube.com/embed/geo5_1",
+    videoUrl: "https://www.youtube.com/embed/fD36N4zD878",
+    simulationUrl: "https://phet.colorado.edu/sims/html/area-builder/latest/area-builder_all.html",
     mebPageRange: "5. Sınıf 1. Kitap, Sayfa 17 - 38",
     questions: [
       { id: "g5q1", text: "Bir ucu kapalı, diğer ucu sonsuza uzayan geometrik çizim hangisidir?", options: ["Doğru", "Işın", "Doğru Parçası", "Açı"], correctAnswer: "Işın" },
@@ -140,11 +143,11 @@ const studyContentDb: Record<string, TopicStudyContent> = {
   },
   "Çarpanlar ve Katlar": {
     summary: "Bir doğal sayıyı kalansız bölebilen sayılara o sayının çarpanları (bölenleri) denir. 1'den büyük, sadece 1'e ve kendisine bölünebilen sayılara asal sayılar denir.\n\n- Bölünebilme Kuralları: 2 (son basamak çift), 3 (rakam toplamı 3'ün katı), 5 (sonu 0 veya 5), 9 (rakam toplamı 9'nun katı) vb.\n- Ortak Kat ve Bölen: İki veya daha fazla sayının ortak olan katları ile bölenleri problem çözümlerinde kullanılır.",
-    videoUrl: "https://www.youtube.com/embed/mat6_1",
+    videoUrl: "https://www.youtube.com/embed/3990SntDk4w",
     mebPageRange: "6. Sınıf 1. Kitap, Sayfa 14 - 61",
     questions: [
       { id: "m6q1", text: "36 sayısının kaç tane pozitif tam sayı çarpanı vardır?", options: ["6", "8", "9", "10"], correctAnswer: "9" },
-      { id: "m6q2", text: "Aşağıdakilerden hangisi bir asal sayıdır?", options: ["15", "21", "29", "33"], correctAnswer: "29" },
+      { id: "m6q2", text: "Aşağıdakirmekten hangisi bir asal sayıdır?", options: ["15", "21", "29", "33"], correctAnswer: "29" },
       { id: "m6q3", text: "Hem 3'e hem de 5'e kalansız bölünebilen en küçük iki basamaklı doğal sayı hangisidir?", options: ["15", "30", "45", "60"], correctAnswer: "15" }
     ]
   },
@@ -206,7 +209,8 @@ const studyContentDb: Record<string, TopicStudyContent> = {
   },
   "Kesirler, Ondalık ve Yüzdeler": {
     summary: "Birim kesirler, tam sayılı ve bileşik kesirler. Kesirlerin sadeleştirilmesi, genişletilmesi ve sayı doğrusunda gösterimi.\n\n- Ondalık Gösterim: Paydası 10, 100, 1000 olan kesirlerin virgülle gösterilmesidir.\n- Yüzdeler: Paydası 100 olan kesirlerin '%' sembolü ile ifade edilmesidir. Karşılaştırmalar bu temsiller arasında dönüştürülerek yapılır.",
-    videoUrl: "https://www.youtube.com/embed/demo_kesir5",
+    videoUrl: "https://www.youtube.com/embed/Q4X-3z57wE0",
+    simulationUrl: "https://phet.colorado.edu/sims/html/fractions-intro/latest/fractions-intro_all.html",
     mebPageRange: "5. Sınıf 2. Kitap, Sayfa 17 - 55",
     questions: [
       { id: "k5q1", text: "Payı 1 olan kesirlere ne ad verilir?", options: ["Birim Kesir", "Bileşik Kesir", "Tam Sayılı Kesir", "Denk Kesir"], correctAnswer: "Birim Kesir" },
@@ -299,12 +303,13 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
 
   // Focused Study Workspace States
   const [activeStudyTask, setActiveStudyTask] = useState<StudyTask | null>(null);
-  const [studySubTab, setStudySubTab] = useState<"summary" | "quiz" | "timer">("summary");
+  const [studySubTab, setStudySubTab] = useState<"summary" | "quiz" | "timer" | "simulation">("summary");
   const [timerSeconds, setTimerSeconds] = useState(0);
   const [timerActive, setTimerActive] = useState(false);
   const [quizAnswers, setQuizAnswers] = useState<Record<string, string>>({});
   const [quizChecked, setQuizChecked] = useState(false);
   const [quizScore, setQuizScore] = useState<number | null>(null);
+  const [modalVideoUrl, setModalVideoUrl] = useState("");
 
   // Interactive Checklist State - Backwards compatibility fallback
   const [checklist, setChecklist] = useState<Record<string, boolean>>({
@@ -1660,22 +1665,37 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
                             </div>
                           )}
 
-                          {/* Video player simulation */}
+                          {/* Video player embed */}
                           <div style={{ 
-                            background: "#000", 
                             aspectRatio: "16/9", 
                             borderRadius: "8px", 
-                            display: "flex", 
-                            flexDirection: "column", 
-                            alignItems: "center", 
-                            justifyContent: "center",
-                            color: "white",
-                            padding: "20px",
-                            textAlign: "center"
+                            overflow: "hidden",
+                            background: "#000",
+                            border: "1.5px solid var(--border-light)",
+                            position: "relative",
+                            marginTop: "10px"
                           }}>
-                            <span style={{ fontSize: "3rem", marginBottom: "10px" }}>🎬</span>
-                            <strong style={{ fontSize: "1rem" }}>{activeStudyTask.topic} Konu Anlatım Videosu</strong>
-                            <p style={{ fontSize: "0.75rem", color: "#888", margin: "4px 0 15px 0" }}>LGS Soru Çözüm Taktikleri & Pratik Anlatım</p>
+                            {studyContentDb[activeStudyTask.topic]?.videoUrl?.startsWith("http") ? (
+                              <iframe
+                                width="100%"
+                                height="100%"
+                                src={studyContentDb[activeStudyTask.topic].videoUrl}
+                                title={`${activeStudyTask.topic} Video Anlatımı`}
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                allowFullScreen
+                                style={{ border: "none" }}
+                              />
+                            ) : (
+                              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", color: "white", padding: 20 }}>
+                                <span style={{ fontSize: "3rem", marginBottom: "10px" }}>🎬</span>
+                                <strong style={{ fontSize: "1rem" }}>{activeStudyTask.topic} Konu Anlatım Videosu</strong>
+                                <p style={{ fontSize: "0.75rem", color: "#888", margin: "4px 0 15px 0" }}>LGS Soru Çözüm Taktikleri & Pratik Anlatım</p>
+                              </div>
+                            )}
+                          </div>
+                          
+                          <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "5px" }}>
                             <button 
                               onClick={() => {
                                 handleCompleteTask(activeStudyTask.id);
@@ -1855,6 +1875,48 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
                             >
                               ⏱️ Sıfırla
                             </button>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Tab Content 4: Simulation */}
+                      {studySubTab === "simulation" && activeStudyTask && studyContentDb[activeStudyTask.topic]?.simulationUrl && (
+                        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "15px" }}>
+                          <div style={{ 
+                            background: "rgba(6, 182, 212, 0.08)", 
+                            padding: "15px 20px", 
+                            borderRadius: "8px", 
+                            borderLeft: "4px solid var(--success)", 
+                            display: "flex", 
+                            justifyContent: "space-between", 
+                            alignItems: "center",
+                            flexWrap: "wrap",
+                            gap: "10px"
+                          }}>
+                            <div>
+                              <strong style={{ display: "block", fontSize: "0.95rem", color: "var(--success)" }}>🔬 Konuya Özel İnteraktif Deney & Simülasyon</strong>
+                              <span style={{ fontSize: "0.78rem", color: "var(--text-muted)" }}>
+                                Kavramları görsel ve deneysel olarak deneyimlemek için aşağıdaki simülasyonu kullanabilirsin.
+                              </span>
+                            </div>
+                            <button
+                              onClick={() => window.open(studyContentDb[activeStudyTask.topic].simulationUrl, "_blank")}
+                              className="primary"
+                              style={{ width: "auto", padding: "8px 16px", fontSize: "0.78rem" }}
+                            >
+                              ↗ Tam Ekran Aç
+                            </button>
+                          </div>
+                          
+                          <div style={{ flex: 1, minHeight: "500px", border: "1.5px solid var(--border-light)", borderRadius: "8px", overflow: "hidden", background: "#f8fafc" }}>
+                            <iframe 
+                              src={studyContentDb[activeStudyTask.topic].simulationUrl}
+                              width="100%"
+                              height="500px"
+                              style={{ border: "none" }}
+                              allowFullScreen
+                              title="Ders Simülasyonu"
+                            />
                           </div>
                         </div>
                       )}
