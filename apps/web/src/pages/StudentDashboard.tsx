@@ -1679,7 +1679,7 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
                               <iframe
                                 width="100%"
                                 height="100%"
-                                src={studyContentDb[activeStudyTask.topic].videoUrl}
+                                src={studyContentDb[activeStudyTask.topic].videoUrl.replace("youtube.com", "youtube-nocookie.com")}
                                 title={`${activeStudyTask.topic} Video Anlatımı`}
                                 frameBorder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1695,7 +1695,22 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
                             )}
                           </div>
                           
-                          <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "5px" }}>
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "10px", flexWrap: "wrap", gap: "10px" }}>
+                            {studyContentDb[activeStudyTask.topic]?.videoUrl?.startsWith("http") ? (
+                              <button
+                                onClick={() => {
+                                  const embedUrl = studyContentDb[activeStudyTask.topic].videoUrl;
+                                  const videoId = embedUrl.split("/embed/")[1]?.split("?")[0];
+                                  const watchUrl = videoId ? `https://www.youtube.com/watch?v=${videoId}` : embedUrl;
+                                  window.open(watchUrl, "_blank");
+                                }}
+                                className="primary"
+                                style={{ width: "auto", padding: "10px 18px", fontSize: "0.82rem", background: "#ef4444", border: "none", color: "white" }}
+                              >
+                                🎬 Videoyu YouTube'da Yeni Sekmede Aç (Alternatif)
+                              </button>
+                            ) : <div></div>}
+                            
                             <button 
                               onClick={() => {
                                 handleCompleteTask(activeStudyTask.id);
@@ -2078,15 +2093,41 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
               <h3>{videoTitle} Video Dersi</h3>
               <button className="modal-close-btn" onClick={() => setVideoOpen(false)}>&times;</button>
             </div>
-            <div className="modal-body" style={{ background: "black", aspectRatio: "16/9", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <div style={{ color: "white", textAlign: "center" }}>
-                <span style={{ fontSize: "3rem", display: "block" }}>🎬</span>
-                <strong>Basınç Video Konu Anlatımı Oynatılıyor...</strong>
-                <p style={{ fontSize: "0.75rem", color: "#999" }}>Süre: 06:12 / AI Koçun Tarafından Önerildi</p>
-              </div>
+            <div className="modal-body" style={{ aspectRatio: "16/9", padding: 0, overflow: "hidden", background: "black" }}>
+              {modalVideoUrl ? (
+                <iframe
+                  width="100%"
+                  height="100%"
+                  src={modalVideoUrl.replace("youtube.com", "youtube-nocookie.com")}
+                  title={videoTitle}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                  style={{ border: "none" }}
+                />
+              ) : (
+                <div style={{ color: "white", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%" }}>
+                  <span style={{ fontSize: "3rem", display: "block" }}>🎬</span>
+                  <strong>{videoTitle} Video Konu Anlatımı Oynatılıyor...</strong>
+                  <p style={{ fontSize: "0.75rem", color: "#999" }}>Süre: 06:12 / AI Koçun Tarafından Önerildi</p>
+                </div>
+              )}
             </div>
-            <div className="modal-footer">
-              <button className="btn-solve" onClick={() => setVideoOpen(false)}>Kapat</button>
+            <div className="modal-footer" style={{ display: "flex", justifyContent: "flex-end", gap: "10px" }}>
+              {modalVideoUrl && (
+                <button
+                  onClick={() => {
+                    const videoId = modalVideoUrl.split("/embed/")[1]?.split("?")[0];
+                    const watchUrl = videoId ? `https://www.youtube.com/watch?v=${videoId}` : modalVideoUrl;
+                    window.open(watchUrl, "_blank");
+                  }}
+                  className="primary"
+                  style={{ width: "auto", padding: "8px 16px", fontSize: "0.8rem", background: "#ef4444", border: "none", color: "white" }}
+                >
+                  🎬 YouTube'da Yeni Sekmede Aç
+                </button>
+              )}
+              <button className="btn-solve" onClick={() => { setVideoOpen(false); setModalVideoUrl(""); }}>Kapat</button>
             </div>
           </div>
         </div>
