@@ -1334,7 +1334,7 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
                             <option value="">🚫 Kaynak Yönlendirmesi Ekleme (Boş)</option>
                             <option value="https://ders.eba.gov.tr">🌐 EBA Ders Portalı</option>
                             <option value="https://www.eba.gov.tr/ebatv">📺 EBA TV Ortaokul Kanalları</option>
-                            <option value="https://www.eba.gov.tr/ders-kitaplari">📚 EBA Ders Kitapları Kitaplığı</option>
+                            <option value="https://www.eba.gov.tr">📚 EBA Ana Sayfası</option>
                             <option value="custom">🔗 Kendim Özel EBA/Web Linki Ekleyeceğim</option>
                           </select>
                           
@@ -1616,7 +1616,7 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
                               </div>
                               <div style={{ display: "flex", gap: "10px", marginTop: "4px" }}>
                                 <button
-                                  onClick={() => window.open("https://www.eba.gov.tr/ders-kitaplari", "_blank")}
+                                  onClick={() => window.open("https://ders.eba.gov.tr", "_blank")}
                                   className="primary"
                                   style={{
                                     width: "auto",
@@ -1629,7 +1629,7 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
                                     fontWeight: 700
                                   }}
                                 >
-                                  🌐 EBA Ders Kitaplığına Git
+                                  🌐 EBA Ders Portalına Git
                                 </button>
                               </div>
                             </div>
