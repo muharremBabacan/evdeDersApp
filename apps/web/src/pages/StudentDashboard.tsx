@@ -1631,7 +1631,10 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
 
                       {/* Sub-Tabs Selector */}
                       <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
-                        {(["summary", "quiz", "timer"] as const).map(tab => (
+                        {(studyContentDb[activeStudyTask.topic]?.simulationUrl 
+                          ? ["summary", "quiz", "timer", "simulation"] as const 
+                          : ["summary", "quiz", "timer"] as const
+                        ).map(tab => (
                           <button
                             key={tab}
                             onClick={() => setStudySubTab(tab)}
@@ -1646,7 +1649,13 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
                               color: studySubTab === tab ? "white" : "var(--text-main)"
                             }}
                           >
-                            {tab === "summary" ? "📖 Konu Anlatımı & Video" : tab === "quiz" ? "✏️ Mini Pratik Test" : "⏱️ Pomodoro Zamanlayıcı"}
+                            {tab === "summary" 
+                              ? "📖 Konu Anlatımı & Video" 
+                              : tab === "quiz" 
+                                ? "✏️ Mini Pratik Test" 
+                                : tab === "timer" 
+                                  ? "⏱️ Pomodoro Zamanlayıcı" 
+                                  : "🔬 İnteraktif Deney & Simülasyon"}
                           </button>
                         ))}
                       </div>
