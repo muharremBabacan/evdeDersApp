@@ -23,7 +23,7 @@ const studyContentDb: Record<string, TopicStudyContent> = {
     summary: "Kesirlerle toplama ve çıkarma işlemlerinde paydaların eşit olması gerekir. Paydaları eşit olmayan kesirlerin önce paydaları eşitlenir (genişletme veya sadeleştirme yoluyla), ardından paylar toplanır veya çıkarılır, ortak payda aynen yazılır.\n\nÇarpma işleminde paylar kendi arasında, paydalar kendi arasında çarpılır. Bölme işleminde ise ilk kesir aynen kalır, ikinci kesir ters çevrilerek çarpılır.",
     videoUrl: "https://www.youtube.com/embed/demo1",
     questions: [
-      { id: "kq1", text: "1/3 + 1/6 işleminin sonucu hangisidir?", options: ["2/9", "3/6", "1/2", "5/6"], correctAnswer: "1/2" },
+      { id: "kq1", text: "1/3 + 1/6 işleminin sonucu hangisidir?", options: ["2/9", "3/9", "1/2", "5/6"], correctAnswer: "1/2" },
       { id: "kq2", text: "2/5 x 3/4 işleminin sonucu sadeleştirildiğinde hangisi olur?", options: ["6/20", "3/10", "5/9", "3/5"], correctAnswer: "3/10" },
       { id: "kq3", text: "1/2 ÷ 1/4 işleminin sonucu kaçtır?", options: ["1/8", "2", "4", "1/2"], correctAnswer: "2" }
     ]
