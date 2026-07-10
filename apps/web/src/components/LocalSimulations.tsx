@@ -1,5 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
 
+const getBtnStyle = (isActive: boolean): React.CSSProperties => ({
+  flex: 1,
+  padding: "8px 12px",
+  borderRadius: 6,
+  border: "1.5px solid",
+  borderColor: isActive ? "var(--primary)" : "#cbd5e1",
+  background: isActive ? "var(--primary)" : "#f8fafc",
+  color: isActive ? "#ffffff" : "#1e293b",
+  fontWeight: "bold",
+  fontSize: "0.78rem",
+  cursor: "pointer",
+  transition: "all 0.2s ease"
+});
+
 interface LocalSimulationProps {
   topic: string;
 }
@@ -123,9 +137,9 @@ function LightAndShadowLab() {
           <div style={controlGroupStyle}>
             <label style={labelStyle}>Material Türü (Geçirgenlik):</label>
             <div style={{ display: "flex", gap: 10 }}>
-              <button onClick={() => setOpacity(1)} style={{ ...btnSelectStyle, background: opacity === 1 ? "var(--primary)" : "var(--bg-light)" }}>Opak (Tahta/Taş)</button>
-              <button onClick={() => setOpacity(0.5)} style={{ ...btnSelectStyle, background: opacity === 0.5 ? "var(--primary)" : "var(--bg-light)" }}>Yarı Saydam (Buzlu Cam)</button>
-              <button onClick={() => setOpacity(0)} style={{ ...btnSelectStyle, background: opacity === 0 ? "var(--primary)" : "var(--bg-light)" }}>Saydam (Cam)</button>
+              <button onClick={() => setOpacity(1)} style={getBtnStyle(opacity === 1)}>Opak (Tahta/Taş)</button>
+              <button onClick={() => setOpacity(0.5)} style={getBtnStyle(opacity === 0.5)}>Yarı Saydam (Buzlu Cam)</button>
+              <button onClick={() => setOpacity(0)} style={getBtnStyle(opacity === 0)}>Saydam (Cam)</button>
             </div>
           </div>
 
@@ -301,9 +315,9 @@ function ParticleModelSim() {
           <div style={controlGroupStyle}>
             <label style={labelStyle}>Maddenin Hali:</label>
             <div style={{ display: "flex", gap: 10 }}>
-              <button onClick={() => { setPhase("solid"); setTemperature(-10); }} style={{ ...btnSelectStyle, background: phase === "solid" ? "var(--primary)" : "var(--bg-light)" }}>🥶 Katı Fazı (-10 °C)</button>
-              <button onClick={() => { setPhase("liquid"); setTemperature(25); }} style={{ ...btnSelectStyle, background: phase === "liquid" ? "var(--primary)" : "var(--bg-light)" }}>💧 Sıvı Fazı (25 °C)</button>
-              <button onClick={() => { setPhase("gas"); setTemperature(110); }} style={{ ...btnSelectStyle, background: phase === "gas" ? "var(--primary)" : "var(--bg-light)" }}>🔥 Gaz Fazı (110 °C)</button>
+              <button onClick={() => { setPhase("solid"); setTemperature(-10); }} style={getBtnStyle(phase === "solid")}>🥶 Katı Fazı (-10 °C)</button>
+              <button onClick={() => { setPhase("liquid"); setTemperature(25); }} style={getBtnStyle(phase === "liquid")}>💧 Sıvı Fazı (25 °C)</button>
+              <button onClick={() => { setPhase("gas"); setTemperature(110); }} style={getBtnStyle(phase === "gas")}>🔥 Gaz Fazı (110 °C)</button>
             </div>
           </div>
 
@@ -595,7 +609,7 @@ function CircuitBuilderSim() {
               <label style={labelStyle}>Pil Sayısı (Güç):</label>
               <div style={{ display: "flex", gap: 10 }}>
                 {[1, 2, 3].map((num) => (
-                  <button key={num} onClick={() => setBatteries(num)} style={{ ...btnSelectStyle, background: batteries === num ? "var(--primary)" : "var(--bg-light)" }}>{num} Pil</button>
+                  <button key={num} onClick={() => setBatteries(num)} style={getBtnStyle(batteries === num)}>{num} Pil</button>
                 ))}
               </div>
             </div>
@@ -604,7 +618,7 @@ function CircuitBuilderSim() {
               <label style={labelStyle}>Ampul Sayısı (Direnç):</label>
               <div style={{ display: "flex", gap: 10 }}>
                 {[1, 2, 3].map((num) => (
-                  <button key={num} onClick={() => setBulbs(num)} style={{ ...btnSelectStyle, background: bulbs === num ? "var(--primary)" : "var(--bg-light)" }}>{num} Ampul</button>
+                  <button key={num} onClick={() => setBulbs(num)} style={getBtnStyle(bulbs === num)}>{num} Ampul</button>
                 ))}
               </div>
             </div>
@@ -633,8 +647,8 @@ function CircuitBuilderSim() {
             <div style={{ flex: 1 }}>
               <label style={labelStyle}>Gösterim Şekli:</label>
               <div style={{ display: "flex", gap: 10 }}>
-                <button onClick={() => setViewMode("real")} style={{ ...btnSelectStyle, width: "100%", background: viewMode === "real" ? "var(--primary)" : "var(--bg-light)" }}>📸 Gerçekçi Görünüm</button>
-                <button onClick={() => setViewMode("symbol")} style={{ ...btnSelectStyle, width: "100%", background: viewMode === "symbol" ? "var(--primary)" : "var(--bg-light)" }}>📐 Şematik (Sembollerle)</button>
+                <button onClick={() => setViewMode("real")} style={{ ...getBtnStyle(viewMode === "real"), width: "100%" }}>📸 Gerçekçi Görünüm</button>
+                <button onClick={() => setViewMode("symbol")} style={{ ...getBtnStyle(viewMode === "symbol"), width: "100%" }}>📐 Şematik (Sembollerle)</button>
               </div>
             </div>
           </div>
@@ -724,16 +738,4 @@ const sliderStyle: React.CSSProperties = {
   width: "100%",
   accentColor: "var(--primary)",
   cursor: "pointer"
-};
-
-const btnSelectStyle: React.CSSProperties = {
-  flex: 1,
-  padding: "8px 12px",
-  borderRadius: 6,
-  border: "1.5px solid var(--border-light)",
-  color: "var(--text-main)",
-  fontWeight: "bold",
-  fontSize: "0.78rem",
-  cursor: "pointer",
-  transition: "all 0.2s ease"
 };
