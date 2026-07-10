@@ -411,7 +411,7 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
     "Matematik (6. Sınıf)": ["Çarpanlar ve Katlar", "Araştırma Soruları ve Veri", "Ondalık Gösterim ve Yuvarlama", "Olasılık Tahmin Etme", "Açılar ve Dörtgenler", "Cebirsel Düşünme ve Algoritma", "Paralelkenar, Üçgen ve Çember"],
     "Matematik (5. Sınıf)": ["Geometrik Şekiller ve Çizimler", "Açılar ve Doğrular", "Doğal Sayılar ve İşlemler", "Çevre ve Alan Ölçümü", "Kesirler, Ondalık ve Yüzdeler", "Araştırma Soruları ve Tablo/Grafik", "İşlem Önceliği ve Örüntüler", "Olayların Olasılığı"],
     "Fen Bilimleri": ["Katı Basıncı", "Sıvı Basıncı", "Gaz Basıncı"],
-    "Fen Bilimleri (5. Sınıf)": ["Güneş, Dünya ve Ay", "Canlıların Çeşitliliği", "Kuvvetin Ölçülmesi"],
+    "Fen Bilimleri (5. Sınıf)": ["Güneş, Dünya ve Ay", "Işığın Yayılması", "Madde ve Işık", "Tam Gölgenin Oluşumu", "Maddenin Tanecikli Yapısı", "Maddenin Hâl Değişimi", "Devre Elemanlarının Sembollerle Gösterimi", "Ampul Parlaklığını Etkileyen Değişkenler", "Evsel Atıklar ve Geri Dönüşüm"],
     Türkçe: ["Paragrafta Anlam", "Sözcükte Anlam", "Yazım Kuralları"],
     İngilizce: ["Friendship", "Teen Life"],
     "T.C. İnkılap Tarihi": ["Uyanan Avrupa", "Mustafa Kemal'in Çocukluğu"],
