@@ -1275,9 +1275,9 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
                 {/* LEFT COLUMN: DYNAMIC PROGRAM EDITOR */}
                 <div>
                   <div className="dashboard-card" style={{ padding: "20px", marginBottom: "20px" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "15px", borderBottom: "1.5px solid var(--border-light)", paddingBottom: "10px" }}>
+                    <div className="study-plan-card-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "15px", borderBottom: "1.5px solid var(--border-light)", paddingBottom: "10px" }}>
                       <h3 style={{ margin: 0 }}>📅 Bugünün Çalışma Programı (Sürükle-Sırala)</h3>
-                      <div style={{ display: "flex", gap: "8px" }}>
+                      <div className="study-plan-actions" style={{ display: "flex", gap: "8px" }}>
                         <button className="btn-card-secondary" onClick={checkPlanWithAi} style={{ fontSize: "0.78rem", fontWeight: 700, display: "flex", alignItems: "center", gap: "4px" }}>
                           🤖 AI Kontrol Et
                         </button>
@@ -1351,10 +1351,11 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
                             className="drag-task-item"
                           >
                             {/* Drag handle */}
-                            <span style={{ fontSize: "1.2rem", color: "var(--text-muted)", marginRight: "10px", cursor: "grab" }}>☰</span>
+                            <span className="task-drag-handle" style={{ fontSize: "1.2rem", color: "var(--text-muted)", marginRight: "10px", cursor: "grab" }}>☰</span>
                             
                             {/* Checkbox */}
                             <input 
+                              className="task-checkbox"
                               type="checkbox" 
                               checked={task.completed}
                               onChange={() => handleToggleTask(task.id)}
@@ -1362,9 +1363,9 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
                             />
 
                             {/* Task Icon & Text */}
-                            <span style={{ fontSize: "1.4rem", marginRight: "10px" }}>{task.icon}</span>
-                            <div style={{ flex: 1 }}>
-                              <span style={{ fontSize: "0.72rem", fontWeight: 800, textTransform: "uppercase", color: "var(--text-muted)" }}>
+                            <span className="task-icon" style={{ fontSize: "1.4rem", marginRight: "10px" }}>{task.icon}</span>
+                            <div className="task-main-info" style={{ flex: 1 }}>
+                              <span className="task-subject-line" style={{ fontSize: "0.72rem", fontWeight: 800, textTransform: "uppercase", color: "var(--text-muted)" }}>
                                 {task.subject} • {task.topic} ({task.type === "lesson" ? "Konu Anlatımı" : task.type === "test" ? "Mini Test" : "Etkinlik"})
                               </span>
                               <p style={{ margin: "2px 0 0 0", fontSize: "0.88rem", fontWeight: 600, color: "var(--text-main)" }}>
@@ -1373,7 +1374,7 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
                             </div>
 
                             {/* Duration & Delete */}
-                            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                            <div className="task-card-actions" style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                               <span style={{ fontSize: "0.78rem", fontWeight: 800, color: "var(--primary)", background: "rgba(99, 102, 241, 0.08)", padding: "4px 8px", borderRadius: "4px" }}>
                                 ⏱️ {task.duration} dk
                               </span>
