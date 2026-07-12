@@ -532,7 +532,7 @@ body {
     position: fixed;
     left: 10px;
     right: 10px;
-    bottom: calc(12px + env(safe-area-inset-bottom));
+    bottom: calc(86px + env(safe-area-inset-bottom));
     min-height: 62px;
     z-index: 120;
     display: grid;
@@ -623,11 +623,9 @@ body {
   }
 
   .mobile-app-shell .top-header {
-    position: fixed;
+    position: sticky;
     top: 0;
-    left: 0;
-    right: 0;
-    z-index: 40;
+    z-index: 90;
     background: rgba(248, 250, 252, 0.96);
     backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--border-light);
@@ -655,7 +653,7 @@ body {
   }
 
   .mobile-app-shell .main-content {
-    padding-top: 8.6rem;
+    padding-top: 0;
   }
 
   .top-header-stats {
