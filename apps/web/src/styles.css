@@ -440,6 +440,18 @@ body {
     padding-bottom: 0.75rem;
   }
 
+  .mobile-app-shell::after {
+    content: "";
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: calc(92px + env(safe-area-inset-bottom));
+    z-index: 49;
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba(248, 250, 252, 0), var(--bg-body) 28%, var(--bg-body) 100%);
+  }
+
   .mobile-app-shell .sidebar-nav {
     position: fixed;
     left: 10px;
