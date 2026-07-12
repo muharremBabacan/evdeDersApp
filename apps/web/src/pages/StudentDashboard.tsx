@@ -858,6 +858,21 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
 
   const getStudyTopicKey = (subject: string, topic: string) => `${subject}::${topic}`;
 
+  const getQuestionSkillLabel = (
+    question: TopicStudyContent["questions"][number],
+    topic: string
+  ) => question.skill || `${topic} temel beceri`;
+
+  const getQuestionHintText = (
+    question: TopicStudyContent["questions"][number],
+    topic: string
+  ) => question.hint || `${topic} sorusunda önce ana kavramı hatırla, sonra seçenekleri tek tek ele. Emin olmadığın seçeneği işlem veya metin kanıtıyla kontrol et.`;
+
+  const getQuestionRemediationText = (
+    question: TopicStudyContent["questions"][number],
+    topic: string
+  ) => question.remediation || `${topic} konusunda kısa anlatımı tekrar oku, örneği yeniden çöz ve benzer tipte 3 mini soru ile pekiştir.`;
+
   const handleStartTopicFromLibrary = (subject: string, topic: string) => {
     handleStartStudy({
       id: `library-${subject}-${topic}`,
@@ -1816,9 +1831,9 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
                           </div>
 
                           <div style={{ padding: 24, border: "1.5px solid var(--border-light)", borderRadius: 8, background: "var(--white)" }}>
-                            {question.skill && (
+                            {getQuestionSkillLabel(question, activeStudyTask.topic) && (
                               <div style={{ color: "var(--primary)", fontWeight: 900, fontSize: "0.78rem", letterSpacing: "0.04em", textTransform: "uppercase", marginBottom: 10 }}>
-                                Alt Beceri: {question.skill}
+                                Alt Beceri: {getQuestionSkillLabel(question, activeStudyTask.topic)}
                               </div>
                             )}
                             <h3 style={{ marginTop: 0, lineHeight: 1.45 }}>{question.text}</h3>
@@ -1846,7 +1861,7 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
                             </div>
                             {selectedWrong && (
                               <div style={{ marginTop: 14, padding: "12px 14px", borderRadius: 8, background: "rgba(245, 158, 11, 0.1)", border: "1.5px solid rgba(245, 158, 11, 0.28)", color: "#92400e", fontWeight: 700, lineHeight: 1.45 }}>
-                                <strong>Koç İpucu:</strong> {question.hint || "Seçenekleri tekrar ele. Bu soru senden temel kavramı doğru uygulamanı istiyor."}
+                                <strong>Koç İpucu:</strong> {getQuestionHintText(question, activeStudyTask.topic)}
                               </div>
                             )}
                           </div>
@@ -1870,10 +1885,10 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
                       const passed = totalQuestions === 0 || (quizScore ?? 0) >= passScore;
                       const wrongQuestions = content?.questions.filter(q => quizAnswers[q.id] !== q.correctAnswer) || [];
                       const correctQuestions = content?.questions.filter(q => quizAnswers[q.id] === q.correctAnswer) || [];
-                      const weakSkills = Array.from(new Set(wrongQuestions.map(q => q.skill || "Genel tekrar")));
-                      const strongSkills = Array.from(new Set(correctQuestions.map(q => q.skill || "Genel tekrar")));
+                      const weakSkills = Array.from(new Set(wrongQuestions.map(q => getQuestionSkillLabel(q, activeStudyTask.topic))));
+                      const strongSkills = Array.from(new Set(correctQuestions.map(q => getQuestionSkillLabel(q, activeStudyTask.topic))));
                       const remediationSteps = wrongQuestions
-                        .map(q => q.remediation)
+                        .map(q => getQuestionRemediationText(q, activeStudyTask.topic))
                         .filter((step): step is string => Boolean(step));
 
                       return (
