@@ -1152,8 +1152,8 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
                         Matematikte üslü sayılar ve çarpanlar konularında kendini oldukça geliştirmişsin! Fen bilimlerinde basınç konusuna çalışarak hedeflerini tamamlayabilirsin.
                       </div>
                       <div className="ai-coach-actions">
-                        <button className="btn-card-primary" onClick={() => setActiveTab("study-plan")}><span className="ai-button-icon ai-button-icon-plan" aria-hidden="true"></span>Bugünkü Planın</button>
-                        <button className="btn-card-secondary" onClick={() => setActiveTab("ai-coach")}><span className="ai-button-icon ai-button-icon-chat" aria-hidden="true"></span>Koçumla Sohbet Et</button>
+                        <button className="btn-card-primary" onClick={() => setActiveTab("study-plan")}>Bugünkü Planın</button>
+                        <button className="btn-card-secondary" onClick={() => setActiveTab("ai-coach")}>Koçumla Sohbet Et</button>
                       </div>
                     </div>
                   </div>

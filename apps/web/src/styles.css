@@ -520,19 +520,19 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    height: calc(78px + env(safe-area-inset-bottom));
-    z-index: 20;
+    height: calc(170px + env(safe-area-inset-bottom));
+    z-index: 89;
     pointer-events: none;
-    background: linear-gradient(180deg, rgba(248, 250, 252, 0), var(--bg-body) 42%, var(--bg-body) 100%);
+    background: linear-gradient(180deg, rgba(248, 250, 252, 0), var(--bg-body) 56%, var(--bg-body) 100%);
   }
 
   .mobile-app-shell .sidebar-nav {
     position: fixed;
     left: 10px;
     right: 10px;
-    bottom: calc(14px + env(safe-area-inset-bottom));
+    bottom: calc(86px + env(safe-area-inset-bottom));
     min-height: 62px;
-    z-index: 100;
+    z-index: 120;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(56px, 1fr));
     gap: 4px;
@@ -561,6 +561,21 @@ body {
     line-height: 1.1;
     text-align: center;
     white-space: normal;
+    color: var(--text-muted);
+  }
+
+  .mobile-app-shell .nav-item.active {
+    color: white;
+  }
+
+  @media (display-mode: standalone) {
+    .mobile-app-shell::after {
+      height: calc(104px + env(safe-area-inset-bottom));
+    }
+
+    .mobile-app-shell .sidebar-nav {
+      bottom: calc(14px + env(safe-area-inset-bottom));
+    }
   }
 
   .mobile-app-shell .nav-item .icon {
