@@ -437,7 +437,18 @@ body {
   }
 
   .mobile-app-shell .sidebar {
-    padding-bottom: 0.75rem;
+    position: static;
+    width: 0;
+    height: 0;
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    overflow: visible;
+  }
+
+  .mobile-app-shell .sidebar-logo {
+    display: none;
   }
 
   .mobile-app-shell::after {
@@ -446,10 +457,10 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    height: calc(92px + env(safe-area-inset-bottom));
+    height: calc(78px + env(safe-area-inset-bottom));
     z-index: 49;
     pointer-events: none;
-    background: linear-gradient(180deg, rgba(248, 250, 252, 0), var(--bg-body) 28%, var(--bg-body) 100%);
+    background: linear-gradient(180deg, rgba(248, 250, 252, 0), var(--bg-body) 42%, var(--bg-body) 100%);
   }
 
   .mobile-app-shell .sidebar-nav {
@@ -503,6 +514,10 @@ body {
     scroll-padding-bottom: calc(8.5rem + env(safe-area-inset-bottom));
   }
 
+  .mobile-app-shell .profile-sidebar-card {
+    display: none;
+  }
+
   .profile-sidebar-card {
     margin-top: 0.75rem;
     padding: 0.85rem;
@@ -516,13 +531,37 @@ body {
   }
 
   .top-header {
+    margin-bottom: 1rem;
+  }
+
+  .mobile-app-shell .top-header {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: rgba(248, 250, 252, 0.96);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border-light);
+    margin: -1rem -1rem 1rem -1rem;
+    padding: 0.75rem 1rem;
     flex-direction: column;
     align-items: flex-start;
-    gap: 12px;
+    gap: 10px;
+  }
+
+  body.dark-mode .mobile-app-shell .top-header {
+    background: rgba(11, 15, 25, 0.96);
   }
 
   .top-header-welcome h2 {
     font-size: 1.35rem;
+  }
+
+  .mobile-app-shell .top-header-welcome h2 {
+    font-size: 1.15rem;
+  }
+
+  .mobile-app-shell .top-header-welcome p {
+    font-size: 0.82rem;
   }
 
   .top-header-stats {
