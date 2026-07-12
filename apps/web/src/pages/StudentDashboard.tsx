@@ -15,6 +15,10 @@ interface TopicStudyContent {
     text: string;
     options: string[];
     correctAnswer: string;
+    skill?: string;
+    hint?: string;
+    explanation?: string;
+    remediation?: string;
   }>;
 }
 
@@ -147,9 +151,12 @@ const studyContentDb: Record<string, TopicStudyContent> = {
     videoUrl: "https://www.youtube.com/embed/R9V4P3T1oM0",
     mebPageRange: "6. Sınıf 1. Kitap, Sayfa 14 - 61",
     questions: [
-      { id: "m6q1", text: "36 sayısının kaç tane pozitif tam sayı çarpanı vardır?", options: ["6", "8", "9", "10"], correctAnswer: "9" },
-      { id: "m6q2", text: "Aşağıdakirmekten hangisi bir asal sayıdır?", options: ["15", "21", "29", "33"], correctAnswer: "29" },
-      { id: "m6q3", text: "Hem 3'e hem de 5'e kalansız bölünebilen en küçük iki basamaklı doğal sayı hangisidir?", options: ["15", "30", "45", "60"], correctAnswer: "15" }
+      { id: "m6q1", text: "36 sayısının kaç tane pozitif tam sayı çarpanı vardır?", options: ["6", "8", "9", "10"], correctAnswer: "9", skill: "Çarpan bulma", hint: "Çarpanları ikili düşün: 1x36, 2x18, 3x12 gibi. Her ikilide iki farklı çarpan olabilir.", explanation: "36'nın çarpanları 1, 2, 3, 4, 6, 9, 12, 18 ve 36'dır.", remediation: "Önce sayıyı kalansız bölen küçük sayıları listele, sonra karşılarındaki eş çarpanları yaz." },
+      { id: "m6q2", text: "Aşağıdakilerden hangisi bir asal sayıdır?", options: ["15", "21", "29", "33"], correctAnswer: "29", skill: "Asal sayı", hint: "Asal sayının sadece 1'e ve kendisine bölünmesi gerekir. 3'e, 5'e veya 11'e bölünebilenleri ele.", explanation: "29 sadece 1'e ve 29'a bölünür; diğer seçeneklerin 1 ve kendisi dışında bölenleri vardır.", remediation: "Asal sayı kontrolünde önce 2, 3, 5, 7 gibi küçük asal bölenleri dene." },
+      { id: "m6q3", text: "Hem 3'e hem de 5'e kalansız bölünebilen en küçük iki basamaklı doğal sayı hangisidir?", options: ["15", "30", "45", "60"], correctAnswer: "15", skill: "Bölünebilme", hint: "5'e bölünebilmesi için son basamak 0 veya 5 olmalı. 3'e bölünebilmesi için rakamları toplamı 3'ün katı olmalı.", explanation: "15 iki basamaklıdır, sonu 5'tir ve 1 + 5 = 6 olduğu için 3'e de bölünür.", remediation: "Bölünebilme sorularında önce son basamağa, sonra rakam toplamına bak." },
+      { id: "m6q4", text: "24 sayısının 50'den küçük katları arasında hangisi yoktur?", options: ["24", "48", "72", "0"], correctAnswer: "72", skill: "Kat bulma", hint: "Katlar sayının 1, 2, 3... ile çarpılmasıyla bulunur. Ayrıca soru 50'den küçük diyor.", explanation: "24'ün 50'den küçük pozitif katları 24 ve 48'dir. 72, 50'den büyüktür.", remediation: "Kat sorularında sınır değerini kaçırmamak için her çarpımı sırayla yaz." },
+      { id: "m6q5", text: "12 ve 18 sayılarının ortak bölenlerinden en büyüğü hangisidir?", options: ["3", "4", "6", "9"], correctAnswer: "6", skill: "Ortak bölen", hint: "İki sayıyı da kalansız bölen seçenekleri tek tek dene, sonra en büyüğünü seç.", explanation: "12'nin bölenleri 1, 2, 3, 4, 6, 12; 18'in bölenleri 1, 2, 3, 6, 9, 18. Ortak bölenlerin en büyüğü 6'dır.", remediation: "Ortak bölen sorularında iki sayının bölen listesini yan yana yaz." },
+      { id: "m6q6", text: "8 ve 12 sayılarının ortak katlarından en küçüğü hangisidir?", options: ["16", "20", "24", "36"], correctAnswer: "24", skill: "Ortak kat", hint: "8'in ve 12'nin katlarını sırayla yaz. İlk ortak görünen sayı cevaptır.", explanation: "8'in katları 8, 16, 24...; 12'nin katları 12, 24... İlk ortak kat 24'tür.", remediation: "Ortak kat sorularında küçük sayıların katlarını artan sırayla yaz ve ilk kesişimi bul." }
     ]
   },
   "Araştırma Soruları ve Veri": {
@@ -438,6 +445,14 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
     const firstSub = Object.keys(filteredSubjectTopics)[0];
     return firstSub ? filteredSubjectTopics[firstSub][0] : "";
   });
+  const studySubjectOptions = Object.keys(filteredSubjectTopics).filter(sub => sub !== "Mola & Dinlenme");
+  const [selectedStudySubject, setSelectedStudySubject] = useState(() => studySubjectOptions[0] || "Matematik");
+  const [studyFlowStep, setStudyFlowStep] = useState<"intro" | "summary" | "media" | "quiz" | "result">("intro");
+  const [currentStudyQuestionIndex, setCurrentStudyQuestionIndex] = useState(0);
+  const [completedStudyTopics, setCompletedStudyTopics] = useState<Record<string, boolean>>(() => {
+    const saved = localStorage.getItem("completed_study_topics_v1");
+    return saved ? JSON.parse(saved) : {};
+  });
   const [newDuration, setNewDuration] = useState("30");
   const [newAction, setNewAction] = useState("");
   const [newType, setNewType] = useState<"lesson" | "activity" | "test">("lesson");
@@ -479,6 +494,10 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
   useEffect(() => {
     localStorage.setItem("masteryRecords", JSON.stringify(masteryRecords));
   }, [masteryRecords]);
+
+  useEffect(() => {
+    localStorage.setItem("completed_study_topics_v1", JSON.stringify(completedStudyTopics));
+  }, [completedStudyTopics]);
 
   useEffect(() => {
     if (darkMode) {
@@ -828,8 +847,73 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
   const handleStartStudy = (task: any) => {
     setActiveStudyTask(task);
     setStudySubTab("summary");
+    setStudyFlowStep("intro");
+    setCurrentStudyQuestionIndex(0);
     setTimerSeconds(task.duration * 60);
     setTimerActive(false);
+    setQuizAnswers({});
+    setQuizChecked(false);
+    setQuizScore(null);
+  };
+
+  const getStudyTopicKey = (subject: string, topic: string) => `${subject}::${topic}`;
+
+  const handleStartTopicFromLibrary = (subject: string, topic: string) => {
+    handleStartStudy({
+      id: `library-${subject}-${topic}`,
+      subject,
+      topic,
+      type: "lesson",
+      duration: 30,
+      completed: completedStudyTopics[getStudyTopicKey(subject, topic)] || false,
+      action: "Konu çalışma akışı",
+      icon: subject.includes("Matematik") ? "📐" : subject.includes("Fen") ? "🧪" : subject.includes("Türkçe") ? "📖" : subject.includes("İngilizce") ? "🇬🇧" : "📚"
+    });
+  };
+
+  const handleStudyFlowNext = () => {
+    if (!activeStudyTask) return;
+    const content = studyContentDb[activeStudyTask.topic];
+    if (studyFlowStep === "intro") {
+      setStudyFlowStep("summary");
+    } else if (studyFlowStep === "summary") {
+      setStudyFlowStep(content?.videoUrl || content?.simulationUrl ? "media" : "quiz");
+    } else if (studyFlowStep === "media") {
+      setStudyFlowStep("quiz");
+    }
+  };
+
+  const handleStudyQuestionNext = () => {
+    if (!activeStudyTask) return;
+    const content = studyContentDb[activeStudyTask.topic];
+    if (!content) return;
+
+    if (currentStudyQuestionIndex < content.questions.length - 1) {
+      setCurrentStudyQuestionIndex(prev => prev + 1);
+      return;
+    }
+
+    const correctCount = content.questions.filter(q => quizAnswers[q.id] === q.correctAnswer).length;
+    const passScore = Math.ceil(content.questions.length * 0.7);
+    setQuizScore(correctCount);
+    setQuizChecked(true);
+    setStudyFlowStep("result");
+
+    if (correctCount >= passScore) {
+      const topicKey = getStudyTopicKey(activeStudyTask.subject, activeStudyTask.topic);
+      setCompletedStudyTopics(prev => ({ ...prev, [topicKey]: true }));
+      if (studyTasks.some(t => t.id === activeStudyTask.id)) {
+        handleCompleteTask(activeStudyTask.id);
+      }
+      const newExtra = extraPoints + 150;
+      setExtraPoints(newExtra);
+      localStorage.setItem("student_extra_points", newExtra.toString());
+    }
+  };
+
+  const resetStudyFlowForRetry = () => {
+    setStudyFlowStep("summary");
+    setCurrentStudyQuestionIndex(0);
     setQuizAnswers({});
     setQuizChecked(false);
     setQuizScore(null);
@@ -936,7 +1020,7 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
   }
 
   return (
-    <div className="app-container">
+    <div className="app-container mobile-app-shell">
       {/* LEFT SIDEBAR */}
       <aside className="sidebar">
         <div className="sidebar-logo">
@@ -952,25 +1036,16 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
             <span className="icon">🏠</span> Ana Sayfa
           </a>
           <a onClick={() => { setTestMode(false); setActiveTab("study-plan"); }} className={`nav-item ${activeTab === "study-plan" ? "active" : ""}`}>
-            <span className="icon">📅</span> Çalışma Planım
+            <span className="icon">📅</span> Plan Oluştur
           </a>
-          <a onClick={() => { setTestMode(false); setActiveTab("study-room"); }} className={`nav-item ${activeTab === "study-room" ? "active" : ""}`}>
-            <span className="icon">📖</span> Ders Çalış (Oda)
-          </a>
-          <a onClick={() => { setTestMode(false); setActiveTab("ai-routine"); }} className={`nav-item ${activeTab === "ai-routine" ? "active" : ""}`}>
-            <span className="icon">⏱️</span> AI Rutinim
-          </a>
-          <a onClick={() => { startDiagnosticTest(); }} className={`nav-item ${testMode ? "active" : ""}`}>
-            <span className="icon">✏️</span> Diagnostik Test
-          </a>
-          <a onClick={() => { setTestMode(false); setActiveTab("exams"); }} className={`nav-item ${activeTab === "exams" ? "active" : ""}`}>
-            <span className="icon">📈</span> Denemelerim
-          </a>
-          <a onClick={() => { setTestMode(false); setActiveTab("ai-coach"); }} className={`nav-item ${activeTab === "ai-coach" ? "active" : ""}`}>
-            <span className="icon">🤖</span> AI Koçum <span className="badge">Yeni</span>
+          <a onClick={() => { setTestMode(false); setActiveTab("study-room-v2"); }} className={`nav-item ${activeTab === "study-room-v2" ? "active" : ""}`}>
+            <span className="icon">📖</span> Ders Çalış
           </a>
           <a onClick={() => { setTestMode(false); setActiveTab("reports"); }} className={`nav-item ${activeTab === "reports" ? "active" : ""}`}>
-            <span className="icon">📊</span> Raporlarım
+            <span className="icon">📊</span> Durum Analizi
+          </a>
+          <a onClick={() => { setTestMode(false); setActiveTab("exams"); }} className={`nav-item ${activeTab === "exams" || testMode ? "active" : ""}`}>
+            <span className="icon">📝</span> Test ve Yazılılar
           </a>
         </nav>
 
@@ -1196,7 +1271,7 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
 
             {/* PANEL: STUDY PLAN */}
             {activeTab === "study-plan" && (
-              <div className="study-plan-container" style={{ display: "grid", gridTemplateColumns: "1.2fr 0.8fr", gap: "20px" }}>
+              <div className="study-plan-container" style={{ display: "grid", gap: "20px" }}>
                 {/* LEFT COLUMN: DYNAMIC PROGRAM EDITOR */}
                 <div>
                   <div className="dashboard-card" style={{ padding: "20px", marginBottom: "20px" }}>
@@ -1514,9 +1589,352 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
               </div>
             )}
 
+            {/* PANEL: STUDY ROOM V2 */}
+            {activeTab === "study-room-v2" && (
+              <div>
+                {!activeStudyTask ? (
+                  <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+                    <div className="dashboard-card" style={{ padding: "22px" }}>
+                      <h3 style={{ margin: "0 0 8px 0" }}>Ders Çalış</h3>
+                      <p style={{ margin: "0 0 18px 0", color: "var(--text-muted)", fontSize: "0.9rem" }}>
+                        Önce dersi seç. Sonra sadece o derse ait konular listelenir. Bir konuya başladığında çalışma sınav sayfası gibi adım adım ilerler.
+                      </p>
+
+                      <div className="form-group" style={{ maxWidth: 420, marginBottom: 0 }}>
+                        <label>Ders seç</label>
+                        <select
+                          value={selectedStudySubject}
+                          onChange={(e) => {
+                            setSelectedStudySubject(e.target.value);
+                            setActiveStudyTask(null);
+                          }}
+                        >
+                          {studySubjectOptions.map(subject => (
+                            <option key={subject} value={subject}>{subject}</option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="section-card">
+                      <h3>{selectedStudySubject} Konuları</h3>
+                      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                        {(filteredSubjectTopics[selectedStudySubject] || []).map(topic => {
+                          const content = studyContentDb[topic];
+                          const topicKey = getStudyTopicKey(selectedStudySubject, topic);
+                          const completed = completedStudyTopics[topicKey] || studyTasks.some(t => t.subject === selectedStudySubject && t.topic === topic && t.completed);
+                          const inPlan = studyTasks.some(t => t.subject === selectedStudySubject && t.topic === topic && !t.completed);
+                          const statusLabel = completed ? "Başarıldı" : inPlan ? "Planda" : "Başlanmadı";
+
+                          return (
+                            <div
+                              key={topic}
+                              style={{
+                                display: "grid",
+                                gridTemplateColumns: "1fr auto",
+                                gap: 16,
+                                alignItems: "center",
+                                padding: "16px 18px",
+                                border: `1.5px solid ${completed ? "rgba(16,185,129,0.35)" : "var(--border-light)"}`,
+                                borderRadius: 8,
+                                background: completed ? "rgba(16,185,129,0.05)" : "var(--white)"
+                              }}
+                            >
+                              <div>
+                                <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginBottom: 5 }}>
+                                  <strong style={{ fontSize: "0.98rem" }}>{topic}</strong>
+                                  <span style={{
+                                    fontSize: "0.7rem",
+                                    fontWeight: 800,
+                                    padding: "3px 8px",
+                                    borderRadius: 999,
+                                    color: completed ? "var(--success)" : inPlan ? "var(--primary)" : "var(--text-muted)",
+                                    background: completed ? "rgba(16,185,129,0.1)" : inPlan ? "rgba(99,102,241,0.1)" : "var(--bg-body)"
+                                  }}>
+                                    {statusLabel}
+                                  </span>
+                                </div>
+                                <div style={{ display: "flex", gap: 8, flexWrap: "wrap", fontSize: "0.74rem", color: "var(--text-muted)" }}>
+                                  <span>📖 Anlatım</span>
+                                  {content?.videoUrl && <span>▶️ Video</span>}
+                                  {content?.simulationUrl && <span>🔬 Simülasyon</span>}
+                                  {content?.questions?.length ? <span>📝 {content.questions.length} soru</span> : <span>📝 Test hazırlanıyor</span>}
+                                </div>
+                              </div>
+
+                              <button
+                                onClick={() => handleStartTopicFromLibrary(selectedStudySubject, topic)}
+                                className={completed ? "btn-card-secondary" : "btn-card-primary"}
+                                style={{ minWidth: 150, padding: "10px 14px" }}
+                              >
+                                {completed ? "Tekrar Çalış" : "Bu Dersi Çalış"}
+                              </button>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="dashboard-card" style={{ padding: "24px", minHeight: 620 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16, marginBottom: 18 }}>
+                      <div>
+                        <span style={{ color: "var(--primary)", fontWeight: 850, fontSize: "0.75rem", textTransform: "uppercase" }}>{activeStudyTask.subject}</span>
+                        <h2 style={{ margin: "4px 0 0 0", fontSize: "1.35rem" }}>{activeStudyTask.topic}</h2>
+                      </div>
+                      <button className="btn-card-secondary" onClick={() => setActiveStudyTask(null)}>Konu Listesine Dön</button>
+                    </div>
+
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 8, marginBottom: 22 }}>
+                      {[
+                        { key: "intro", label: "Başla" },
+                        { key: "summary", label: "Anlatım" },
+                        { key: "media", label: "Video/Sim" },
+                        { key: "quiz", label: "Sorular" },
+                        { key: "result", label: "Sonuç" }
+                      ].map((item) => (
+                        <div
+                          key={item.key}
+                          style={{
+                            height: 8,
+                            borderRadius: 999,
+                            background: studyFlowStep === item.key ? "var(--primary)" : "var(--border-light)"
+                          }}
+                          title={item.label}
+                        />
+                      ))}
+                    </div>
+
+                    {studyFlowStep === "intro" && (
+                      <div style={{ minHeight: 420, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center" }}>
+                        <span style={{ fontSize: "3rem", marginBottom: 12 }}>📚</span>
+                        <h3 style={{ fontSize: "1.35rem", margin: "0 0 10px 0" }}>Bu dersi adım adım çalışacağız</h3>
+                        <p style={{ maxWidth: 560, color: "var(--text-muted)", lineHeight: 1.6 }}>
+                          Önce kısa konu anlatımını okuyacaksın. Varsa video veya simülasyonu inceleyeceksin. Sonra sorular tek tek gelecek. Testi geçersen konu yanında başarı işareti görünecek.
+                        </p>
+                        <button onClick={handleStudyFlowNext} className="primary-btn" style={{ marginTop: 18, width: "auto", padding: "12px 28px" }}>
+                          Başla
+                        </button>
+                      </div>
+                    )}
+
+                    {studyFlowStep === "summary" && (
+                      <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+                        <div style={{ background: "var(--bg-body)", padding: 22, borderRadius: 8, borderLeft: "4px solid var(--primary)" }}>
+                          <h3 style={{ marginTop: 0 }}>Kısa Konu Anlatımı</h3>
+                          <p style={{ whiteSpace: "pre-line", color: "var(--text-muted)", lineHeight: 1.65, marginBottom: 0 }}>
+                            {studyContentDb[activeStudyTask.topic]?.summary || `${activeStudyTask.topic} konusu için temel kavramları oku, örnekleri incele ve sorulara geçmeden önce ana fikri anladığından emin ol.`}
+                          </p>
+                        </div>
+                        <button onClick={handleStudyFlowNext} className="primary-btn" style={{ alignSelf: "flex-end", width: "auto", padding: "10px 22px" }}>
+                          Anladım, Devam Et
+                        </button>
+                      </div>
+                    )}
+
+                    {studyFlowStep === "media" && (
+                      <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+                        {studyContentDb[activeStudyTask.topic]?.videoUrl ? (
+                          <div style={{ aspectRatio: "16/9", borderRadius: 8, overflow: "hidden", background: "#000", border: "1.5px solid var(--border-light)" }}>
+                            {studyContentDb[activeStudyTask.topic].videoUrl.startsWith("http") ? (
+                              <iframe
+                                width="100%"
+                                height="100%"
+                                src={studyContentDb[activeStudyTask.topic].videoUrl.replace("youtube.com", "youtube-nocookie.com")}
+                                title={`${activeStudyTask.topic} Video Anlatımı`}
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                allowFullScreen
+                                style={{ border: "none" }}
+                              />
+                            ) : (
+                              <div style={{ color: "white", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>Video hazırlanıyor</div>
+                            )}
+                          </div>
+                        ) : (
+                          <div style={{ padding: 24, borderRadius: 8, background: "var(--bg-body)", color: "var(--text-muted)" }}>
+                            Bu konu için video henüz eklenmedi. Anlatımdan sonra sorulara geçebilirsin.
+                          </div>
+                        )}
+
+                        {studyContentDb[activeStudyTask.topic]?.simulationUrl && (
+                          <div style={{ border: "1.5px solid var(--border-light)", borderRadius: 8, overflow: "hidden", background: "#f8fafc" }}>
+                            {studyContentDb[activeStudyTask.topic].simulationUrl?.startsWith("local://") ? (
+                              <LocalSimulation topic={activeStudyTask.topic} />
+                            ) : (
+                              <iframe
+                                src={studyContentDb[activeStudyTask.topic].simulationUrl}
+                                width="100%"
+                                height="420"
+                                style={{ border: "none" }}
+                                allowFullScreen
+                                title="Ders Simülasyonu"
+                              />
+                            )}
+                          </div>
+                        )}
+
+                        <button onClick={handleStudyFlowNext} className="primary-btn" style={{ alignSelf: "flex-end", width: "auto", padding: "10px 22px" }}>
+                          Sorulara Geç
+                        </button>
+                      </div>
+                    )}
+
+                    {studyFlowStep === "quiz" && (() => {
+                      const content = studyContentDb[activeStudyTask.topic];
+                      const question = content?.questions[currentStudyQuestionIndex];
+                      const selectedAnswer = question ? quizAnswers[question.id] : "";
+                      const selectedWrong = Boolean(selectedAnswer && question && selectedAnswer !== question.correctAnswer);
+
+                      if (!content || !question) {
+                        return (
+                          <div style={{ minHeight: 360, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center" }}>
+                            <h3>Bu konu için mini test henüz hazırlanmadı.</h3>
+                            <p style={{ color: "var(--text-muted)" }}>Konu anlatımını tamamlandı olarak işaretleyebilirsin.</p>
+                            <button
+                              onClick={() => {
+                                const topicKey = getStudyTopicKey(activeStudyTask.subject, activeStudyTask.topic);
+                                setCompletedStudyTopics(prev => ({ ...prev, [topicKey]: true }));
+                                setStudyFlowStep("result");
+                                setQuizScore(null);
+                              }}
+                              className="primary-btn"
+                              style={{ width: "auto", padding: "10px 22px" }}
+                            >
+                              Konuyu Tamamla
+                            </button>
+                          </div>
+                        );
+                      }
+
+                      return (
+                        <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+                          <div style={{ display: "flex", justifyContent: "space-between", color: "var(--text-muted)", fontSize: "0.85rem", fontWeight: 800 }}>
+                            <span>Soru {currentStudyQuestionIndex + 1} / {content.questions.length}</span>
+                            <span>{activeStudyTask.topic}</span>
+                          </div>
+
+                          <div style={{ padding: 24, border: "1.5px solid var(--border-light)", borderRadius: 8, background: "var(--white)" }}>
+                            {question.skill && (
+                              <div style={{ color: "var(--primary)", fontWeight: 900, fontSize: "0.78rem", letterSpacing: "0.04em", textTransform: "uppercase", marginBottom: 10 }}>
+                                Alt Beceri: {question.skill}
+                              </div>
+                            )}
+                            <h3 style={{ marginTop: 0, lineHeight: 1.45 }}>{question.text}</h3>
+                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                              {question.options.map(option => {
+                                const selected = quizAnswers[question.id] === option;
+                                return (
+                                  <button
+                                    key={option}
+                                    onClick={() => handleQuizAnswerSelect(question.id, option)}
+                                    style={{
+                                      textAlign: "left",
+                                      padding: "14px 16px",
+                                      borderRadius: 8,
+                                      border: selected ? "2px solid var(--primary)" : "1.5px solid var(--border-light)",
+                                      background: selected ? "rgba(99,102,241,0.08)" : "var(--bg-body)",
+                                      fontWeight: selected ? 800 : 600,
+                                      cursor: "pointer"
+                                    }}
+                                  >
+                                    {option}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                            {selectedWrong && (
+                              <div style={{ marginTop: 14, padding: "12px 14px", borderRadius: 8, background: "rgba(245, 158, 11, 0.1)", border: "1.5px solid rgba(245, 158, 11, 0.28)", color: "#92400e", fontWeight: 700, lineHeight: 1.45 }}>
+                                <strong>Koç İpucu:</strong> {question.hint || "Seçenekleri tekrar ele. Bu soru senden temel kavramı doğru uygulamanı istiyor."}
+                              </div>
+                            )}
+                          </div>
+
+                          <button
+                            onClick={handleStudyQuestionNext}
+                            disabled={!quizAnswers[question.id]}
+                            className="primary-btn"
+                            style={{ alignSelf: "flex-end", width: "auto", padding: "10px 22px" }}
+                          >
+                            {currentStudyQuestionIndex < content.questions.length - 1 ? "Sonraki Soru" : "Sonucu Gör"}
+                          </button>
+                        </div>
+                      );
+                    })()}
+
+                    {studyFlowStep === "result" && (() => {
+                      const content = studyContentDb[activeStudyTask.topic];
+                      const totalQuestions = content?.questions.length || 0;
+                      const passScore = totalQuestions ? Math.ceil(totalQuestions * 0.7) : 0;
+                      const passed = totalQuestions === 0 || (quizScore ?? 0) >= passScore;
+                      const wrongQuestions = content?.questions.filter(q => quizAnswers[q.id] !== q.correctAnswer) || [];
+                      const correctQuestions = content?.questions.filter(q => quizAnswers[q.id] === q.correctAnswer) || [];
+                      const weakSkills = Array.from(new Set(wrongQuestions.map(q => q.skill || "Genel tekrar")));
+                      const strongSkills = Array.from(new Set(correctQuestions.map(q => q.skill || "Genel tekrar")));
+                      const remediationSteps = wrongQuestions
+                        .map(q => q.remediation)
+                        .filter((step): step is string => Boolean(step));
+
+                      return (
+                        <div style={{ minHeight: 420, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", gap: 12 }}>
+                          <span style={{ fontSize: "3.4rem", marginBottom: 12 }}>{passed ? "✅" : "🔁"}</span>
+                          <h3 style={{ fontSize: "1.4rem", margin: "0 0 8px 0" }}>{passed ? "Başardın!" : "Tekrar çalışalım"}</h3>
+                          <p style={{ color: "var(--text-muted)", maxWidth: 560, lineHeight: 1.6 }}>
+                            {totalQuestions > 0
+                              ? `${totalQuestions} sorudan ${quizScore ?? 0} doğru yaptın. ${passed ? "Bu konu başarıldı olarak işaretlendi." : "Kısa anlatımı tekrar okuyup testi yeniden çözebilirsin."}`
+                              : "Bu konu anlatımı tamamlandı olarak işaretlendi."}
+                          </p>
+                          {totalQuestions > 0 && (
+                            <div style={{ width: "100%", maxWidth: 720, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, textAlign: "left" }}>
+                              <div style={{ padding: 16, border: "1.5px solid rgba(16,185,129,0.28)", background: "rgba(16,185,129,0.08)", borderRadius: 8 }}>
+                                <h4 style={{ margin: "0 0 10px 0", color: "#047857" }}>Güçlü Beceriler</h4>
+                                {strongSkills.length > 0 ? (
+                                  <ul style={{ margin: 0, paddingLeft: 18, color: "var(--text-dark)", fontWeight: 700 }}>
+                                    {strongSkills.map(skill => <li key={skill}>{skill}</li>)}
+                                  </ul>
+                                ) : (
+                                  <p style={{ margin: 0, color: "var(--text-muted)" }}>Henüz net güçlü beceri oluşmadı.</p>
+                                )}
+                              </div>
+                              <div style={{ padding: 16, border: "1.5px solid rgba(245,158,11,0.28)", background: "rgba(245,158,11,0.08)", borderRadius: 8 }}>
+                                <h4 style={{ margin: "0 0 10px 0", color: "#92400e" }}>Tekrar İsteyen Beceriler</h4>
+                                {weakSkills.length > 0 ? (
+                                  <ul style={{ margin: 0, paddingLeft: 18, color: "var(--text-dark)", fontWeight: 700 }}>
+                                    {weakSkills.map(skill => <li key={skill}>{skill}</li>)}
+                                  </ul>
+                                ) : (
+                                  <p style={{ margin: 0, color: "var(--text-muted)" }}>Eksik beceri görünmüyor.</p>
+                                )}
+                              </div>
+                              {remediationSteps.length > 0 && (
+                                <div style={{ gridColumn: "1 / -1", padding: 16, border: "1.5px solid var(--border-light)", background: "var(--bg-body)", borderRadius: 8 }}>
+                                  <h4 style={{ margin: "0 0 10px 0" }}>Önerilen Tekrar Adımları</h4>
+                                  <ul style={{ margin: 0, paddingLeft: 18, color: "var(--text-muted)", fontWeight: 700, lineHeight: 1.55 }}>
+                                    {Array.from(new Set(remediationSteps)).map(step => <li key={step}>{step}</li>)}
+                                  </ul>
+                                </div>
+                              )}
+                            </div>
+                          )}
+                          <div style={{ display: "flex", gap: 10, marginTop: 16 }}>
+                            {!passed && (
+                              <button onClick={resetStudyFlowForRetry} className="btn-card-secondary">Tekrar Çalış</button>
+                            )}
+                            <button onClick={() => setActiveStudyTask(null)} className="primary-btn" style={{ width: "auto", padding: "10px 22px" }}>
+                              Konu Listesine Dön
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })()}
+                  </div>
+                )}
+              </div>
+            )}
+
             {/* PANEL: STUDY ROOM */}
             {activeTab === "study-room" && (
-              <div className="study-room-layout" style={{ display: "grid", gridTemplateColumns: "0.8fr 1.2fr", gap: "20px" }}>
+              <div className="study-room-layout" style={{ display: "grid", gap: "20px" }}>
                 {/* LEFT SIDEBAR: STUDY PLAN & FULL CURRICULUM */}
                 <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
                   {/* ACTIVE TASKS */}

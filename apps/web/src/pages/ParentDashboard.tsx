@@ -174,7 +174,7 @@ export function ParentDashboard({ username, onLogout }: ParentDashboardProps) {
   }
 
   return (
-    <div className="app-container">
+    <div className="app-container mobile-app-shell">
       {/* SIDEBAR */}
       <aside className="sidebar">
         <div className="sidebar-logo">
