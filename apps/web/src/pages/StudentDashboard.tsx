@@ -1033,19 +1033,19 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
 
         <nav className="sidebar-nav">
           <a onClick={() => { setTestMode(false); setActiveTab("home"); }} className={`nav-item ${activeTab === "home" && !testMode ? "active" : ""}`}>
-            <span className="icon">🏠</span> Ana Sayfa
+            <span className="icon ai-icon ai-icon-home" aria-hidden="true"></span> Ana Sayfa
           </a>
           <a onClick={() => { setTestMode(false); setActiveTab("study-plan"); }} className={`nav-item ${activeTab === "study-plan" ? "active" : ""}`}>
-            <span className="icon">📅</span> Plan Oluştur
+            <span className="icon ai-icon ai-icon-plan" aria-hidden="true"></span> Plan Oluştur
           </a>
           <a onClick={() => { setTestMode(false); setActiveTab("study-room-v2"); }} className={`nav-item ${activeTab === "study-room-v2" ? "active" : ""}`}>
-            <span className="icon">📖</span> Ders Çalış
+            <span className="icon ai-icon ai-icon-study" aria-hidden="true"></span> Ders Çalış
           </a>
           <a onClick={() => { setTestMode(false); setActiveTab("reports"); }} className={`nav-item ${activeTab === "reports" ? "active" : ""}`}>
-            <span className="icon">📊</span> Durum Analizi
+            <span className="icon ai-icon ai-icon-insight" aria-hidden="true"></span> Durum Analizi
           </a>
           <a onClick={() => { setTestMode(false); setActiveTab("exams"); }} className={`nav-item ${activeTab === "exams" || testMode ? "active" : ""}`}>
-            <span className="icon">📝</span> Test ve Yazılılar
+            <span className="icon ai-icon ai-icon-test" aria-hidden="true"></span> Test ve Yazılılar
           </a>
         </nav>
 
@@ -1137,8 +1137,8 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
                         Matematikte üslü sayılar ve çarpanlar konularında kendini oldukça geliştirmişsin! Fen bilimlerinde basınç konusuna çalışarak hedeflerini tamamlayabilirsin.
                       </div>
                       <div className="ai-coach-actions">
-                        <button className="btn-card-primary" onClick={() => setActiveTab("study-plan")}>Bugünkü Planın</button>
-                        <button className="btn-card-secondary" onClick={() => setActiveTab("ai-coach")}>Koçumla Sohbet Et</button>
+                        <button className="btn-card-primary" onClick={() => setActiveTab("study-plan")}><span className="ai-button-icon ai-button-icon-plan" aria-hidden="true"></span>Bugünkü Planın</button>
+                        <button className="btn-card-secondary" onClick={() => setActiveTab("ai-coach")}><span className="ai-button-icon ai-button-icon-chat" aria-hidden="true"></span>Koçumla Sohbet Et</button>
                       </div>
                     </div>
                   </div>
@@ -1276,13 +1276,13 @@ export function StudentDashboard({ username, onLogout }: StudentDashboardProps) 
                 <div>
                   <div className="dashboard-card" style={{ padding: "20px", marginBottom: "20px" }}>
                     <div className="study-plan-card-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "15px", borderBottom: "1.5px solid var(--border-light)", paddingBottom: "10px" }}>
-                      <h3 style={{ margin: 0 }}>📅 Bugünün Çalışma Programı (Sürükle-Sırala)</h3>
+                      <h3 style={{ margin: 0 }}><span className="ai-heading-icon ai-icon-plan" aria-hidden="true"></span> Bugünün Çalışma Programı (Sürükle-Sırala)</h3>
                       <div className="study-plan-actions" style={{ display: "flex", gap: "8px" }}>
                         <button className="btn-card-secondary" onClick={checkPlanWithAi} style={{ fontSize: "0.78rem", fontWeight: 700, display: "flex", alignItems: "center", gap: "4px" }}>
-                          🤖 AI Kontrol Et
+                          <span className="ai-button-icon ai-button-icon-scan" aria-hidden="true"></span> AI Kontrol Et
                         </button>
                         <button className="btn-card-primary" onClick={generateAiPlan} style={{ fontSize: "0.78rem", fontWeight: 700, display: "flex", alignItems: "center", gap: "4px" }}>
-                          ✨ AI Plan Oluştur
+                          <span className="ai-button-icon ai-button-icon-spark" aria-hidden="true"></span> AI Plan Oluştur
                         </button>
                       </div>
                     </div>

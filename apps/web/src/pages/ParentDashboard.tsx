@@ -187,13 +187,13 @@ export function ParentDashboard({ username, onLogout }: ParentDashboardProps) {
 
         <nav className="sidebar-nav">
           <a onClick={() => setActiveTab("overview")} className={`nav-item ${activeTab === "overview" ? "active" : ""}`}>
-            <span className="icon">🏠</span> Genel Özet & AI Koç
+            <span className="icon ai-icon ai-icon-child" aria-hidden="true"></span> Genel Özet & AI Koç
           </a>
           <a onClick={() => setActiveTab("academic")} className={`nav-item ${activeTab === "academic" ? "active" : ""}`}>
-            <span className="icon">📈</span> Kazanım Karnesi
+            <span className="icon ai-icon ai-icon-insight" aria-hidden="true"></span> Kazanım Karnesi
           </a>
           <a onClick={() => setActiveTab("billing")} className={`nav-item ${activeTab === "billing" ? "active" : ""}`}>
-            <span className="icon">💳</span> Abonelik & Ödeme
+            <span className="icon ai-icon ai-icon-wallet" aria-hidden="true"></span> Abonelik & Ödeme
           </a>
         </nav>
 
